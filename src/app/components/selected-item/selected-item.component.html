@@ -1,0 +1,8 @@
+<mat-form-field appearance="fill" style="width: 100%;">
+  <mat-select [disabled]="isDisabled" (selectionChange)="onValueChange($event)"
+    [value]="this.itemSelected ? this.itemSelected.id : null" [required]="required">
+    <div *ngFor="let item of dataSource">
+      <mat-option [value]="item.id" [disabled]="item.isDisable">{{item.name}}</mat-option>
+    </div>
+  </mat-select>
+</mat-form-field>

@@ -1,0 +1,54 @@
+<div class="menu-sys">
+  <div class="icon-toggle">
+    <mat-icon>arrow_back</mat-icon>
+  </div>
+
+  <div class="role">
+    <span style="margin-bottom: 5px">Your role now is:</span>
+    <app-selected-item [dataSource]="dataSourceRoles" [value]="dataSourceRoles[1]"></app-selected-item>
+  </div>
+
+  <div class="content-menu">
+    <span class="each-item">
+      <mat-icon>fiber_manual_record</mat-icon>
+      <span class="link-action" [ngClass]="{isSelected: selectedItem === MenuEnum.Dashboard}">
+        Dashboard
+      </span>
+    </span>
+
+    <span class="each-item">
+      <mat-icon>fiber_manual_record</mat-icon>
+      <span class="link-action" [ngClass]="{isSelected: selectedItem === MenuEnum.ClassManagement}">
+        Class Management
+      </span>
+    </span>
+
+    <span class="each-item">
+      <mat-icon>fiber_manual_record</mat-icon>
+      <span class="link-action" [ngClass]="{isSelected: selectedItem === MenuEnum.CandidateManagement}">
+        Candidate Management
+      </span>
+    </span>
+
+    <span class="each-item">
+      <mat-icon>fiber_manual_record</mat-icon>
+      <span class="link-action" [ngClass]="{isSelected: selectedItem === MenuEnum.TrainerManagement}">
+        Trainer Management
+      </span>
+    </span>
+
+    <span class="each-item">
+      <mat-icon>fiber_manual_record</mat-icon>
+      <span class="link-action" [ngClass]="{isSelected: selectedItem === MenuEnum.TraineeManagement}">
+        Trainee Management
+      </span>
+    </span>
+
+    <span class="each-item">
+      <mat-icon>fiber_manual_record</mat-icon>
+      <span class="link-action" [ngClass]="{isSelected: selectedItem === MenuEnum.GeneralSetting}">
+        General Setting
+      </span>
+    </span>
+  </div>
+</div>

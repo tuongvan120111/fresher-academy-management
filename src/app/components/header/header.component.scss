@@ -1,0 +1,36 @@
+@import '/src/variable.scss';
+
+.header-sys {
+  display: flex;
+  justify-content: space-between;
+  background-color: $blue;
+  padding: 5px 10px;
+  color: $white;
+  height: 46px;
+
+  .left-sys {
+    display: flex;
+    align-items: center;
+
+    .logo {
+      margin-right: 200px;
+    }
+
+
+    h4 {
+      margin-bottom: 0
+    }
+  }
+
+  .right-sys {
+    display: flex;
+    flex-direction: column;
+    font-size: 12px;
+
+    .infor {
+      &:hover {
+        cursor: pointer;
+      }
+    }
+  }
+}

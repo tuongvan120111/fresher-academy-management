@@ -1,0 +1,79 @@
+@import '/src/variable.scss';
+
+.menu-sys {
+  background-color: $grey;
+  padding: 10px;
+  width: 300px;
+  border: 1px solid;
+  height: 100%;
+
+  .icon-toggle {
+    display: flex;
+    justify-content: flex-end;
+    padding: 0 5px;
+    margin-bottom: 30px;
+
+    &:hover {
+      cursor: pointer;
+    }
+
+    .mat-icon {
+      &:active {
+        background-color: $darkGrey;
+      }
+    }
+  }
+
+  .role {
+    display: flex;
+    flex-direction: column;
+    padding: 0 5px;
+  }
+
+  .content-menu {
+    display: flex;
+    flex-direction: column;
+    color: $lightBlue;
+
+    .isSelected {
+      font-weight: bold;
+    }
+
+    mat-icon {
+      transform: scale(0.5);
+    }
+
+    .each-item {
+      display: flex;
+      word-spacing: 1px;
+      margin-bottom: 5px;
+
+      .feature {
+        -webkit-touch-callout: none;
+        /* iOS Safari */
+        -webkit-user-select: none;
+        /* Safari */
+        -khtml-user-select: none;
+        /* Konqueror HTML */
+        -moz-user-select: none;
+        /* Old versions of Firefox */
+        -ms-user-select: none;
+        /* Internet Explorer/Edge */
+        user-select: none;
+
+        /* Non-prefixed version, currently
+                                          supported by Chrome, Edge, Opera and Firefox */
+        &:hover {
+          cursor: pointer;
+          text-decoration: underline;
+        }
+
+        &:active {
+          font-weight: bold;
+        }
+      }
+    }
+
+
+  }
+}
