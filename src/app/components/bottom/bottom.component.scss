@@ -1,0 +1,37 @@
+@import '/src/variable.scss';
+
+.bottom-sys {
+  background-color: $grey;
+  border: 1px solid;
+  display: flex;
+  padding: 10px 0 30px 320px;
+
+  .icon {
+    color: $blue;
+    margin-right: 8px;
+  }
+
+  .infor-area {
+    display: flex;
+    align-self: center;
+    margin-right: 150px;
+  }
+
+  span {
+    color: $blue;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+
+    &:hover {
+      cursor: pointer;
+    }
+
+    &:active {
+      text-decoration: underline;
+    }
+  }
+}
