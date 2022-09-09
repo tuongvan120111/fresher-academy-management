@@ -11,24 +11,44 @@ import { BottomModule } from './components/bottom/bottom.module';
 import { RouterModule, Routes } from '@angular/router';
 import { AppRoutingModule } from './app-routing.module';
 import { MainPageComponent } from './components/main-page/main-page.component';
+import { CandidatesComponent } from './candidate-management/candidates/candidates.component';
 
 const routes: Routes = [
   {
-    path: '', component: MainPageComponent,
+    path: '',
+    component: MainPageComponent,
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
-      { path: 'login', loadChildren: () => import('./login/login.module').then(m => m.LoginModule) },
-      { path: 'dashboard', loadChildren: () => import('./dashboard/dashboard.module').then(m => m.DashboardModule) },
-      { path: 'class-management', loadChildren: () => import('./class-management/class-management.module').then(m => m.ClassManagementModule) },
-    ]
+      {
+        path: 'login',
+        loadChildren: () =>
+          import('./login/login.module').then((m) => m.LoginModule),
+      },
+      {
+        path: 'dashboard',
+        loadChildren: () =>
+          import('./dashboard/dashboard.module').then((m) => m.DashboardModule),
+      },
+      {
+        path: 'class-management',
+        loadChildren: () =>
+          import('./class-management/class-management.module').then(
+            (m) => m.ClassManagementModule
+          ),
+      },
+      {
+        path: 'candidate-management',
+        loadChildren: () =>
+          import('./candidate-management/candidate-management.module').then(
+            (m) => m.CandidateManagementModule
+          ),
+      },
+    ],
   },
-]
+];
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    MainPageComponent
-  ],
+  declarations: [AppComponent, MainPageComponent],
   imports: [
     BrowserModule,
     AngularFireModule.initializeApp(environment.firebase),
@@ -39,10 +59,10 @@ const routes: Routes = [
     RouterModule.forRoot(routes),
     HeaderModule,
     BottomModule,
-    ToggleMenuModule
+    ToggleMenuModule,
     // AppRoutingModule
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
