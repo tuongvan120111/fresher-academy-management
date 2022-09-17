@@ -1,1 +1,163 @@
-<p>candidates works!</p>
+<div class="candidates-container">
+  <h2 class="title">Candidate Listing</h2>
+  <div class="content">
+    <div class="form-group">
+      <div class="form-row">
+        <div class="form-control">
+          <label for="empId">Empl ID</label>
+          <input id="empId" name="employee_id" type="number">
+        </div>
+        <div class="form-control">
+          <label for="account">Account</label>
+          <input id="account" name="account" type="text">
+        </div>
+        <div class="form-control">
+          <label for="name">Name</label>
+          <input id="name" name="name" type="text">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-control">
+          <label for="dob">{{'dob' | uppercase}}</label>
+          <input id="dob" name="dob" type="date">
+        </div>
+        <div class="form-control">
+          <label for="phone">Phone</label>
+          <input id="phone" name="phone" type="number">
+        </div>
+        <div class="form-control">
+          <label for="email">Email</label>
+          <input id="email" name="email" type="text">
+        </div>
+      </div>
+      <div class="search">
+        <button mat-raised-button>
+          <mat-icon>search</mat-icon>
+          Search
+        </button>
+      </div>
+    </div>
+    <div class="table">
+      <table>
+        <thead>
+        <tr class="table-header">
+          <td>
+            <input (click)="toggleSelected()" [checked]="isSelectedAll" type="checkbox" name="select-all">
+          </td>
+          <td>#</td>
+          <td>Empl ID</td>
+          <td>Account</td>
+          <td>Name</td>
+          <td>DOB</td>
+          <td>Gender</td>
+          <td>University</td>
+          <td>Faculty</td>
+          <td>Phone</td>
+          <td>Email</td>
+          <td>Status</td>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td>
+            <input [checked]="isSelectedAll" type="checkbox" name="select">
+          </td>
+          <td>1</td>
+          <td>00137439</td>
+          <td>HoangPT11</td>
+          <td>HoangPhan</td>
+          <td>15/07/1999</td>
+          <td>Male</td>
+          <td>UIT</td>
+          <td>IT</td>
+          <td>0769820111</td>
+          <td>hoangpt11@fsoft.com.vn</td>
+          <td>Interview - pass</td>
+        </tr>
+
+        <tr>
+          <td>
+            <input [checked]="isSelectedAll" type="checkbox" name="select">
+          </td>
+          <td>1</td>
+          <td>00137439</td>
+          <td>HoangPT12</td>
+          <td>HoangPhan</td>
+          <td>15/07/1999</td>
+          <td>Male</td>
+          <td>UIT</td>
+          <td>IT</td>
+          <td>0769820111</td>
+          <td>hoangpt11@fsoft.com.vn</td>
+          <td>Interview - pass</td>
+        </tr>
+
+        <tr>
+          <td>
+            <input [checked]="isSelectedAll" type="checkbox" name="select">
+          </td>
+          <td>1</td>
+          <td>00137439</td>
+          <td>HoangPT12</td>
+          <td>HoangPhan</td>
+          <td>15/07/1999</td>
+          <td>Male</td>
+          <td>UIT</td>
+          <td>IT</td>
+          <td>0769820111</td>
+          <td>hoangpt11@fsoft.com.vn</td>
+          <td>Interview - pass</td>
+        </tr>
+
+        <tr>
+          <td>
+            <input [checked]="isSelectedAll" type="checkbox" name="select">
+          </td>
+          <td>1</td>
+          <td>00137439</td>
+          <td>HoangPT12</td>
+          <td>HoangPhan</td>
+          <td>15/07/1999</td>
+          <td>Male</td>
+          <td>UIT</td>
+          <td>IT</td>
+          <td>0769820111</td>
+          <td>hoangpt11@fsoft.com.vn</td>
+          <td>Interview - pass</td>
+        </tr>
+
+        <tr>
+          <td>
+            <input [checked]="isSelectedAll" type="checkbox" name="select">
+          </td>
+          <td>1</td>
+          <td>00137439</td>
+          <td>HoangPT12</td>
+          <td>HoangPhan</td>
+          <td>15/07/1999</td>
+          <td>Male</td>
+          <td>UIT</td>
+          <td>IT</td>
+          <td>0769820111</td>
+          <td>hoangpt11@fsoft.com.vn</td>
+          <td>Interview - pass</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="actions">
+      <button class="add-btn" mat-raised-button>
+        <mat-icon class="add-icon">add</mat-icon>
+        New Candidate
+      </button>
+      <button class="update-btn" mat-raised-button>
+        <mat-icon class="update-icon">arrow_circle_up</mat-icon>
+        Update Candidate
+      </button>
+      <button class="delete-btn" mat-raised-button>
+        <mat-icon class="delete-icon">cancel</mat-icon>
+        Delete Candidate
+      </button>
+    </div>
+  </div>
+</div>

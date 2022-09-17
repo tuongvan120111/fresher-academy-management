@@ -1,0 +1,16 @@
+.content-sys {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+}
+.content-sys .body-sys {
+  display: flex;
+  height: 100%;
+}
+.content-sys .fix-content {
+  flex-shrink: 1;
+}
+
+/*# sourceMappingURL=main-page.component.css.map */
