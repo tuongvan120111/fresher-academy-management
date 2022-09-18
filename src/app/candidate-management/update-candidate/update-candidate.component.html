@@ -1,0 +1,39 @@
+<link rel="stylesheet" href="update-candidate.component.scss">
+<div class="update-c-container">
+  <div class="content">
+    <h2 class="title">
+      <p *ngIf="isCreate; else update">Create Candidate</p>
+      <ng-template #update>
+        <p>Update Candidate</p>
+      </ng-template>
+    </h2>
+    <div class="form-group">
+      <mat-tab-group class="tab">
+        <mat-tab label="Candidate Information">
+          <div class="tab-content">
+            <div class="content-title">
+              <span>Personal Information</span>
+            </div>
+            <div class="stable-content">
+              <div class="employee">
+                <span>Empl ID</span>
+                <span>00126792</span>
+              </div>
+              <div class="type">
+                <span>Type</span>
+                <span>Candidate</span>
+              </div>
+              <div class="status">
+                <span>Status</span>
+                <span>New</span>
+              </div>
+            </div>
+          </div>
+        </mat-tab>
+        <mat-tab label="Result">
+          res
+        </mat-tab>
+      </mat-tab-group>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,41 @@
+@import "src/mixins";
+
+.update-c-container {
+  @include content-width;
+
+  .content {
+    .tab {
+      display: flex;
+    }
+
+    .tab-content {
+      display: flex;
+      flex-direction: column;
+      width: 95%;
+      border: 1px solid black;
+      margin: 20px auto 0px auto;
+
+      .content-title {
+        background: rgb(149, 188, 242);
+        border-bottom: 1px solid black;
+        padding: 10px 5px;
+        font-weight: bold;
+      }
+
+      .stable-content {
+        display: flex;
+        justify-content: space-between;
+
+        .employee, .type, .status {
+          span {
+            display: inline-block;
+            background: rgb(204, 204, 204);
+            border-left: 1px solid black;
+            border-right: 1px solid black;
+            padding: 10px 5px;
+          }
+        }
+      }
+    }
+  }
+}

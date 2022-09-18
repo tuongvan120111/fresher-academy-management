@@ -1,0 +1,97 @@
+.candidates-container {
+  width: 83.5vw;
+
+  .content {
+    padding: 0 0 0 5px;
+  }
+
+  .form-group {
+    margin-bottom: 20px;
+
+    .form-row {
+      display: flex;
+      justify-content: space-between;
+
+      .form-control {
+        display: flex;
+        border: none;
+        justify-content: space-between;
+        width: 24%;
+
+        label {
+          margin-right: 20px;
+        }
+
+        input {
+          width: 189px;
+        }
+      }
+    }
+
+    .search {
+      button {
+        margin: 20px 0px 0px 5px;
+      }
+    }
+  }
+
+  .table {
+    margin-left: 5px;
+
+    table {
+      tbody {
+        tr:nth-child(odd) {
+          background-color: rgb(238, 238, 238);
+        }
+      }
+    }
+
+    table {
+      width: 99%;
+      border: 1px solid black;
+
+      .table-header > td {
+        background: rgb(204, 204, 204);
+        font-weight: bold;
+      }
+
+      td {
+        text-align: center;
+        border-left: 1px solid black;
+        border-right: 1px solid black;
+      }
+
+      .employee-id {
+        color: blue;
+        cursor: pointer;
+      }
+    }
+  }
+
+  .actions {
+    display: flex;
+
+    button {
+      margin-right: 15px;
+      display: flex;
+      align-items: center;
+
+      mat-icon {
+        height: 27px;
+      }
+
+      .add-icon {
+        color: green;
+      }
+
+      .update-icon {
+        color: blue;
+      }
+
+      .delete-icon {
+        color: red;
+      }
+    }
+  }
+}
+
