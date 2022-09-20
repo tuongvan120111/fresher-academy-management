@@ -1,7 +1,12 @@
 @import "src/mixins";
+@import "src/variable.scss";
 
 .update-c-container {
   @include content-width;
+
+  .flex {
+    display: flex;
+  }
 
   .content {
     .tab {
@@ -17,23 +22,44 @@
 
       .content-title {
         background: rgb(149, 188, 242);
-        border-bottom: 1px solid black;
         padding: 10px 5px;
         font-weight: bold;
+        border-bottom: 1px solid black;
       }
 
-      .stable-content {
+      .content {
         display: flex;
-        justify-content: space-between;
+        .left-column,
+        .right-column {
+          width: 50%;
+        }
 
-        .employee, .type, .status {
-          span {
-            display: inline-block;
-            background: rgb(204, 204, 204);
-            border-left: 1px solid black;
-            border-right: 1px solid black;
-            padding: 10px 5px;
+        .left-column {
+          .employee {
+            display: flex;
           }
+          .application {
+            border-top: 1px solid black;
+          }
+        }
+
+        .small-col,
+        .medium-col,
+        .large-col {
+          border-right: 1px solid black;
+          padding: 5px 0px 5px 5px;
+        }
+
+        .small-col {
+          flex: 0.5;
+          background: $gray-1;
+        }
+        .medium-col {
+          flex: 1;
+          background: $gray-2;
+        }
+        .large-col {
+          flex: 1.6;
         }
       }
     }

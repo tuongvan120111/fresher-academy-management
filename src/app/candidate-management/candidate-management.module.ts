@@ -7,6 +7,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {UpdateCandidateComponent} from './update-candidate/update-candidate.component';
 import {TableCandidateComponent} from './table-candidate/table-candidate.component';
 import {MatTabsModule} from '@angular/material/tabs';
+import { CandidateDetailComponent } from './update-candidate/candidate-detail/candidate-detail.component';
 
 const routes: Routes = [
   {
@@ -25,7 +26,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [CandidatesComponent, UpdateCandidateComponent, TableCandidateComponent],
+  declarations: [CandidatesComponent, UpdateCandidateComponent, TableCandidateComponent, CandidateDetailComponent],
   imports: [CommonModule, RouterModule.forChild(routes), MatButtonModule, MatIconModule, MatTabsModule],
 })
 export class CandidateManagementModule {
