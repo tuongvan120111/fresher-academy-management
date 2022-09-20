@@ -9,10 +9,7 @@ import { HeaderModule } from './components/header/header.module';
 import { ToggleMenuModule } from './components/toggle-menu/toggle-menu.module';
 import { BottomModule } from './components/bottom/bottom.module';
 import { RouterModule, Routes } from '@angular/router';
-import { AppRoutingModule } from './app-routing.module';
 import { MainPageComponent } from './components/main-page/main-page.component';
-import { CandidatesComponent } from './candidate-management/candidates/candidates.component';
-import { CandidateDetailComponent } from './candidate-management/update-candidate/candidate-detail/candidate-detail.component';
 
 const routes: Routes = [
   {
@@ -49,7 +46,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [AppComponent, MainPageComponent, CandidateDetailComponent],
+  declarations: [AppComponent, MainPageComponent],
   imports: [
     BrowserModule,
     AngularFireModule.initializeApp(environment.firebase),

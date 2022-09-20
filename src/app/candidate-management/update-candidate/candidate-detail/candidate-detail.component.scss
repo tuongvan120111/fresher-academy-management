@@ -1,0 +1,95 @@
+@import "src/mixins";
+@import "src/variable.scss";
+
+.candidate-detail {
+  .border-top-black {
+    border-top: 1px solid black;
+  }
+
+  .flex {
+    display: flex;
+  }
+
+  .flex:not(:last-child) {
+    border-bottom: 1px solid black;
+  }
+
+  display: flex;
+  flex-direction: column;
+  width: 95%;
+  border: 1px solid black;
+  border-right: unset;
+  margin: 20px auto 0px auto;
+
+  .content-title {
+    background: rgb(149, 188, 242);
+    padding: 10px 5px;
+    font-weight: bold;
+    border-bottom: 1px solid black;
+    border-right: 1px solid black;
+  }
+
+  .content {
+    display: flex;
+  }
+
+  .left-column,
+  .right-column {
+    width: 50%;
+  }
+
+  .left-column {
+    .employee {
+      display: flex;
+    }
+    .application {
+      border-top: 1px solid black;
+    }
+  }
+  .small-col,
+  .medium-col,
+  .large-col {
+    border-right: 1px solid black;
+    padding: 5px 0px 5px 5px;
+  }
+
+  .small-col {
+    flex: 0.5;
+    background: $gray-1;
+  }
+  .medium-col {
+    flex: 1;
+    background: $gray-2;
+  }
+  .large-col {
+    flex: 1.4;
+  }
+
+  .flex-21 {
+    flex: 0.21;
+    border-right: 1px solid black;
+    padding: 5px 0px 5px 5px;
+    background: $gray-1;
+  }
+}
+
+.content-actions {
+  width: 95%;
+  height: 50px;
+  margin: 20px auto 0px auto;
+
+  button {
+    margin-right: 15px;
+  }
+
+  .submit-btn {
+    background: $blue;
+    color: white;
+  }
+
+  .back-btn {
+    span {
+      margin-left: 5px;
+    }
+  }
+}
