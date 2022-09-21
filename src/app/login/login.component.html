@@ -1,1 +1,47 @@
-<p>login works!</p>
+<div class="login-page">
+  <div class="login-header">
+    Login
+  </div>
+
+  <div class="login-mesg">
+    <span *ngIf="messError">*{{messError}}</span>
+  </div>
+  <div class="login-content">
+    <div class="login-body">
+      <div class="login-input">
+        <div class="label">UserName</div>
+        <input type="text" [(ngModel)]="userName">
+      </div>
+
+      <div class="login-input">
+        <div class="label">Password</div>
+        <input type="text" [(ngModel)]="passWd" type="password">
+      </div>
+
+      <div class="login-action">
+        <button style="margin-right: 16px;" class="btn btn-light" (click)="onLogin()">Login</button>
+        <button class="btn btn-light" (click)="onReset()">Reset</button>
+      </div>
+    </div>
+
+    <div class="login-infor">
+      <div class="infor-title">Welcome to Fsoft HR Utility</div>
+      <div class="infor-body">
+        <span class="infor-content">This too is developed to help Employee, Project Managers, BJ Managers, FSU Leads, HR
+          (SSC, BP Manager), CTC, FWA, QA... insubmitting HR related informations, approving the submitted infor,
+          monitoring status of your submissions... and further more</span>
+        <mat-expansion-panel [expanded]="panelOpenState">
+        </mat-expansion-panel>
+        <span class="infor-more link-action" (click)="onMore()">More...</span>
+      </div>
+
+      <div class="recommend">
+        <i>The recommended web browser is
+          <span>
+            <img src="/assets/image/google_logo.png" alt="" height="16">
+          </span>
+          Sorry for any inconvenience!!!</i>
+      </div>
+    </div>
+  </div>
+</div>

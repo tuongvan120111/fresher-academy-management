@@ -1,0 +1,90 @@
+@import '/src/variable.scss';
+
+.login {
+  &-header {
+    border-bottom: 1px solid;
+    margin-bottom: unset;
+    padding: 10px 10px;
+    font-weight: bold;
+  }
+
+  &-mesg {
+    height: 30px;
+    color: $red;
+    display: flex;
+    align-items: center;
+    padding-left: 170px;
+  }
+
+  &-content {
+    display: flex;
+    padding: 0 20px 30px 20px;
+  }
+
+  &-body {
+    width: 50%;
+
+    .label {
+      width: 150px;
+      font-family: revert;
+    }
+  }
+
+  &-input {
+    display: flex;
+    margin-bottom: 16px;
+
+    input {
+      width: 200px;
+    }
+  }
+
+  &-action {
+    margin-top: 8px;
+    margin-left: 150px;
+
+    &:first-child {
+      margin-right: 20px;
+    }
+  }
+
+  &-infor {
+    width: 50%;
+    background-color: $yellow;
+    font-size: 14px;
+    border: 1px solid;
+
+    .infor {
+      &-title {
+        font-weight: bold;
+        padding: 20px 40px;
+      }
+
+      &-body {
+        display: flex;
+        flex-direction: column;
+        padding: 0 40px;
+      }
+
+      &-content {
+        font-weight: 500;
+      }
+
+
+      &-more {
+        align-self: flex-end;
+        color: $blue;
+      }
+    }
+
+    .recommend {
+      border-top: 1px dashed;
+      padding: 20px 40px 40px 40px;
+      border-style: dashed;
+      border-bottom: unset;
+      border-left: unset;
+      border-right: unset;
+      margin: 12px;
+    }
+  }
+}

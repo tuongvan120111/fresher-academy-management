@@ -1,0 +1,11 @@
+<div class="dialog-s">
+  <div class="icon">
+    <mat-icon>{{data.icon}}</mat-icon>
+  </div>
+  <h3 class="title">{{data.title}}</h3>
+  <div class="message">{{data.message}}</div>
+  <div class="button">
+    <button *ngIf="!data.isOneButton" class="btn btn-light" (click)="onClosed()">Cancel</button>
+    <button class="btn btn-success" (click)="onSubmit()">{{data.buttons}}</button>
+  </div>
+</div>
