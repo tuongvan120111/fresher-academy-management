@@ -3,3 +3,8 @@
 @mixin content-width {
   width: calc(99vw - #{$side-menu-width});
 }
+
+.border-right {
+  border-right: 1px solid black;
+}
+
