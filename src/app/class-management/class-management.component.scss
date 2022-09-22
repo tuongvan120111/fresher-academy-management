@@ -1,0 +1,43 @@
+.example-container {
+  max-height: 400px;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+table {
+  // width: 100%;
+  width: calc(95vw - 300px);
+}
+
+h3 {
+  width: 100%;
+  border-bottom: 1px solid;
+  padding: 10px 0;
+}
+
+.flex-container {
+  display: flex;
+
+  .item-container {
+    display: flex;
+    align-items: center;
+    width: 30%;
+    padding-right: 30px;
+
+    p {
+      width: 30%;
+      min-width: 95px;
+    }
+  }
+
+  .button-container {
+    height: auto;
+    align-self: center;
+    width: 9%;
+    text-align: right;
+  }
+
+  .mat-form-field {
+    width: 100%;
+  }
+}
