@@ -1,0 +1,19 @@
+<h2 mat-dialog-title>
+  Confirm
+  <mat-icon fontIcon="close"></mat-icon>
+</h2>
+<mat-dialog-content class="mat-typography">
+  <div>
+    <mat-icon
+      fontIcon="error"
+      [ngStyle]="{ color: 'green', fontSize: '30px' }"
+    ></mat-icon>
+    <p>Are you sure to cancle?</p>
+  </div>
+
+  <div class="btn-container">
+    <button [mat-dialog-close]="true">OK</button>
+    <button mat-dialog-close>Cancle</button>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end"> </mat-dialog-actions>

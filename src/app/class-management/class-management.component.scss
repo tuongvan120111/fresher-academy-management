@@ -1,18 +1,46 @@
-.example-container {
-  max-height: 400px;
-  overflow-x: hidden;
-  overflow-y: auto;
+.btn-container button {
+  margin-right: 15px;
 }
 
 table {
-  // width: 100%;
-  width: calc(95vw - 300px);
+  width: 100%;
+  // width: calc(95vw - 300px);
+}
+
+table tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+table tr:hover {
+  background-color: #d3d3d3;
 }
 
 h3 {
   width: 100%;
   border-bottom: 1px solid;
   padding: 10px 0;
+}
+
+:host ::ng-deep .mat-table thead {
+  background-color: #d3d3d3;
+  text-align-last: center;
+}
+
+table,
+th,
+td {
+  border: 1px solid;
+}
+
+th.mat-header-cell:first-of-type,
+td.mat-cell:first-of-type {
+  padding-left: 0;
+  width: 60px;
+  text-align: center;
+}
+
+td.mat-cell:nth-of-type(2) {
+  text-align: center;
 }
 
 .flex-container {

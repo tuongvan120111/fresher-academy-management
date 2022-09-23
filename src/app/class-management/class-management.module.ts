@@ -14,11 +14,18 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTabsModule } from '@angular/material/tabs';
 import { ClassInformationComponent } from './class-information/class-information.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { TraineeComponent } from './trainee/trainee.component';
+import { MatDialogModule } from '@angular/material/dialog';
+import { DialogModule } from '../components/dialog/dialog.module';
 
 const routes: Routes = [{ path: '', component: ClassManagementComponent }];
 
 @NgModule({
-  declarations: [ClassManagementComponent, ClassInformationComponent],
+  declarations: [
+    ClassManagementComponent,
+    ClassInformationComponent,
+    TraineeComponent,
+  ],
   imports: [
     CommonModule,
     MatTableModule,
@@ -33,6 +40,8 @@ const routes: Routes = [{ path: '', component: ClassManagementComponent }];
     MatTabsModule,
     FormsModule,
     ReactiveFormsModule,
+    MatDialogModule,
+    DialogModule,
     RouterModule.forChild(routes),
   ],
 })

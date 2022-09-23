@@ -10,148 +10,152 @@
       </ng-container>
     </form>
   </mat-tab>
-  <mat-tab label="Trainee">Trainee</mat-tab>
+  <mat-tab label="Trainee"><app-trainee></app-trainee></mat-tab>
 </mat-tab-group>
 
 <ng-template #buttonAdd>
-  <button mat-stroked-button type="submit" mat-raised-button color="primary">
-    Submit
-  </button>
-  <button mat-stroked-button type="reset" (click)="toggleIsCreateClass.emit()">
-    <mat-icon
-      aria-hidden="false"
-      aria-label="Search icon"
-      fontIcon="reply_icon"
-      [ngStyle]="{ color: 'red' }"
-    >
-    </mat-icon>
-    Close
-  </button>
+  <div class="btn-container">
+    <button mat-stroked-button type="submit" mat-raised-button color="primary">
+      Submit
+    </button>
+    <button mat-stroked-button type="button" (click)="onClickToggleClose()">
+      <mat-icon
+        aria-hidden="false"
+        aria-label="Search icon"
+        fontIcon="reply_icon"
+        [ngStyle]="{ color: 'red' }"
+      >
+      </mat-icon>
+      Close
+    </button>
+  </div>
 </ng-template>
 
 <ng-template #buttonUpdate>
-  <button mat-stroked-button type="submit">
-    <mat-icon
-      aria-hidden="false"
-      aria-label="Search icon"
-      fontIcon="arrow_circle_up"
-      [ngStyle]="{ color: 'green' }"
-    >
-    </mat-icon>
-    Update Class
-  </button>
-  <button mat-stroked-button>
-    <mat-icon
-      aria-hidden="false"
-      aria-label="Search icon"
-      fontIcon="turn_left"
-      [ngStyle]="{ color: 'blue', transform: 'rotate(90deg)' }"
-    >
-    </mat-icon>
-    Submit Class
-  </button>
-  <button mat-stroked-button>
-    <mat-icon
-      aria-hidden="false"
-      aria-label="Search icon"
-      fontIcon="play_arrow"
-      [ngStyle]="{ color: 'blue' }"
-    >
-    </mat-icon>
-    Start Class
-  </button>
-  <button mat-stroked-button>
-    <mat-icon
-      aria-hidden="false"
-      aria-label="Search icon"
-      fontIcon="indeterminate_check_box"
-      [ngStyle]="{ color: 'blue' }"
-    >
-    </mat-icon>
-    Finish Class
-  </button>
-  <button mat-stroked-button>
-    <mat-icon
-      aria-hidden="false"
-      aria-label="Search icon"
-      fontIcon="reply"
-      [ngStyle]="{ color: 'red' }"
-    >
-    </mat-icon>
-    Close
-  </button>
+  <div class="btn-container">
+    <button mat-stroked-button type="submit">
+      <mat-icon
+        aria-hidden="false"
+        aria-label="Search icon"
+        fontIcon="arrow_circle_up"
+        [ngStyle]="{ color: 'green' }"
+      >
+      </mat-icon>
+      Update Class
+    </button>
+    <button mat-stroked-button>
+      <mat-icon
+        aria-hidden="false"
+        aria-label="Search icon"
+        fontIcon="turn_left"
+        [ngStyle]="{ color: 'blue', transform: 'rotate(90deg)' }"
+      >
+      </mat-icon>
+      Submit Class
+    </button>
+    <button mat-stroked-button>
+      <mat-icon
+        aria-hidden="false"
+        aria-label="Search icon"
+        fontIcon="play_arrow"
+        [ngStyle]="{ color: 'blue' }"
+      >
+      </mat-icon>
+      Start Class
+    </button>
+    <button mat-stroked-button>
+      <mat-icon
+        aria-hidden="false"
+        aria-label="Search icon"
+        fontIcon="indeterminate_check_box"
+        [ngStyle]="{ color: 'blue' }"
+      >
+      </mat-icon>
+      Finish Class
+    </button>
+    <button mat-stroked-button type="button" (click)="onClickToggleClose()">
+      <mat-icon
+        aria-hidden="false"
+        aria-label="Search icon"
+        fontIcon="reply"
+        [ngStyle]="{ color: 'red' }"
+      >
+      </mat-icon>
+      Close
+    </button>
 
-  <button mat-stroked-button>
-    <mat-icon
-      aria-hidden="false"
-      aria-label="Search icon"
-      fontIcon="do_disturb"
-      [ngStyle]="{ color: 'red' }"
-    >
-    </mat-icon>
-    Cancle Class
-  </button>
-  <button mat-stroked-button>
-    <mat-icon
-      aria-hidden="false"
-      aria-label="Search icon"
-      fontIcon="thumb_up"
-      [ngStyle]="{ color: 'red' }"
-    >
-    </mat-icon>
-    Approve Class
-  </button>
-  <button mat-stroked-button>
-    <mat-icon
-      aria-hidden="false"
-      aria-label="Search icon"
-      fontIcon="thumb_down_alt"
-      [ngStyle]="{ color: 'red' }"
-    >
-    </mat-icon>
-    Reject Class
-  </button>
-  <button mat-stroked-button>
-    <mat-icon
-      aria-hidden="false"
-      aria-label="Search icon"
-      fontIcon="remove_circle"
-      [ngStyle]="{ color: 'red' }"
-    >
-    </mat-icon>
-    Close Class
-  </button>
-  <button mat-stroked-button>
-    <mat-icon
-      aria-hidden="false"
-      aria-label="Search icon"
-      fontIcon="question_mark"
-      [ngStyle]="{ color: 'red' }"
-    >
-    </mat-icon>
-    Request Info
-  </button>
+    <button mat-stroked-button>
+      <mat-icon
+        aria-hidden="false"
+        aria-label="Search icon"
+        fontIcon="do_disturb"
+        [ngStyle]="{ color: 'red' }"
+      >
+      </mat-icon>
+      Cancle Class
+    </button>
+    <button mat-stroked-button>
+      <mat-icon
+        aria-hidden="false"
+        aria-label="Search icon"
+        fontIcon="thumb_up"
+        [ngStyle]="{ color: 'red' }"
+      >
+      </mat-icon>
+      Approve Class
+    </button>
+    <button mat-stroked-button>
+      <mat-icon
+        aria-hidden="false"
+        aria-label="Search icon"
+        fontIcon="thumb_down_alt"
+        [ngStyle]="{ color: 'red' }"
+      >
+      </mat-icon>
+      Reject Class
+    </button>
+    <button mat-stroked-button>
+      <mat-icon
+        aria-hidden="false"
+        aria-label="Search icon"
+        fontIcon="remove_circle"
+        [ngStyle]="{ color: 'red' }"
+      >
+      </mat-icon>
+      Close Class
+    </button>
+    <button mat-stroked-button>
+      <mat-icon
+        aria-hidden="false"
+        aria-label="Search icon"
+        fontIcon="question_mark"
+        [ngStyle]="{ color: 'red' }"
+      >
+      </mat-icon>
+      Request Info
+    </button>
 
-  <button mat-stroked-button>
-    <mat-icon
-      aria-hidden="false"
-      aria-label="Search icon"
-      fontIcon="thumb_up_off_alt"
-      [ngStyle]="{ color: 'red' }"
-    >
-    </mat-icon>
-    Accept Class
-  </button>
-  <button mat-stroked-button>
-    <mat-icon
-      aria-hidden="false"
-      aria-label="Search icon"
-      fontIcon="thumb_down_off_alt"
-      [ngStyle]="{ color: 'red' }"
-    >
-    </mat-icon>
-    Decline Class
-  </button>
+    <button mat-stroked-button>
+      <mat-icon
+        aria-hidden="false"
+        aria-label="Search icon"
+        fontIcon="thumb_up_off_alt"
+        [ngStyle]="{ color: 'red' }"
+      >
+      </mat-icon>
+      Accept Class
+    </button>
+    <button mat-stroked-button>
+      <mat-icon
+        aria-hidden="false"
+        aria-label="Search icon"
+        fontIcon="thumb_down_off_alt"
+        [ngStyle]="{ color: 'red' }"
+      >
+      </mat-icon>
+      Decline Class
+    </button>
+  </div>
 </ng-template>
 
 <ng-template #information>
@@ -347,11 +351,12 @@
         <p>Learning Path *</p>
         <div>
           <input
-            id="file"
+            id="learningPath"
             type="file"
             class="form-control"
-            (change)="onFileChange($event)"
+            (change)="onFileLearningPathChange($event)"
             required
+            accept=".xlx,.xlsx"
           />
         </div>
       </div>
@@ -501,15 +506,14 @@
       <div class="flex-container">
         <p>Curriculumn</p>
         <div>
-          <button mat-stroked-button>
-            <mat-icon
-              aria-hidden="false"
-              aria-label="Search icon"
-              fontIcon="arrow_circle_up"
-              [ngStyle]="{ color: 'blue' }"
-            ></mat-icon>
-            Curriculumn
-          </button>
+          <input
+            id="curriculumn"
+            type="file"
+            class="form-control"
+            (change)="onFileCurriculumnChange($event)"
+            required
+            accept=".xlx,.xlsx"
+          />
         </div>
 
         <p>Remarks</p>
@@ -549,7 +553,7 @@
       <!-- Checkbox Column -->
       <ng-container matColumnDef="add">
         <th mat-header-cell *matHeaderCellDef>
-          <button mat-button (click)="addBudgetData()">
+          <button mat-button (click)="addFieldBudgetData()">
             <mat-icon
               aria-hidden="false"
               aria-label="Search icon"
@@ -560,7 +564,7 @@
           </button>
         </th>
         <td mat-cell *matCellDef="let element; let i = index">
-          <button mat-button (click)="removeBudgetData(i)">
+          <button mat-button (click)="removeFieldBudgetData(i)">
             <mat-icon
               aria-hidden="false"
               aria-label="Search icon"
@@ -636,7 +640,7 @@
       <!-- Checkbox Column -->
       <ng-container matColumnDef="add">
         <th mat-header-cell *matHeaderCellDef>
-          <button mat-button (click)="addAuditData()">
+          <button mat-button (click)="addFieldAuditData()">
             <mat-icon
               aria-hidden="false"
               aria-label="Search icon"
@@ -647,7 +651,7 @@
           </button>
         </th>
         <td mat-cell *matCellDef="let element; let i = index">
-          <button mat-button (click)="removeAuditData(i)">
+          <button mat-button (click)="removeFieldAuditData(i)">
             <mat-icon
               aria-hidden="false"
               aria-label="Search icon"

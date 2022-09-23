@@ -1,5 +1,7 @@
-import { ClassStatus } from './../shared/constants/class.contants';
-import { AngularFirestore } from '@angular/fire/compat/firestore';
+import {
+  ClassStatus,
+  ClassManagementColumns,
+} from '../shared/constants/class-management.contants';
 import { ClassManagementService } from './../shared/services/class-management.service';
 import {
   AfterViewInit,
@@ -12,9 +14,9 @@ import {
 import { SelectionModel } from '@angular/cdk/collections';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
-import { ClassModel } from '../shared/models/class.model';
-import { formatDate } from '@angular/common';
-import { Observable } from 'rxjs';
+import { ClassModel } from '../shared/models/class-management.model';
+import { MatDialog } from '@angular/material/dialog';
+import { DialogComponent } from '../components/dialog/dialog.component';
 
 @Component({
   selector: 'app-class-management',
@@ -24,17 +26,8 @@ import { Observable } from 'rxjs';
 export class ClassManagementComponent
   implements OnInit, AfterViewInit, OnChanges
 {
-  displayedColumns: string[] = [
-    'select',
-    'id',
-    'classCode',
-    'className',
-    'actualStartDate',
-    'actualEndDate',
-    'location',
-    'status',
-  ];
-  dataSource = new MatTableDataSource<ClassModel>([]);
+  displayedColumns: string[] = ClassManagementColumns;
+  classData = new MatTableDataSource<ClassModel>([]);
   selection = new SelectionModel<ClassModel>(true, []);
 
   location: SelectData[] = [{ value: 'all', viewValue: 'All' }];
@@ -45,16 +38,17 @@ export class ClassManagementComponent
 
   isAllSelected() {
     const numSelected = this.selection.selected.length;
-    const numRows = this.dataSource.data.length;
+    const numRows = this.classData.data.length;
     return numSelected === numRows;
   }
 
   toggleAllRows() {
     if (this.isAllSelected()) {
       this.selection.clear();
+      console.log(this.selection);
       return;
     }
-    this.selection.select(...this.dataSource.data);
+    this.selection.select(...this.classData.data);
   }
 
   /** The label for the checkbox on the passed row */
@@ -70,46 +64,51 @@ export class ClassManagementComponent
   @ViewChild(MatPaginator)
   paginator!: MatPaginator;
 
-  isCreateClass: boolean = true;
-  isUpdateClass: boolean = true;
+  isCreateClass: boolean = false;
+  isUpdateClass: boolean = false;
 
-  constructor(private classManagementService: ClassManagementService) {}
+  constructor(
+    private classManagementService: ClassManagementService,
+    public dialog: MatDialog
+  ) {}
 
   ngOnInit(): void {
     this.classManagementService.getListClass().subscribe((data: any) => {
-      this.dataSource = new MatTableDataSource<ClassModel>(data);
+      this.classData = new MatTableDataSource<ClassModel>(data);
     });
-    // this.classManagementService.getListLocations(
-    //   this.paginator.pageIndex,
-    //   this.paginator.pageSize
-    // );
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    // this.classManagementService.getListLocations(
-    //   this.paginator.pageIndex,
-    //   this.paginator.pageSize
-    // );
-  }
+  ngOnChanges(changes: SimpleChanges): void {}
 
   ngAfterViewInit() {
-    console.log(this.paginator.pageSize);
-    this.dataSource.paginator = this.paginator;
-
-    this.paginator.page.subscribe((event) => console.log(event));
+    this.classData.paginator = this.paginator;
   }
 
-  toggleIsCreateClass(isUpdateClass: boolean = false): void {
+  toggleIsCreateClass(): void {
     this.isCreateClass = !this.isCreateClass;
-    this.isUpdateClass = isUpdateClass;
+  }
+
+  toggleIsUpdateClass(): void {
+    this.isUpdateClass = !this.isUpdateClass;
   }
 
   getStatusClass(status: number = 0): string {
     return ClassStatus[status] || 'None';
   }
-}
 
-const ELEMENT_DATA: ClassModel[] = [];
+  openDialog(): void {
+    const dialogRef = this.dialog.open(DialogComponent, {
+      width: '400px',
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.classManagementService.cancleClass(this.selection.selected[0]);
+        this.selection.clear();
+      }
+    });
+  }
+}
 
 interface SelectData {
   value: string;

@@ -9,8 +9,8 @@ import { HeaderModule } from './components/header/header.module';
 import { ToggleMenuModule } from './components/toggle-menu/toggle-menu.module';
 import { BottomModule } from './components/bottom/bottom.module';
 import { RouterModule, Routes } from '@angular/router';
-import { AppRoutingModule } from './app-routing.module';
 import { MainPageComponent } from './components/main-page/main-page.component';
+import { AngularFireStorageModule } from '@angular/fire/compat/storage';
 
 const routes: Routes = [
   {
@@ -22,7 +22,7 @@ const routes: Routes = [
       { path: 'class-management', loadChildren: () => import('./class-management/class-management.module').then(m => m.ClassManagementModule) },
     ]
   },
-]
+];
 
 @NgModule({
   declarations: [
@@ -39,10 +39,11 @@ const routes: Routes = [
     RouterModule.forRoot(routes),
     HeaderModule,
     BottomModule,
-    ToggleMenuModule
+    ToggleMenuModule,
+    AngularFireStorageModule
     // AppRoutingModule
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
 export class AppModule { }

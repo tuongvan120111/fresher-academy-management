@@ -203,6 +203,33 @@ export const EventCategoryList = [
   },
 ];
 
+export const ClassAdminList = [
+  {
+    id: 0,
+    name: 'Extra cheese',
+  },
+  {
+    id: 0,
+    name: 'Mushroom',
+  },
+  {
+    id: 0,
+    name: 'Onion',
+  },
+  {
+    id: 0,
+    name: 'Pepperoni',
+  },
+  {
+    id: 0,
+    name: 'Sausage',
+  },
+  {
+    id: 0,
+    name: 'Tomato',
+  },
+];
+
 export const ClassStatus: StatusType = {
   0: 'Planned',
   1: 'In-progress',
@@ -212,8 +239,43 @@ export const ClassStatus: StatusType = {
   5: 'Wating for more information',
   6: 'Rejected',
   7: 'Declined',
+  8: 'Canceled',
 };
 
 type StatusType = {
   [key: number]: string;
 };
+
+export const ClassManagementColumns: string[] = [
+  'select',
+  'id',
+  'classCode',
+  'className',
+  'actualStartDate',
+  'actualEndDate',
+  'location',
+  'status',
+];
+
+export const BudgetDisplayedColumns: string[] = [
+  'add',
+  'item',
+  'unit',
+  'unitExpense',
+  'quality',
+  'amount',
+  'tax',
+  'sum',
+  'note',
+];
+
+export const AuditDisplayedColumns: string[] = [
+  'add',
+  'date',
+  'eventCategory',
+  'relatedPeople',
+  'action',
+  'pic',
+  'deadline',
+  'note',
+];

@@ -1,10 +1,12 @@
-import { ClassModel, LocationModel } from './../models/class.model';
+import { ClassModel, LocationModel } from '../models/class-management.model';
 import { Injectable } from '@angular/core';
 import {
   AngularFirestore,
   AngularFirestoreCollection,
 } from '@angular/fire/compat/firestore';
 import { map, Observable } from 'rxjs';
+import { ClassStatus } from '../constants/class-management.contants';
+import { DatePipe } from '@angular/common';
 
 @Injectable({
   providedIn: 'root',
@@ -50,20 +52,6 @@ export class ClassManagementService {
         map((snaps) =>
           snaps.map((snap) => {
             let data = snap.payload.doc.data() as ClassModel;
-
-            data.general.expectedStartDate = new Date(
-              data.general.expectedStartDate
-            );
-            data.general.expectedEndDate = new Date(
-              data.general.expectedEndDate
-            );
-
-            data.detail.actualStartDate = new Date(
-              data.detail.actualStartDate
-            );
-            data.detail.actualEndDate = new Date(
-              data.detail.actualEndDate
-            );
             const id = snap.payload.doc.id;
             return {
               ...data,
@@ -72,5 +60,21 @@ export class ClassManagementService {
           })
         )
       );
+  }
+
+  cancleClass(data: ClassModel) {
+    const datePipe = new DatePipe('en-US');
+    let history = data.general.history;
+    const currentDate = datePipe.transform(new Date(), 'dd/MM/yyyy');
+    history = currentDate + ' - "Cancelled by" username';
+
+    this.classCol.doc(data.id).update({
+      general: {
+        ...data.general,
+        status: 8,
+        history: history,
+      },
+    });
+    console.log('cancleClass done');
   }
 }

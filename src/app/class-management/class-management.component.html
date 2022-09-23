@@ -1,4 +1,4 @@
-<div *ngIf="!isCreateClass">
+<div *ngIf="!(isCreateClass || isUpdateClass)">
   <h3>Class Listing</h3>
 
   <div class="flex-container">
@@ -67,7 +67,7 @@
   </div>
 
   <section class="example-container mat-elevation-z8" tabindex="0">
-    <table mat-table [dataSource]="dataSource">
+    <table mat-table [dataSource]="classData">
       <!-- Checkbox Column -->
       <ng-container matColumnDef="select">
         <th mat-header-cell *matHeaderCellDef>
@@ -155,7 +155,7 @@
   >
   </mat-paginator>
 
-  <div class="flex-container">
+  <div class="flex-container btn-container">
     <button mat-stroked-button (click)="toggleIsCreateClass()">
       <mat-icon
         aria-hidden="false"
@@ -169,7 +169,7 @@
     <button
       mat-stroked-button
       [disabled]="selection.selected.length !== 1"
-      (click)="toggleIsCreateClass(true)"
+      (click)="toggleIsUpdateClass()"
     >
       <mat-icon
         aria-hidden="false"
@@ -180,7 +180,7 @@
       </mat-icon>
       Update Class
     </button>
-    <button mat-stroked-button>
+    <button mat-stroked-button (click)="openDialog()">
       <mat-icon
         aria-hidden="false"
         aria-label="Search icon"
@@ -193,8 +193,8 @@
 </div>
 
 <app-class-information
-  *ngIf="isCreateClass"
+  *ngIf="isCreateClass || isUpdateClass"
   [isUpdateClass]="isUpdateClass"
   [classManagementData]="selection.selected[0]"
-  (toggleIsCreateClass)="toggleIsCreateClass()"
+  (toggleClose)="isCreateClass ? toggleIsCreateClass() : toggleIsUpdateClass()"
 ></app-class-information>
