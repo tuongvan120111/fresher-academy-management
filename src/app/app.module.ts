@@ -11,6 +11,7 @@ import { BottomModule } from './components/bottom/bottom.module';
 import { RouterModule, Routes } from '@angular/router';
 import { MainPageComponent } from './components/main-page/main-page.component';
 import { AngularFireStorageModule } from '@angular/fire/compat/storage';
+import { AuthGuard } from './auth/auth.guard';
 
 const routes: Routes = [
   {
@@ -18,8 +19,8 @@ const routes: Routes = [
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       { path: 'login', loadChildren: () => import('./login/login.module').then(m => m.LoginModule) },
-      { path: 'dashboard', loadChildren: () => import('./dashboard/dashboard.module').then(m => m.DashboardModule) },
-      { path: 'class-management', loadChildren: () => import('./class-management/class-management.module').then(m => m.ClassManagementModule) },
+      { path: 'dashboard', loadChildren: () => import('./dashboard/dashboard.module').then(m => m.DashboardModule), canActivate: [AuthGuard] },
+      { path: 'class-management', loadChildren: () => import('./class-management/class-management.module').then(m => m.ClassManagementModule), canActivate: [AuthGuard] },
     ]
   },
 ];

@@ -5,7 +5,17 @@ export enum RoleUser {
   ClassAdmin,
   FARec,
   Trainer,
-  SystemAdmin
+  SystemAdmin,
+  Trainee
+}
+
+export const RoleUserString = {
+  FAManager: 'FA Manager',
+  DeliveryManager: 'DeliveryManager',
+  ClassAdmin: 'ClassAdmin',
+  FARec: 'FARec',
+  Trainer: 'Trainer',
+  SystemAdmin: 'SystemAdmin'
 }
 
 export const ListRoleuser = [
@@ -15,4 +25,9 @@ export const ListRoleuser = [
   RoleUser.FARec,
   RoleUser.Trainer,
   RoleUser.SystemAdmin,
+  RoleUser.Trainee
 ]
+
+export const Loclastorage = {
+  UserLogin: 'user.login'
+}

@@ -7,11 +7,11 @@
     <h4>{{title}}</h4>
   </div>
   <div class="right-sys">
-    <span>Welcome,
+    <span *ngIf="isLogged">Welcome,
       <span class="infor">
         <span class="link-text">{{name}}</span> ({{buzUnit}})
       </span>
     </span>
-    <span class="link-text">Logout</span>
+    <span *ngIf="isLogged" class="link-text" (click)="onLogout()">Logout</span>
   </div>
 </div>

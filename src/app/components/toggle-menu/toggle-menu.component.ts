@@ -13,11 +13,30 @@ export class ToggleMenuComponent implements OnInit {
   MenuEnum = MenuEnum;
   selectedItem: MenuEnum = MenuEnum.Dashboard;
   dataSourceRoles: SelectedItem[] = []
+  isLogged!: boolean;
+
   private readonly userRoles: RoleUser[] = ListRoleuser
 
   constructor(private commonSer: CommonService) { }
 
   ngOnInit(): void {
+    this.commonSer.loginSignal$.subscribe((isLogged: boolean) => {
+      if (isLogged) {
+        const userLogin = this.commonSer.getCurrentUser();
+        if (userLogin) {
+          this.isLogged = userLogin.isLogged
+        }
+      } else {
+        this.isLogged = false;
+      }
+    })
+
+    const userLogin = this.commonSer.getCurrentUser();
+    if (userLogin) {
+      this.isLogged = userLogin.isLogged
+    }
+
+
     this.dataSourceRoles = this.userRoles.map((role: RoleUser) => {
       return {
         id: role.toString(),

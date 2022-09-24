@@ -1,14 +1,14 @@
 <div class="menu-sys">
-  <div class="icon-toggle">
+  <div *ngIf="isLogged" class="icon-toggle">
     <mat-icon>arrow_back</mat-icon>
   </div>
 
-  <div class="role">
+  <div *ngIf="isLogged" class="role">
     <span style="margin-bottom: 5px">Your role now is:</span>
     <app-selected-item [dataSource]="dataSourceRoles" [value]="dataSourceRoles[1]"></app-selected-item>
   </div>
 
-  <div class="content-menu">
+  <div *ngIf="isLogged" class="content-menu">
     <span class="each-item">
       <mat-icon>fiber_manual_record</mat-icon>
       <span class="link-action" [ngClass]="{isSelected: selectedItem === MenuEnum.Dashboard}">

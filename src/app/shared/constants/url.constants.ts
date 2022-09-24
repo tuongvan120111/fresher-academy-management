@@ -1,3 +1,3 @@
 export class UrlConstant {
-  public static CLASS_MANAGEMENT: '/class-managements'
+  public static readonly CLASS_MANAGEMENT = '/class-managements'
 }
