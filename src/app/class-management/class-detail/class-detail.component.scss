@@ -1,14 +1,3 @@
-.btn-container {
-  margin-right: 15px;
-
-  flex-wrap: wrap;
-  display: grid;
-  grid-template-columns: repeat(5, auto);
-
-  grid-gap: 10px;
-  width: 70%;
-}
-
 table {
   width: 100%;
 }
@@ -105,6 +94,9 @@ form > button {
 }
 
 :host ::ng-deep {
+  input:read-only {
+    cursor: default;
+  }
   .mat-form-field-flex > .mat-form-field-infix {
     padding: 0 0 8px 0;
   }
@@ -126,4 +118,20 @@ form > button {
   .mat-form-field-appearance-outline.mat-focused .mat-form-field-outline-thick {
     color: transparent;
   }
+}
+
+input[type="file"] {
+  border: none;
+  height: 100%;
+  width: 100%;
+}
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
 }

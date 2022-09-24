@@ -1,21 +1,14 @@
-import { UploadFileService } from './../../shared/services/upload-file.service';
+import { Router } from '@angular/router';
+import { UploadFileService } from '../../shared/services/upload-file.service';
 import {
   LocationModel,
   ClassModel,
 } from '../../shared/models/class-management.model';
-import { ClassManagementService } from './../../shared/services/class-management.service';
+import { ClassManagementService } from '../../shared/services/class-management.service';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
-import {
-  Component,
-  EventEmitter,
-  Inject,
-  Input,
-  OnInit,
-  Output,
-  ViewChild,
-} from '@angular/core';
+import { Component, Inject, Input, OnInit, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs';
-import { MatTable } from '@angular/material/table';
+import { MatTable, MatTableDataSource } from '@angular/material/table';
 import {
   AuditDisplayedColumns,
   BudgetCodeList,
@@ -28,27 +21,34 @@ import {
   SubSubjectTypeList,
 } from 'src/app/shared/constants/class-management.contants';
 import {
+  FormArray,
   FormBuilder,
   FormControl,
   FormGroup,
+  FormGroupDirective,
+  NgForm,
   Validators,
 } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
+import { ErrorStateMatcher } from '@angular/material/core';
 
 @Component({
-  selector: 'app-class-information',
-  templateUrl: './class-information.component.html',
-  styleUrls: ['./class-information.component.scss'],
+  selector: 'app-class-detail',
+  templateUrl: './class-detail.component.html',
+  styleUrls: ['./class-detail.component.scss'],
 })
-export class ClassInformationComponent implements OnInit {
-  @Input() isUpdateClass: boolean = false;
+export class NewClassComponent implements OnInit {
   @Input() classManagementData!: ClassModel;
-  @Output() toggleClose = new EventEmitter();
 
   @ViewChild('budgetTable')
   budgetTable!: MatTable<any>;
 
   @ViewChild('auditTable')
   auditTable!: MatTable<any>;
+
+  isLoading: boolean = true;
+
+  matcher = new MyErrorStateMatcher();
 
   budgetDisplayedColumns: string[] = BudgetDisplayedColumns;
   auditDisplayedColumns: string[] = AuditDisplayedColumns;
@@ -71,53 +71,68 @@ export class ClassInformationComponent implements OnInit {
   locationList!: Observable<LocationModel[]>;
   classAdmin = new FormControl('');
 
+  budgetDataSource!: MatTableDataSource<any>;
+  auditDataSource!: MatTableDataSource<any>;
+
   constructor(
-    @Inject(FormBuilder) formBuilder: FormBuilder,
+    @Inject(FormBuilder) private formBuilder: FormBuilder,
     private firestore: AngularFirestore,
     private classManagementService: ClassManagementService,
-    private uploadFileService: UploadFileService
+    private uploadFileService: UploadFileService,
+    private router: Router,
+    private activatedRoute: ActivatedRoute
   ) {
     this.initData(formBuilder);
   }
 
   ngOnInit(): void {
-    this.addFieldBudgetData();
-    this.addFieldAuditData();
+    this.budgetDataSource = new MatTableDataSource(this.budgets.controls);
+    this.auditDataSource = new MatTableDataSource(this.audits.controls);
 
-    if (this.isUpdateClass) {
-      let classData = this.classManagementData;
-      classData.general.expectedEndDate = new Date(
-        classData.general.expectedEndDate
-      );
-      classData.general.expectedStartDate = new Date(
-        classData.general.expectedStartDate
-      );
-      classData.detail.actualEndDate = new Date(classData.detail.actualEndDate);
-      classData.detail.actualStartDate = new Date(
-        classData.detail.actualStartDate
-      );
+    this.activatedRoute.params.subscribe((params) => {
+      this.isLoading = true;
+      if (!params['id']) {
+        this.isLoading = false;
+        return;
+      }
+      this.classManagementService.getClassByID(params['id'] || '').subscribe({
+        next: (data) => {
+          data.general.expectedEndDate = new Date(data.general.expectedEndDate);
+          data.general.expectedStartDate = new Date(
+            data.general.expectedStartDate
+          );
+          data.detail.actualEndDate = new Date(data.detail.actualEndDate);
+          data.detail.actualStartDate = new Date(data.detail.actualStartDate);
 
-      this.addClassFrom.patchValue(this.classManagementData);
-    }
+          this.classManagementData = data;
+
+          this.isLoading = false;
+          this.addClassFrom.patchValue(data);
+        },
+        error: (err) => {
+          this.isLoading = false;
+        },
+      });
+    });
   }
 
   addFieldBudgetData(): void {
-    this.budgetData.push({});
+    this.budgets?.push(this.initBudget());
     this.budgetTable?.renderRows();
   }
 
   removeFieldBudgetData(index: number): void {
-    this.budgetData.splice(index, 1);
+    this.budgets?.removeAt(index);
     this.budgetTable?.renderRows();
   }
 
   addFieldAuditData(): void {
-    this.auditData.push({});
+    this.audits?.push(this.initAudit());
     this.auditTable?.renderRows();
   }
 
   removeFieldAuditData(index: number): void {
-    this.auditData.splice(index, 1);
+    this.audits?.removeAt(index);
     this.auditTable?.renderRows();
   }
 
@@ -135,7 +150,7 @@ export class ClassInformationComponent implements OnInit {
   }
 
   onSubmit(values: any) {
-    console.log('this.addClassFrom.value');
+    console.log(values);
     // const aaaaaa: ClassModel = {
     //   general: {
     //     classCode: 'Site_FR_Skill_12_12',
@@ -187,9 +202,14 @@ export class ClassInformationComponent implements OnInit {
     // this.firestore.collection('classManagement').add(aaaaaa);
   }
 
-  onClickToggleClose = () => {
-    this.toggleClose.emit();
-  };
+  get budgets() {
+    return this.addClassFrom.controls['budget'] as FormArray;
+  }
+
+  get audits() {
+    return this.addClassFrom.controls['audit'] as FormArray;
+  }
+  selectedObjectsFromArray: any = [0, 2, 3];
 
   private initData = (formBuilder: FormBuilder) => {
     this.addClassFrom = formBuilder.group({
@@ -225,7 +245,48 @@ export class ClassInformationComponent implements OnInit {
         curriculumn: [''],
         remarks: [0],
       }),
+
+      budget: formBuilder.array([this.initBudget()]),
+      audit: formBuilder.array([this.initAudit()]),
     });
     this.locationList = this.classManagementService.getListLocations();
   };
+
+  private initBudget() {
+    return this.formBuilder.group({
+      item: [''],
+      unit: [''],
+      unitExpense: [''],
+
+      quantity: [''],
+      amount: [''],
+      tax: [''],
+
+      sum: [''],
+      note: [''],
+    });
+  }
+
+  private initAudit() {
+    return this.formBuilder.group({
+      date: [new Date()],
+      eventCategory: [''],
+      relatedPeople: [''],
+
+      action: [0],
+      pic: [0],
+      deadline: [new Date()],
+
+      note: [''],
+    });
+  }
+}
+export class MyErrorStateMatcher implements ErrorStateMatcher {
+  isErrorState(
+    control: FormControl | null,
+    form: FormGroupDirective | NgForm | null
+  ): boolean {
+    const isSubmitted = form && form.submitted;
+    return isSubmitted ? !!control?.errors : false;
+  }
 }

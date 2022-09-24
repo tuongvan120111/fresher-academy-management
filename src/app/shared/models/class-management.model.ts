@@ -57,7 +57,7 @@ interface ClassDetail {
   remarks: string;
 }
 
-interface ClassBudget {
+export interface ClassBudget {
   total: number;
   overBudget: number;
 
@@ -73,14 +73,14 @@ interface ClassBudget {
   note: string;
 }
 
-interface ClassAudit {
+export interface ClassAudit {
   date: Date | number;
   eventCategory: string;
   relatedPeople: string;
 
   action: number;
   pic: number;
-  dealine: Date | number;
+  deadline: Date | number;
 
   note: string;
 }

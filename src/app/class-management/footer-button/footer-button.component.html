@@ -1,0 +1,155 @@
+<ng-container
+  [ngTemplateOutlet]="buttonAdd"
+  *ngIf="routerURI.includes('/new-class')"
+>
+</ng-container>
+<ng-container
+  [ngTemplateOutlet]="buttonUpdate"
+  *ngIf="!routerURI.includes('/new-class')"
+>
+</ng-container>
+
+<ng-template #buttonAdd>
+  <div class="btn-container">
+    <button mat-stroked-button type="submit" mat-raised-button color="primary">
+      Submit
+    </button>
+    <button mat-stroked-button type="button" routerLink="/class-management">
+      <mat-icon
+        aria-hidden="false"
+        aria-label="Search icon"
+        fontIcon="reply_icon"
+        [ngStyle]="{ color: 'red' }"
+      >
+      </mat-icon>
+      Close
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #buttonUpdate>
+  <div class="btn-container">
+    <button mat-stroked-button type="submit">
+      <mat-icon
+        aria-hidden="false"
+        aria-label="Search icon"
+        fontIcon="arrow_circle_up"
+        [ngStyle]="{ color: 'green' }"
+      >
+      </mat-icon>
+      Update Class
+    </button>
+    <button mat-stroked-button>
+      <mat-icon
+        aria-hidden="false"
+        aria-label="Search icon"
+        fontIcon="turn_left"
+        [ngStyle]="{ color: 'blue', transform: 'rotate(90deg)' }"
+      >
+      </mat-icon>
+      Submit Class
+    </button>
+    <button mat-stroked-button>
+      <mat-icon
+        aria-hidden="false"
+        aria-label="Search icon"
+        fontIcon="play_arrow"
+        [ngStyle]="{ color: 'blue' }"
+      >
+      </mat-icon>
+      Start Class
+    </button>
+    <button mat-stroked-button>
+      <mat-icon
+        aria-hidden="false"
+        aria-label="Search icon"
+        fontIcon="indeterminate_check_box"
+        [ngStyle]="{ color: 'blue' }"
+      >
+      </mat-icon>
+      Finish Class
+    </button>
+    <button mat-stroked-button type="button" routerLink="/class-management">
+      <mat-icon
+        aria-hidden="false"
+        aria-label="Search icon"
+        fontIcon="reply"
+        [ngStyle]="{ color: 'red' }"
+      >
+      </mat-icon>
+      Close
+    </button>
+
+    <button mat-stroked-button>
+      <mat-icon
+        aria-hidden="false"
+        aria-label="Search icon"
+        fontIcon="do_disturb"
+        [ngStyle]="{ color: 'red' }"
+      >
+      </mat-icon>
+      Cancle Class
+    </button>
+    <button mat-stroked-button>
+      <mat-icon
+        aria-hidden="false"
+        aria-label="Search icon"
+        fontIcon="thumb_up"
+        [ngStyle]="{ color: 'red' }"
+      >
+      </mat-icon>
+      Approve Class
+    </button>
+    <button mat-stroked-button>
+      <mat-icon
+        aria-hidden="false"
+        aria-label="Search icon"
+        fontIcon="thumb_down_alt"
+        [ngStyle]="{ color: 'red' }"
+      >
+      </mat-icon>
+      Reject Class
+    </button>
+    <button mat-stroked-button>
+      <mat-icon
+        aria-hidden="false"
+        aria-label="Search icon"
+        fontIcon="remove_circle"
+        [ngStyle]="{ color: 'red' }"
+      >
+      </mat-icon>
+      Close Class
+    </button>
+    <button mat-stroked-button>
+      <mat-icon
+        aria-hidden="false"
+        aria-label="Search icon"
+        fontIcon="question_mark"
+        [ngStyle]="{ color: 'red' }"
+      >
+      </mat-icon>
+      Request Info
+    </button>
+
+    <button mat-stroked-button>
+      <mat-icon
+        aria-hidden="false"
+        aria-label="Search icon"
+        fontIcon="thumb_up_off_alt"
+        [ngStyle]="{ color: 'red' }"
+      >
+      </mat-icon>
+      Accept Class
+    </button>
+    <button mat-stroked-button>
+      <mat-icon
+        aria-hidden="false"
+        aria-label="Search icon"
+        fontIcon="thumb_down_off_alt"
+        [ngStyle]="{ color: 'red' }"
+      >
+      </mat-icon>
+      Decline Class
+    </button>
+  </div>
+</ng-template>

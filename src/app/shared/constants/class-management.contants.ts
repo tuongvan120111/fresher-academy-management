@@ -209,23 +209,23 @@ export const ClassAdminList = [
     name: 'Extra cheese',
   },
   {
-    id: 0,
+    id: 1,
     name: 'Mushroom',
   },
   {
-    id: 0,
+    id: 2,
     name: 'Onion',
   },
   {
-    id: 0,
+    id: 3,
     name: 'Pepperoni',
   },
   {
-    id: 0,
+    id: 4,
     name: 'Sausage',
   },
   {
-    id: 0,
+    id: 5,
     name: 'Tomato',
   },
 ];
@@ -262,7 +262,7 @@ export const BudgetDisplayedColumns: string[] = [
   'item',
   'unit',
   'unitExpense',
-  'quality',
+  'quantity',
   'amount',
   'tax',
   'sum',

@@ -1,0 +1,682 @@
+<h3>Create Class</h3>
+
+<mat-tab-group mat-align-tabs="start">
+  <mat-tab label="Information">
+    <form
+      [formGroup]="addClassFrom"
+      (ngSubmit)="onSubmit(addClassFrom.value)"
+      style="margin: 10px"
+    >
+      <mat-progress-bar
+        mode="indeterminate"
+        [hidden]="!isLoading"
+      ></mat-progress-bar>
+      <div style="margin-bottom: 10px">
+        <!-- TODO: Form General -->
+        <mat-error *ngIf="">Due Date is required for Tasks</mat-error>
+        <fieldset formGroupName="general">
+          <div class="flex-container header">
+            <mat-icon
+              aria-hidden="false"
+              aria-label="Search icon"
+              fontIcon="arrow_drop_down"
+            ></mat-icon>
+            <p>General</p>
+          </div>
+          <div class="flex-container">
+            <p>Class Code</p>
+            <mat-form-field appearance="outline" [hideRequiredMarker]="true">
+              <mat-label></mat-label>
+              <input
+                matInput
+                placeholder=""
+                value=""
+                readonly
+                formControlName="classCode"
+              />
+            </mat-form-field>
+
+            <p>Class Name</p>
+            <mat-form-field appearance="outline" [hideRequiredMarker]="true">
+              <mat-label></mat-label>
+              <input
+                matInput
+                placeholder=""
+                value=""
+                readonly
+                formControlName="className"
+              />
+            </mat-form-field>
+
+            <p>Status</p>
+            <mat-form-field appearance="outline" [hideRequiredMarker]="true">
+              <mat-label></mat-label>
+              <input
+                matInput
+                placeholder=""
+                value=""
+                readonly
+                formControlName="status"
+              />
+            </mat-form-field>
+          </div>
+          <div class="flex-container">
+            <p>Planned Trainee No</p>
+            <mat-form-field appearance="outline" [hideRequiredMarker]="true">
+              <mat-label></mat-label>
+              <input
+                matInput
+                placeholder=""
+                value=""
+                formControlName="plannedTraineeNo"
+                type="number"
+                min="1"
+              />
+            </mat-form-field>
+
+            <p>Accepted Trainee No</p>
+            <mat-form-field appearance="outline" [hideRequiredMarker]="true">
+              <mat-label></mat-label>
+              <input
+                matInput
+                placeholder=""
+                value=""
+                readonly
+                formControlName="acceptedTraineeNo"
+              />
+            </mat-form-field>
+
+            <p>Actual Trainee No</p>
+            <mat-form-field appearance="outline" [hideRequiredMarker]="true">
+              <mat-label></mat-label>
+              <input
+                matInput
+                placeholder=""
+                value=""
+                readonly
+                formControlName="actualTraineeNo"
+              />
+            </mat-form-field>
+          </div>
+          <div class="flex-container">
+            <p>Expected Start Date *</p>
+            <mat-form-field appearance="outline" [hideRequiredMarker]="true">
+              <mat-label></mat-label>
+              <input
+                matInput
+                [matDatepicker]="expectedStartDate"
+                formControlName="expectedStartDate"
+                [errorStateMatcher]="matcher"
+              />
+              <mat-datepicker-toggle
+                matSuffix
+                [for]="expectedStartDate"
+              ></mat-datepicker-toggle>
+              <mat-datepicker #expectedStartDate></mat-datepicker>
+            </mat-form-field>
+
+            <p>Expected End Date *</p>
+            <mat-form-field appearance="outline" [hideRequiredMarker]="true">
+              <mat-label></mat-label>
+              <input
+                matInput
+                [matDatepicker]="expectedEndDate"
+                formControlName="expectedEndDate"
+                [errorStateMatcher]="matcher"
+              />
+              <mat-datepicker-toggle
+                matSuffix
+                [for]="expectedEndDate"
+              ></mat-datepicker-toggle>
+              <mat-datepicker #expectedEndDate></mat-datepicker>
+            </mat-form-field>
+          </div>
+          <div class="flex-container">
+            <p>Location *</p>
+            <mat-form-field appearance="outline" [hideRequiredMarker]="true">
+              <mat-label></mat-label>
+              <mat-select
+                matNativeControl
+                formControlName="locationID"
+                [errorStateMatcher]="matcher"
+              >
+                <mat-option
+                  *ngFor="let data of locationList | async"
+                  [value]="data.id"
+                >
+                  {{ data.name }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <p>Detailed Location</p>
+            <mat-form-field appearance="outline" [hideRequiredMarker]="true">
+              <mat-label></mat-label>
+              <input
+                matInput
+                placeholder=""
+                value=""
+                formControlName="detailedLocation"
+              />
+            </mat-form-field>
+          </div>
+          <div class="flex-container">
+            <p>Bubget Code *</p>
+            <mat-form-field appearance="outline" [hideRequiredMarker]="true">
+              <mat-label></mat-label>
+              <mat-select
+                matNativeControl
+                formControlName="budgetCode"
+                [errorStateMatcher]="matcher"
+              >
+                <mat-option
+                  *ngFor="let data of budgetCodeList"
+                  [value]="data.id"
+                >
+                  {{ data.name }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <p>Estimated Bubget *</p>
+            <mat-form-field appearance="outline" [hideRequiredMarker]="true">
+              <mat-label></mat-label>
+              <input
+                matInput
+                placeholder=""
+                value=""
+                formControlName="estimatedBudget"
+                [errorStateMatcher]="matcher"
+              />
+            </mat-form-field>
+          </div>
+          <div class="flex-container">
+            <p>Class Admin *</p>
+            <mat-form-field appearance="outline" [hideRequiredMarker]="true">
+              <mat-label></mat-label>
+              <mat-select
+                [formControl]="classAdmin"
+                multiple
+                [errorStateMatcher]="matcher"
+                [(ngModel)]="selectedObjectsFromArray"
+              >
+                <mat-select-trigger>
+                  {{classAdmin.value?.[0]+', '+classAdmin.value?.[1] || ''}}
+                  <span *ngIf="(classAdmin.value?.length || 0) > 2">
+                    (+{{ (classAdmin.value?.length || 0) - 2 }}
+                    {{ classAdmin.value?.length === 3 ? "other" : "others" }})
+                  </span>
+                </mat-select-trigger>
+                <mat-option
+                  *ngFor="let data of classAdminList"
+                  [value]="data.name"
+                  >{{ data.name }}</mat-option
+                >
+              </mat-select>
+            </mat-form-field>
+
+            <p>Learning Path *</p>
+            <div>
+              <input
+                id="learningPath"
+                type="file"
+                class="form-control"
+                (change)="onFileLearningPathChange($event)"
+                required
+                accept=".xlx,.xlsx"
+              />
+            </div>
+          </div>
+          <div class="flex-container">
+            <p style="width: 20%">History</p>
+            <mat-form-field appearance="outline" [hideRequiredMarker]="true">
+              <mat-label></mat-label>
+              <input
+                matInput
+                placeholder=""
+                value=""
+                readonly
+                formControlName="history"
+              />
+            </mat-form-field>
+          </div>
+        </fieldset>
+
+        <!-- TODO: Form Detail -->
+        <fieldset formGroupName="detail">
+          <div class="flex-container header">
+            <mat-icon
+              aria-hidden="false"
+              aria-label="Search icon"
+              fontIcon="arrow_drop_down"
+            ></mat-icon>
+            <p>Detail</p>
+          </div>
+
+          <div class="flex-container">
+            <p>Subject Type</p>
+            <mat-form-field appearance="outline" [hideRequiredMarker]="true">
+              <mat-label></mat-label>
+              <mat-select matNativeControl formControlName="subjectType">
+                <mat-option
+                  *ngFor="let data of subjectTypeList"
+                  [value]="data.id"
+                >
+                  {{ data.name }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <p>Sub-Subject Type</p>
+            <mat-form-field appearance="outline" [hideRequiredMarker]="true">
+              <mat-label></mat-label>
+              <mat-select matNativeControl formControlName="subSubjectType">
+                <mat-option
+                  *ngFor="let data of subSubjectTypeList"
+                  [value]="data.id"
+                >
+                  {{ data.name }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <p>Delivery Type</p>
+            <mat-form-field appearance="outline" [hideRequiredMarker]="true">
+              <mat-label></mat-label>
+              <mat-select matNativeControl formControlName="deliveryType">
+                <mat-option
+                  *ngFor="let data of deliveryTypeList"
+                  [value]="data.id"
+                >
+                  {{ data.name }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <div class="flex-container">
+            <p>Format Type</p>
+            <mat-form-field appearance="outline" [hideRequiredMarker]="true">
+              <mat-label></mat-label>
+              <mat-select matNativeControl formControlName="formatType">
+                <mat-option
+                  *ngFor="let data of formatTypeList"
+                  [value]="data.id"
+                >
+                  {{ data.name }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <p>Scope</p>
+            <mat-form-field appearance="outline" [hideRequiredMarker]="true">
+              <mat-label></mat-label>
+              <mat-select matNativeControl formControlName="scope">
+                <mat-option *ngFor="let data of scopeList" [value]="data.id">
+                  {{ data.name }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <p>Supplier / Partner</p>
+            <mat-form-field appearance="outline" [hideRequiredMarker]="true">
+              <mat-label></mat-label>
+              <input
+                matInput
+                placeholder=""
+                value=""
+                formControlName="supplier"
+              />
+            </mat-form-field>
+          </div>
+          <div class="flex-container">
+            <p>Actual Start Date</p>
+            <mat-form-field appearance="outline" [hideRequiredMarker]="true">
+              <mat-label></mat-label>
+              <input
+                matInput
+                [matDatepicker]="actualStartDate"
+                formControlName="actualStartDate"
+                readonly
+              />
+              <mat-datepicker-toggle
+                matSuffix
+                [for]="actualStartDate"
+                disabled
+              ></mat-datepicker-toggle>
+              <mat-datepicker #actualStartDate></mat-datepicker>
+            </mat-form-field>
+
+            <p>Actual End Date</p>
+            <mat-form-field appearance="outline" [hideRequiredMarker]="true">
+              <mat-label></mat-label>
+              <input
+                matInput
+                [matDatepicker]="actualEndDate"
+                formControlName="actualEndDate"
+                readonly
+              />
+              <mat-datepicker-toggle
+                matSuffix
+                [for]="actualEndDate"
+                disabled
+              ></mat-datepicker-toggle>
+              <mat-datepicker #actualEndDate></mat-datepicker>
+            </mat-form-field>
+          </div>
+          <div class="flex-container">
+            <p>Master Trainer</p>
+            <mat-form-field appearance="outline" [hideRequiredMarker]="true">
+              <mat-label></mat-label>
+              <mat-select matNativeControl formControlName="masterTrainer">
+                <mat-option *ngFor="let data of scopeList" [value]="data.id">
+                  {{ data.name }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <p>Trainer</p>
+            <mat-form-field appearance="outline" [hideRequiredMarker]="true">
+              <mat-label></mat-label>
+              <input
+                matInput
+                placeholder=""
+                value=""
+                formControlName="trainer"
+              />
+            </mat-form-field>
+          </div>
+          <div class="flex-container">
+            <p>Curriculumn</p>
+            <div>
+              <input
+                id="curriculumn"
+                type="file"
+                class="form-control"
+                (change)="onFileCurriculumnChange($event)"
+                required
+                accept=".xlx,.xlsx"
+              />
+            </div>
+
+            <p>Remarks</p>
+            <mat-form-field appearance="outline" [hideRequiredMarker]="true">
+              <mat-label></mat-label>
+              <input
+                matInput
+                placeholder=""
+                value=""
+                formControlName="remarks"
+              />
+            </mat-form-field>
+          </div>
+        </fieldset>
+
+        <!-- TODO: Form Detail -->
+
+        <ng-container *ngTemplateOutlet="budget"> </ng-container>
+        <ng-container *ngTemplateOutlet="audit"> </ng-container>
+      </div>
+      <app-footer-button></app-footer-button>
+    </form>
+  </mat-tab>
+  <mat-tab label="Trainee"></mat-tab>
+</mat-tab-group>
+
+<ng-template #budget>
+  <form [formGroup]="addClassFrom">
+    <div class="flex-container header">
+      <mat-icon
+        aria-hidden="false"
+        aria-label="Search icon"
+        fontIcon="arrow_drop_down"
+      ></mat-icon>
+      <p>Budget</p>
+    </div>
+    <div class="flex-container">
+      <p>Total</p>
+      <mat-form-field appearance="outline" [hideRequiredMarker]="true">
+        <mat-label></mat-label>
+        <input matInput placeholder="" value="" readonly />
+      </mat-form-field>
+      <p>Over Budget</p>
+      <mat-form-field appearance="outline" [hideRequiredMarker]="true">
+        <mat-label></mat-label>
+        <input matInput placeholder="" value="" readonly />
+      </mat-form-field>
+    </div>
+
+    <table #budgetTable mat-table [dataSource]="budgetDataSource">
+      <!-- Checkbox Column -->
+      <ng-container matColumnDef="add">
+        <th mat-header-cell *matHeaderCellDef>
+          <button mat-button (click)="addFieldBudgetData()">
+            <mat-icon
+              aria-hidden="false"
+              aria-label="Search icon"
+              fontIcon="add_circle"
+              [ngStyle]="{ color: 'green' }"
+            >
+            </mat-icon>
+          </button>
+        </th>
+        <td mat-cell *matCellDef="let element; let i = index">
+          <button mat-button (click)="removeFieldBudgetData(i)">
+            <mat-icon
+              aria-hidden="false"
+              aria-label="Search icon"
+              fontIcon="delete"
+              [ngStyle]="{ color: 'red' }"
+            >
+            </mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="item">
+        <th mat-header-cell *matHeaderCellDef>Item</th>
+        <td mat-cell *matCellDef="let element" [formGroup]="element">
+          <mat-form-field appearance="outline" [hideRequiredMarker]="true">
+            <mat-label></mat-label>
+            <input matInput placeholder="" formControlName="item" />
+          </mat-form-field>
+        </td>
+      </ng-container>
+
+      <!-- Name Column -->
+      <ng-container matColumnDef="unit">
+        <th mat-header-cell *matHeaderCellDef>Unit</th>
+        <td mat-cell *matCellDef="let element" [formGroup]="element">
+          <mat-form-field appearance="outline" [hideRequiredMarker]="true">
+            <mat-label></mat-label>
+            <input matInput placeholder="" formControlName="unit" />
+          </mat-form-field>
+        </td>
+      </ng-container>
+
+      <!-- Weight Column -->
+      <ng-container matColumnDef="unitExpense">
+        <th mat-header-cell *matHeaderCellDef>Unit Expense</th>
+        <td mat-cell *matCellDef="let element" [formGroup]="element">
+          <mat-form-field appearance="outline" [hideRequiredMarker]="true">
+            <mat-label></mat-label>
+            <input matInput placeholder="" formControlName="unitExpense" />
+          </mat-form-field>
+        </td>
+      </ng-container>
+
+      <!-- Symbol Column -->
+      <ng-container matColumnDef="quantity">
+        <th mat-header-cell *matHeaderCellDef>Quantity</th>
+        <td mat-cell *matCellDef="let element" [formGroup]="element">
+          <mat-form-field appearance="outline" [hideRequiredMarker]="true">
+            <mat-label></mat-label>
+            <input matInput placeholder="" formControlName="quantity" />
+          </mat-form-field>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="amount">
+        <th mat-header-cell *matHeaderCellDef>Amount</th>
+        <td mat-cell *matCellDef="let element" [formGroup]="element">
+          <mat-form-field appearance="outline" [hideRequiredMarker]="true">
+            <mat-label></mat-label>
+            <input matInput placeholder="" formControlName="amount" />
+          </mat-form-field>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="tax">
+        <th mat-header-cell *matHeaderCellDef>Tax</th>
+        <td mat-cell *matCellDef="let element" [formGroup]="element">
+          <mat-form-field appearance="outline" [hideRequiredMarker]="true">
+            <mat-label></mat-label>
+            <input matInput placeholder="" formControlName="tax" />
+          </mat-form-field>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="sum">
+        <th mat-header-cell *matHeaderCellDef>Sum</th>
+        <td mat-cell *matCellDef="let element" [formGroup]="element">
+          <mat-form-field appearance="outline" [hideRequiredMarker]="true">
+            <mat-label></mat-label>
+            <input matInput placeholder="" formControlName="sum" />
+          </mat-form-field>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="note">
+        <th mat-header-cell *matHeaderCellDef>Note</th>
+        <td mat-cell *matCellDef="let element" [formGroup]="element">
+          <mat-form-field appearance="outline" [hideRequiredMarker]="true">
+            <mat-label></mat-label>
+            <input matInput placeholder="" formControlName="note" />
+          </mat-form-field>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="budgetDisplayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: budgetDisplayedColumns"></tr>
+    </table>
+  </form>
+</ng-template>
+
+<ng-template #audit>
+  <form [formGroup]="addClassFrom">
+    <div class="flex-container header">
+      <mat-icon
+        aria-hidden="false"
+        aria-label="Search icon"
+        fontIcon="arrow_drop_down"
+      ></mat-icon>
+      <p>Audit</p>
+    </div>
+
+    <table #auditTable mat-table [dataSource]="auditDataSource">
+      <!-- Checkbox Column -->
+      <ng-container matColumnDef="add">
+        <th mat-header-cell *matHeaderCellDef>
+          <button mat-button (click)="addFieldAuditData()">
+            <mat-icon
+              aria-hidden="false"
+              aria-label="Search icon"
+              fontIcon="add_circle"
+              [ngStyle]="{ color: 'green' }"
+            >
+            </mat-icon>
+          </button>
+        </th>
+        <td mat-cell *matCellDef="let element; let i = index">
+          <button mat-button (click)="removeFieldAuditData(i)">
+            <mat-icon
+              aria-hidden="false"
+              aria-label="Search icon"
+              fontIcon="delete"
+              [ngStyle]="{ color: 'red' }"
+            >
+            </mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="date">
+        <th mat-header-cell *matHeaderCellDef>Date</th>
+        <td mat-cell *matCellDef="let element" [formGroup]="element">
+          <mat-form-field appearance="outline" [hideRequiredMarker]="true">
+            <mat-label></mat-label>
+            <input matInput placeholder="" formControlName="date" />
+          </mat-form-field>
+        </td>
+      </ng-container>
+
+      <!-- Name Column -->
+      <ng-container matColumnDef="eventCategory">
+        <th mat-header-cell *matHeaderCellDef>Event Category</th>
+        <td mat-cell *matCellDef="let element" [formGroup]="element">
+          <mat-form-field appearance="outline" [hideRequiredMarker]="true">
+            <mat-label></mat-label>
+            <input matInput placeholder="" formControlName="eventCategory" />
+          </mat-form-field>
+        </td>
+      </ng-container>
+
+      <!-- Weight Column -->
+      <ng-container matColumnDef="relatedPeople">
+        <th mat-header-cell *matHeaderCellDef>Related People</th>
+        <td mat-cell *matCellDef="let element" [formGroup]="element">
+          <mat-form-field appearance="outline" [hideRequiredMarker]="true">
+            <mat-label></mat-label>
+            <input matInput placeholder="" formControlName="relatedPeople" />
+          </mat-form-field>
+        </td>
+      </ng-container>
+
+      <!-- Symbol Column -->
+      <ng-container matColumnDef="action">
+        <th mat-header-cell *matHeaderCellDef>Action</th>
+        <td mat-cell *matCellDef="let element" [formGroup]="element">
+          <mat-form-field appearance="outline" [hideRequiredMarker]="true">
+            <mat-label></mat-label>
+            <input matInput placeholder="" formControlName="action" />
+          </mat-form-field>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="pic">
+        <th mat-header-cell *matHeaderCellDef>PIC</th>
+        <td mat-cell *matCellDef="let element" [formGroup]="element">
+          <mat-form-field appearance="outline" [hideRequiredMarker]="true">
+            <mat-label></mat-label>
+            <input matInput placeholder="" formControlName="pic" />
+          </mat-form-field>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="deadline">
+        <th mat-header-cell *matHeaderCellDef>Deadline</th>
+        <td mat-cell *matCellDef="let element" [formGroup]="element">
+          <mat-form-field appearance="outline" [hideRequiredMarker]="true">
+            <mat-label></mat-label>
+            <input matInput placeholder="" formControlName="deadline" />
+          </mat-form-field>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="note">
+        <th mat-header-cell *matHeaderCellDef>Note</th>
+        <td mat-cell *matCellDef="let element" [formGroup]="element">
+          <mat-form-field appearance="outline" [hideRequiredMarker]="true">
+            <mat-label></mat-label>
+            <input matInput placeholder="" formControlName="note" />
+          </mat-form-field>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="auditDisplayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: auditDisplayedColumns"></tr>
+    </table>
+  </form>
+</ng-template>
+
+<ng-template #audit> </ng-template>

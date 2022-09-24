@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import {
   AngularFirestore,
   AngularFirestoreCollection,
+  DocumentReference,
 } from '@angular/fire/compat/firestore';
 import { map, Observable } from 'rxjs';
 import { ClassStatus } from '../constants/class-management.contants';
@@ -35,6 +36,10 @@ export class ClassManagementService {
 
   getLocationByID(id: string = ''): Observable<string> {
     return this.locationCol.doc(id).valueChanges();
+  }
+
+  getClassByID(id: string = ''): Observable<any> {
+    return this.classCol.doc(id).valueChanges();
   }
 
   getListClass(
@@ -76,5 +81,9 @@ export class ClassManagementService {
       },
     });
     console.log('cancleClass done');
+  }
+
+  addNewClass(data: ClassModel): Promise<DocumentReference<ClassModel>> {
+    return this.classCol.add(data);
   }
 }

@@ -1,3 +1,5 @@
+import { ClassManagementService } from '../../shared/services/class-management.service';
+
 import {
   AfterViewInit,
   Component,
@@ -10,19 +12,19 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatDialog } from '@angular/material/dialog';
-import { ClassManagementColumns, ClassStatus } from 'src/app/shared/constants/class-management.contants';
+import {
+  ClassManagementColumns,
+  ClassStatus,
+} from 'src/app/shared/constants/class-management.contants';
 import { ClassModel } from 'src/app/shared/models/class-management.model';
 import { DialogComponent } from 'src/app/components/dialog/dialog.component';
-import { ClassManagementService } from '../shared/services/class-management.service';
 
 @Component({
-  selector: 'app-class-management',
-  templateUrl: './class-management.component.html',
-  styleUrls: ['./class-management.component.scss'],
+  selector: 'app-class-table',
+  templateUrl: './class-table.component.html',
+  styleUrls: ['./class-table.component.scss'],
 })
-export class ClassManagementComponent
-  implements OnInit, AfterViewInit, OnChanges
-{
+export class ClassTableComponent implements OnInit, AfterViewInit, OnChanges {
   displayedColumns: string[] = ClassManagementColumns;
   classData = new MatTableDataSource<ClassModel>([]);
   selection = new SelectionModel<ClassModel>(true, []);
@@ -32,6 +34,8 @@ export class ClassManagementComponent
 
   status: SelectData[] = [{ value: 'all', viewValue: 'All' }];
   statusSelected = 'all';
+
+  isLoading: boolean = true;
 
   isAllSelected() {
     const numSelected = this.selection.selected.length;
@@ -71,6 +75,7 @@ export class ClassManagementComponent
 
   ngOnInit(): void {
     this.classManagementService.getListClass().subscribe((data: any) => {
+      this.isLoading = false;
       this.classData = new MatTableDataSource<ClassModel>(data);
     });
   }

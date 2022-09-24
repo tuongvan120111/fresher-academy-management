@@ -1,4 +1,4 @@
-@import '/src/variable.scss';
+@import "/src/variable.scss";
 
 .menu-sys {
   background-color: $grey;
@@ -47,6 +47,9 @@
       display: flex;
       word-spacing: 1px;
       margin-bottom: 5px;
+      border: none;
+      color: blue;
+      padding: 0;
 
       .feature {
         -webkit-touch-callout: none;
@@ -73,7 +76,5 @@
         }
       }
     }
-
-
   }
 }

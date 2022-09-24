@@ -1,3 +1,4 @@
+import { RouterModule } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ToggleMenuComponent } from './toggle-menu.component';
@@ -11,7 +12,8 @@ import { SelectedItemModule } from '../selected-item/selected-item.module';
   imports: [
     CommonModule,
     MatIconModule,
-    SelectedItemModule
+    SelectedItemModule,
+    RouterModule
   ],
   exports: [
     ToggleMenuComponent

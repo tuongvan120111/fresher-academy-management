@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ClassManagementComponent } from './class-management.component';
 import { RouterModule, Routes } from '@angular/router';
 import { MatTableModule } from '@angular/material/table';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -12,19 +11,29 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTabsModule } from '@angular/material/tabs';
-import { ClassInformationComponent } from './class-information/class-information.component';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { TraineeComponent } from './trainee/trainee.component';
 import { MatDialogModule } from '@angular/material/dialog';
-import { DialogModule } from '../components/dialog/dialog.module';
 
-const routes: Routes = [{ path: '', component: ClassManagementComponent }];
+import { DialogModule } from '../components/dialog/dialog.module';
+import { NewClassComponent } from './class-detail/class-detail.component';
+import { ClassManagementComponent } from './class-management.component';
+import { FooterButtonComponent } from './footer-button/footer-button.component';
+import { ClassTableComponent } from './class-table/class-table.component';
+
+const routes: Routes = [
+  { path: '', component: ClassTableComponent },
+  { path: 'new-class', component: NewClassComponent },
+  { path: ':id', component: NewClassComponent },
+  { path: '**', redirectTo: '/' },
+];
 
 @NgModule({
   declarations: [
     ClassManagementComponent,
-    ClassInformationComponent,
-    TraineeComponent,
+    NewClassComponent,
+    ClassTableComponent,
+    FooterButtonComponent,
   ],
   imports: [
     CommonModule,
@@ -42,6 +51,7 @@ const routes: Routes = [{ path: '', component: ClassManagementComponent }];
     ReactiveFormsModule,
     MatDialogModule,
     DialogModule,
+    MatProgressBarModule,
     RouterModule.forChild(routes),
   ],
 })
