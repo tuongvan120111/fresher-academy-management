@@ -7,7 +7,7 @@ import {
 import { ClassManagementService } from '../../shared/services/class-management.service';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { Component, Inject, Input, OnInit, ViewChild } from '@angular/core';
-import { Observable } from 'rxjs';
+import { from, Observable } from 'rxjs';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
 import {
   AuditDisplayedColumns,
@@ -31,6 +31,7 @@ import {
 } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ErrorStateMatcher } from '@angular/material/core';
+import { ValidationService } from 'src/app/shared/services/validation.service';
 
 @Component({
   selector: 'app-class-detail',
@@ -74,6 +75,11 @@ export class NewClassComponent implements OnInit {
   budgetDataSource!: MatTableDataSource<any>;
   auditDataSource!: MatTableDataSource<any>;
 
+  selectedObjectsFromArray: any;
+
+  generalErrorMessage: string = '';
+  detailErrorMessage: string = '';
+
   constructor(
     @Inject(FormBuilder) private formBuilder: FormBuilder,
     private firestore: AngularFirestore,
@@ -107,6 +113,10 @@ export class NewClassComponent implements OnInit {
           this.classManagementData = data;
 
           this.isLoading = false;
+
+          this.selectedObjectsFromArray =
+            this.classManagementData.general.classAdmin;
+
           this.addClassFrom.patchValue(data);
         },
         error: (err) => {
@@ -150,7 +160,50 @@ export class NewClassComponent implements OnInit {
   }
 
   onSubmit(values: any) {
-    console.log(values);
+    this.generalErrorMessage = '';
+    const generalKeys: {
+      [key: string]: string;
+    } = {
+      expectedStartDate: 'Expected Start Date',
+      expectedEndDate: 'Expected End Date',
+      locationID: 'Location',
+      budgetCode: 'Budget Code',
+      estimatedBudget: 'Estimated Budget',
+      // classAdmin: 'Class Admin',
+      // learningPath: 'Learning Path',
+    };
+    for (const [key, val] of Object.entries(generalKeys)) {
+      for (const [errorKey, _] of Object.entries(
+        this.generals.get(key)?.errors || {}
+      )) {
+        console.log(errorKey);
+        this.generalErrorMessage +=
+          val +
+          ' ' +
+          ValidationService.getValidatorErrorMessage(errorKey) +
+          ', ';
+        //  + '\n';
+      }
+    }
+
+    if (
+      !this.selectedObjectsFromArray ||
+      this.selectedObjectsFromArray.length === 0
+    ) {
+      this.generalErrorMessage +=
+        'Class Admin ' +
+        ValidationService.getValidatorErrorMessage('required') +
+        ', ';
+    }
+
+    if (!this.learningPathFiles) {
+      this.generalErrorMessage +=
+        'Learning Path ' +
+        ValidationService.getValidatorErrorMessage('required') +
+        ', ';
+    }
+    this.generalErrorMessage = this.generalErrorMessage.slice(0, -2);
+    // generalErrorMessage+=this.generals.get('budgetCode')?.errors
     // const aaaaaa: ClassModel = {
     //   general: {
     //     classCode: 'Site_FR_Skill_12_12',
@@ -202,6 +255,10 @@ export class NewClassComponent implements OnInit {
     // this.firestore.collection('classManagement').add(aaaaaa);
   }
 
+  get generals(): any {
+    return this.addClassFrom.controls['general'] as FormArray;
+  }
+
   get budgets() {
     return this.addClassFrom.controls['budget'] as FormArray;
   }
@@ -209,7 +266,6 @@ export class NewClassComponent implements OnInit {
   get audits() {
     return this.addClassFrom.controls['audit'] as FormArray;
   }
-  selectedObjectsFromArray: any = [0, 2, 3];
 
   private initData = (formBuilder: FormBuilder) => {
     this.addClassFrom = formBuilder.group({

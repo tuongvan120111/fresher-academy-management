@@ -80,12 +80,12 @@ h3 {
     width: 100%;
   }
 
-  .mat-form-field:has(input:read-only) {
+  .mat-form-field:has(input:not(.date-input):read-only) {
     background-color: lightgrey;
   }
 }
 
-form:not(:first-child) {
+fieldset:not(:first-child) {
   margin-top: 20px;
 }
 
