@@ -52,6 +52,7 @@
   .candidate > span,
   .application > span,
   .row-properties > span,
+  .row-properties > label,
   {
     padding: 5px 0px 5px 5px;
   }
@@ -92,6 +93,11 @@
   .input {
     border: none;
     outline: none;
+    padding: 0;
+  }
+
+  .error {
+    color: red;
   }
 }
 

@@ -3,6 +3,10 @@
 @import '/src/variable.scss';
 @import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
 
+body {
+  box-sizing: border-box;
+}
+
 .link-text {
   text-decoration: underline;
 
