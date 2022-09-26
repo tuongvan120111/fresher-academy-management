@@ -4,11 +4,6 @@
 .candidates-container .content {
   padding: 0 0 0 5px;
 }
-.candidates-container .title {
-  padding-bottom: 10px;
-  padding-left: 20px;
-  border-bottom: 1px solid black;
-}
 .candidates-container .form-group {
   margin-bottom: 20px;
 }
@@ -49,6 +44,10 @@
   text-align: center;
   border-left: 1px solid black;
   border-right: 1px solid black;
+}
+.candidates-container .table table .employee-id {
+  color: blue;
+  cursor: pointer;
 }
 .candidates-container .actions {
   display: flex;

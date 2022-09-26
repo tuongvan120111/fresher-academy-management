@@ -8,6 +8,7 @@ import {UpdateCandidateComponent} from './update-candidate/update-candidate.comp
 import {TableCandidateComponent} from './table-candidate/table-candidate.component';
 import {MatTabsModule} from '@angular/material/tabs';
 import { CandidateDetailComponent } from './update-candidate/candidate-detail/candidate-detail.component';
+import { CandidateService } from "./candidate.service";
 
 const routes: Routes = [
   {
@@ -28,6 +29,7 @@ const routes: Routes = [
 @NgModule({
   declarations: [CandidatesComponent, UpdateCandidateComponent, TableCandidateComponent, CandidateDetailComponent],
   imports: [CommonModule, RouterModule.forChild(routes), MatButtonModule, MatIconModule, MatTabsModule],
+  providers: [CandidateService]
 })
 export class CandidateManagementModule {
 }

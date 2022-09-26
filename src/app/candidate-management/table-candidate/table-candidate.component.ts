@@ -1,6 +1,9 @@
 import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { CANDIDATE_TAB_TYPE } from "../utils/candidate.const";
+import { CandidateService } from "../candidate.service";
+import { Observable } from "rxjs";
+import { ICandidate } from "../model/candidate.interface";
 
 @Component({
   selector: "app-table-candidate",
@@ -8,6 +11,7 @@ import { CANDIDATE_TAB_TYPE } from "../utils/candidate.const";
   styleUrls: ["./table-candidate.component.scss"],
 })
 export class TableCandidateComponent implements OnInit {
+  candidates$: Observable<ICandidate<Date, string>[]>;
   isSelectedAll: boolean = false;
   cols = ["#",
     "Empl ID",
@@ -21,7 +25,8 @@ export class TableCandidateComponent implements OnInit {
     "Email",
     "Status"];
 
-  constructor(private router: Router, private route: ActivatedRoute) {
+  constructor(private router: Router, private route: ActivatedRoute, private candidateService: CandidateService) {
+    this.candidates$ = this.candidateService.candidateStore$;
   }
 
   ngOnInit(): void {

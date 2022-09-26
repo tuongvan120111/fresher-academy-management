@@ -1,4 +1,4 @@
-<div class="candidates-container">
+<div  class="candidates-container">
   <h2 class="title">Candidate Listing</h2>
   <div class="content">
     <div class="form-group">
@@ -37,7 +37,7 @@
         </button>
       </div>
     </div>
-    <div class="table">
+    <div *ngIf="(candidates$ | async) as candidates" class="table">
       <table>
         <thead>
         <tr class="table-header">
@@ -48,90 +48,23 @@
         </tr>
         </thead>
         <tbody>
-
-        <tr>
+        <tr *ngFor="let candidate of candidates; index as i">
           <td>
             <input [checked]="isSelectedAll" type="checkbox" name="select">
           </td>
-          <td>1</td>
-          <td class="employee-id" (click)="navigateToUpdate('00137439')">00137439</td>
-          <td>HoangPT11</td>
-          <td>HoangPhan</td>
-          <td>15/07/1999</td>
-          <td>Male</td>
-          <td>UIT</td>
-          <td>IT</td>
-          <td>0769820111</td>
-          <td>hoangpt11@fsoft.com.vn</td>
-          <td>Interview - pass</td>
-        </tr>
-
-        <tr>
-          <td>
-            <input [checked]="isSelectedAll" type="checkbox" name="select">
+          <td>{{i + 1}}</td>
+          <td class="employee-id" (click)="navigateToUpdate(candidate.employeeId)">
+            {{candidate.employeeId}}
           </td>
-          <td>1</td>
-          <td class="employee-id">00137439</td>
-          <td>HoangPT12</td>
-          <td>HoangPhan</td>
-          <td>15/07/1999</td>
-          <td>Male</td>
-          <td>UIT</td>
+          <td>{{candidate.account}}</td>
+          <td>{{candidate.name}}</td>
+          <td>{{candidate.dob | date: 'dd/MM/yyyy'}}</td>
+          <td>{{candidate.gender}}</td>
+          <td>{{candidate.university}}</td>
           <td>IT</td>
-          <td>0769820111</td>
-          <td>hoangpt11@fsoft.com.vn</td>
-          <td>Interview - pass</td>
-        </tr>
-
-        <tr>
-          <td>
-            <input [checked]="isSelectedAll" type="checkbox" name="select">
-          </td>
-          <td>1</td>
-          <td class="employee-id">00137439</td>
-          <td>HoangPT12</td>
-          <td>HoangPhan</td>
-          <td>15/07/1999</td>
-          <td>Male</td>
-          <td>UIT</td>
-          <td>IT</td>
-          <td>0769820111</td>
-          <td>hoangpt11@fsoft.com.vn</td>
-          <td>Interview - pass</td>
-        </tr>
-
-        <tr>
-          <td>
-            <input [checked]="isSelectedAll" type="checkbox" name="select">
-          </td>
-          <td>1</td>
-          <td class="employee-id">00137439</td>
-          <td>HoangPT12</td>
-          <td>HoangPhan</td>
-          <td>15/07/1999</td>
-          <td>Male</td>
-          <td>UIT</td>
-          <td>IT</td>
-          <td>0769820111</td>
-          <td>hoangpt11@fsoft.com.vn</td>
-          <td>Interview - pass</td>
-        </tr>
-
-        <tr>
-          <td>
-            <input [checked]="isSelectedAll" type="checkbox" name="select">
-          </td>
-          <td>1</td>
-          <td class="employee-id">00137439</td>
-          <td>HoangPT12</td>
-          <td>HoangPhan</td>
-          <td>15/07/1999</td>
-          <td>Male</td>
-          <td>UIT</td>
-          <td>IT</td>
-          <td>0769820111</td>
-          <td>hoangpt11@fsoft.com.vn</td>
-          <td>Interview - pass</td>
+          <td>{{candidate.phone}}</td>
+          <td>{{candidate.email}}</td>
+          <td>Interview - {{candidate.status}}</td>
         </tr>
         </tbody>
       </table>
