@@ -1,4 +1,5 @@
 export interface ICandidate<E, F> {
+  id?: string;
   employeeId: string;
   account: string;
   name: string;
