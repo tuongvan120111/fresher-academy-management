@@ -2,7 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { CANDIDATE_TAB_TYPE } from "../utils/candidate.const";
 import { CandidateService } from "../candidate.service";
-import { Observable } from "rxjs";
+import { Observable, of } from "rxjs";
 import { ICandidate } from "../model/candidate.interface";
 
 @Component({
@@ -11,7 +11,7 @@ import { ICandidate } from "../model/candidate.interface";
   styleUrls: ["./table-candidate.component.scss"],
 })
 export class TableCandidateComponent implements OnInit {
-  candidates$: Observable<ICandidate<Date, string>[]>;
+  candidates$: Observable<ICandidate<Date, string>[]> = of([]);
   isSelectedAll: boolean = false;
   cols = ["#",
     "Empl ID",
@@ -26,10 +26,12 @@ export class TableCandidateComponent implements OnInit {
     "Status"];
 
   constructor(private router: Router, private route: ActivatedRoute, private candidateService: CandidateService) {
-    this.candidates$ = this.candidateService.candidateStore$;
+   
   }
 
   ngOnInit(): void {
+    this.candidateService.getCandidates();
+    this.candidates$ = this.candidateService.candidateStore$;
   }
 
   ngAfterViewInit() {

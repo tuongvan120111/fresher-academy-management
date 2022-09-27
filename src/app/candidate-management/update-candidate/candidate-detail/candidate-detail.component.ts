@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 
 @Component({
   selector: 'app-candidate-detail',
@@ -7,8 +7,11 @@ import { Router } from "@angular/router";
   styleUrls: ['./candidate-detail.component.scss']
 })
 export class CandidateDetailComponent implements OnInit {
+  employeeId: string = '';
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private route: ActivatedRoute) {
+    this.employeeId = this.route.snapshot.queryParams['id']
+  }
 
   ngOnInit(): void {
   }
