@@ -1,28 +1,25 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
-import { CandidateService, FirebaseCandidateFormat } from "../../candidate.service";
-import { Observable } from "rxjs";
+import { FirebaseCandidateFormat } from "../../candidate.service";
 
 @Component({
-  selector: 'app-candidate-detail',
-  templateUrl: './candidate-detail.component.html',
-  styleUrls: ['./candidate-detail.component.scss']
+  selector: "app-candidate-detail",
+  templateUrl: "./candidate-detail.component.html",
+  styleUrls: ["./candidate-detail.component.scss"],
 })
 export class CandidateDetailComponent implements OnInit {
-  employeeId: string = '';
-  candidate$: Observable<FirebaseCandidateFormat | undefined> = new Observable();
+  @Input()
+  candidate: FirebaseCandidateFormat;
 
-  constructor(private router: Router, private route: ActivatedRoute, private candidateService: CandidateService) {
+  constructor(private router: Router, private route: ActivatedRoute) {
 
   }
 
   ngOnInit(): void {
-    this.employeeId = this.route.snapshot.queryParams['id'];
-    this.candidateService.getCandidateById(this.employeeId).subscribe((val: any) => console.log(val, "<== candidateID"));
-    this.candidateService.candidateStore$.subscribe(console.log)
+    console.log(this.candidate, "<== candidate");
   }
 
   goBack() {
-    this.router.navigate(["candidate-management"])
+    this.router.navigate(["candidate-management"]);
   }
 }

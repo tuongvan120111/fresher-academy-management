@@ -10,6 +10,8 @@ export interface ICandidate<E, F> {
   phone: string;
   email: string;
   status: F;
+  skill: string;
+  language: string;
 }
 
 export type GENDER = "male" | "female";

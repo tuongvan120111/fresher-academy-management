@@ -1,14 +1,14 @@
 import { Injectable } from "@angular/core";
 import { AngularFirestore, AngularFirestoreCollection } from "@angular/fire/compat/firestore";
 import { ICandidate, IFirebaseDate, STATUS } from "./model/candidate.interface";
-import { concatMap, map, Observable, of, shareReplay, Subject, tap } from "rxjs";
+import { BehaviorSubject, map, Observable, shareReplay, Subject, tap } from "rxjs";
 
 export type FirebaseCandidateResponse = ICandidate<IFirebaseDate, STATUS>;
 export type FirebaseCandidateFormat = ICandidate<Date, string>;
 
 @Injectable()
 export class CandidateService {
-  private subject$ = new Subject<FirebaseCandidateFormat[]>();
+  private subject$ = new BehaviorSubject<FirebaseCandidateFormat[]>(null);
   candidateStore$ = this.subject$.asObservable();
 
   private candidates!: AngularFirestoreCollection<FirebaseCandidateResponse>;
@@ -19,11 +19,13 @@ export class CandidateService {
 
   getCandidates(): void {
     this.candidates
-      .valueChanges()
+      .snapshotChanges()
       .pipe(
-        map((candidates) => {
-          return candidates.map((candidate) => {
-            return CandidateService._formatData(candidate);
+        map((actions) => {
+          return actions.map((a) => {
+            const data = a.payload.doc.data() as FirebaseCandidateResponse;
+            data.id = a.payload.doc.id;
+            return CandidateService._formatData(data);
           });
         }),
         tap((val) => {
@@ -47,25 +49,12 @@ export class CandidateService {
   }
 
   //v.payload.doc.id
-  getCandidateById(id: string): any {
-    return this.candidates.snapshotChanges().pipe(
-      map((actions) => {
-        let candidates = actions.map((a) => {
-          const data = a.payload.doc.data() as FirebaseCandidateResponse;
-          data.id = a.payload.doc.id;
-          return data;
-        });
-        return candidates
+  getCandidateById(id: string): Observable<FirebaseCandidateFormat> {
+    return this.candidateStore$.pipe(
+      map(candidates => {
+        console.log(id)
+        return candidates.find(candidate => candidate.id === id);
       }),
-      tap(
-        val => {
-          this.subject$.next(val.map((candidate) => CandidateService._formatData(candidate)));
-        }
-      )
-      // map((candidates) => {
-      //   return candidates.find(c => c.employeeId === id);
-      // }),
-      // tap(console.log)
-    )
+    );
   }
 }
