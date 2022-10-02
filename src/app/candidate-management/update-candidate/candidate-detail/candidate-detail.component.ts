@@ -44,7 +44,9 @@ export class CandidateDetailComponent implements OnInit, OnChanges {
         university: this.candidate.university,
         phone: this.candidate.phone,
         skill: this.candidate.skill,
-        account: this.candidate.account
+        account: this.candidate.account,
+        level: this.candidate.level,
+        graduateYear: moment(this.candidate.graduateYear).format("YYYY-MM-DD")
       })
     }
   }

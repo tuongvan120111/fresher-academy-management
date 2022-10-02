@@ -43,9 +43,17 @@ export class CandidateService {
     );
     return {
       ...candidate,
-      dob: formatTime,
+      dob: CandidateService._formatTime(candidate.dob),
       status: candidate.status === STATUS.PASS ? "pass" : "failed",
+      graduateYear: CandidateService._formatTime(candidate.graduateYear)
     };
+  }
+
+  private static _formatTime(value: IFirebaseDate): Date {
+    return new Date(
+      value.seconds * 1000 +
+      value.nanoseconds / 1000000,
+    );
   }
 
   //v.payload.doc.id
@@ -54,7 +62,7 @@ export class CandidateService {
       map(candidate => {
         return CandidateService._formatData(candidate.data());
       }),
-    )
+    );
     return this.candidateStore$.pipe(
       map(candidates => {
         console.log(id);

@@ -12,6 +12,8 @@ export interface ICandidate<E, F> {
   status: F;
   skill: string;
   language: string;
+  level: string;
+  graduateYear: E;
 }
 
 export type GENDER = "male" | "female";

@@ -41,6 +41,8 @@ export class UpdateCandidateComponent implements OnInit {
       id: new FormControl(""),
       note: new FormControl(""),
       history: new FormControl(""),
+      level: new FormControl(""),
+      graduateYear: new FormControl(new Date())
     });
   }
 
