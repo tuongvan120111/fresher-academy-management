@@ -93,6 +93,7 @@
     border: none;
     outline: none;
     padding: 0;
+    width: 100%;
   }
 
   .error {
@@ -119,4 +120,8 @@
       margin-left: 5px;
     }
   }
+}
+
+mat-form-field {
+  width: 95%;
 }

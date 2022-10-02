@@ -3,135 +3,145 @@
     <div class="content-title">
       <span>Personal Information</span>
     </div>
-    <div class="content">
-      <div class="left-column">
-        <div class="employee">
-          <span class="w-20 border-right bg-gray-1">Empl ID</span>
-          <span class="w-60 border-right bg-gray-2">{{ candidate.employeeId }}</span>
-          <span class="w-20 border-right bg-gray-1">Type</span>
-        </div>
-        <div class="application flex">
-          <span class="w-20 bg-gray-1 border-right">Application Date</span>
-          <div class="w-82 p-1 border-right">
-            <input class="input" type="date" />
+    <form [formGroup]="candidateForm">
+      <div class="content">
+        <div class="left-column">
+          <div class="employee">
+            <span class="w-20 border-right bg-gray-1">Empl ID</span>
+            <span class="w-60 border-right bg-gray-2">{{ candidate.employeeId }}</span>
+            <span class="w-20 border-right bg-gray-1">Type</span>
+          </div>
+          <div class="application flex">
+            <span class="w-20 bg-gray-1 border-right">Application Date</span>
+            <div class="w-82 p-1 border-right">
+              <input class="input" type="date" />
+            </div>
+          </div>
+          <div class="row-properties flex">
+            <span class="w-20 bg-gray-1 border-right">Site</span>
+            <span class="w-82 border-right">23-OTc-2018</span>
+          </div>
+          <div class="row-properties flex">
+            <span class="w-20 bg-gray-1 border-right">Name*</span>
+            <span class="w-82 border-right">
+          <input formControlName="name" class="input" type="text" />
+        </span>
+          </div>
+          <div class="row-properties flex">
+            <span class="w-20 bg-gray-1 border-right">DOB*</span>
+            <span class="w-82 border-right">
+             <input
+               formControlName="dob"
+               class="input"
+               type="date"
+             />
+            </span>
+          </div>
+          <div class="row-properties flex">
+            <span class="w-20 bg-gray-1 border-right">University</span>
+            <span class="w-82 border-right">
+              <input class="input" formControlName="university" type="text" />
+            </span>
+          </div>
+          <div class="row-properties flex">
+            <span class="w-20 bg-gray-1 border-right">Phone</span>
+            <span class="w-82 border-right">
+          <input class="input" formControlName="phone" type="text" />
+        </span>
+          </div>
+          <div class="row-properties flex">
+            <span class="w-20 bg-gray-1 border-right">Skill</span>
+            <span class="w-82 border-right">
+             <input formControlName="skill" class="input" type="text" />
+            </span>
+          </div>
+          <div class="row-properties flex">
+            <span class="w-20 bg-gray-1 border-right">Foreign Language</span>
+            <span class="w-82 border-right">{{candidate.language}}</span>
           </div>
         </div>
-        <div class="row-properties flex">
-          <span class="w-20 bg-gray-1 border-right">Site</span>
-          <span class="w-82 border-right">23-OTc-2018</span>
-        </div>
-        <div class="row-properties flex">
-          <span class="w-20 bg-gray-1 border-right">Name*</span>
-          <span class="w-82 border-right">
-          <input [value]="candidate.name" class="input" type="text" />
-        </span>
-        </div>
-        <div class="row-properties flex">
-          <span class="w-20 bg-gray-1 border-right">DOB*</span>
-          <span class="w-82 border-right">
-          <input class="input" type="date" />
-        </span>
-        </div>
-        <div class="row-properties flex">
-          <span class="w-20 bg-gray-1 border-right">University</span>
-          <span class="w-82 border-right">{{candidate.university}}</span>
-        </div>
-        <div class="row-properties flex">
-          <span class="w-20 bg-gray-1 border-right">Phone</span>
-          <span class="w-82 border-right">
-          <input class="input" [value]="candidate.phone" type="text" />
-        </span>
-        </div>
-        <div class="row-properties flex">
-          <span class="w-20 bg-gray-1 border-right">Skill</span>
-          <span class="w-82 border-right">
-          <input [value]="candidate.skill" class="input" type="text" />
-        </span>
-        </div>
-        <div class="row-properties flex">
-          <span class="w-20 bg-gray-1 border-right">Foreign Language</span>
-          <span class="w-82 border-right">{{candidate.language}}</span>
-        </div>
-      </div>
-      <div class="right-column">
-        <div class="candidate flex">
-          <span class="w-20 bg-gray-1 border-right">Candidate</span>
-          <span class="w-60 bg-gray-2 border-right">Status</span>
-          <span class="w-20 bg-gray-1 border-right">new</span>
-        </div>
-        <div class="application flex">
+        <div class="right-column">
+          <div class="candidate flex">
+            <span class="w-20 bg-gray-1 border-right">Candidate</span>
+            <span class="w-60 bg-gray-2 border-right">Status</span>
+            <span class="w-20 bg-gray-1 border-right">new</span>
+          </div>
+          <div class="application flex">
         <span class="w-20 bg-gray-1 border-right">
           <label for="channel"> Channel </label>
         </span>
-          <span class="w-82 border-right">
+            <span class="w-82 border-right">
           <select id="channel">
             <option value="male">1</option>
             <option value="female">2</option>
           </select>
         </span>
-        </div>
-        <div class="row-properties flex">
-          <span class="w-20 bg-gray-1 border-right">Account</span>
-          <span class="w-82 border-right">23-OTc-2018</span>
-        </div>
-        <div class="row-properties flex">
-          <label for="gender" class="w-20 bg-gray-1 border-right">Gender</label>
-          <span class="w-82 border-right">
+          </div>
+          <div class="row-properties flex">
+            <span class="w-20 bg-gray-1 border-right">Account</span>
+            <span class="w-82 border-right">
+              <input formControlName="account" class="input" type="text" />
+            </span>
+          </div>
+          <div class="row-properties flex">
+            <label for="gender" class="w-20 bg-gray-1 border-right">Gender</label>
+            <span class="w-82 border-right">
           <select id="gender">
             <option value="male">Male</option>
             <option value="female">Female</option>
           </select>
         </span>
-        </div>
-        <div class="row-properties flex">
-          <span class="w-20 bg-gray-1 border-right">CV</span>
-          <span class="w-82 border-right">23-OTc-2018</span>
-        </div>
-        <div class="row-properties flex">
-          <span class="w-20 bg-gray-1 border-right">Faculty</span>
-          <span class="w-82 border-right">
+          </div>
+          <div class="row-properties flex">
+            <span class="w-20 bg-gray-1 border-right">CV</span>
+            <span class="w-82 border-right">23-OTc-2018</span>
+          </div>
+          <div class="row-properties flex">
+            <span class="w-20 bg-gray-1 border-right">Faculty</span>
+            <span class="w-82 border-right">
           <select>
             <option value="male">Male</option>
             <option value="female">Female</option>
           </select>
         </span>
-        </div>
-        <div class="row-properties flex">
-          <span class="w-20 bg-gray-1 border-right">Email</span>
-          <span class="w-82 border-right">
-          <input class="input error" type="text" />
-        </span>
-        </div>
-        <div class="row-properties flex">
-          <span class="w-20 bg-gray-1 border-right">Graduation Year</span>
-          <span class="w-82 border-right">
+          </div>
+          <div class="row-properties flex">
+            <span class="w-20 bg-gray-1 border-right">Email</span>
+            <span class="w-82 border-right">
+              <input formControlName="email" class="input" type="text" />
+            </span>
+          </div>
+          <div class="row-properties flex">
+            <span class="w-20 bg-gray-1 border-right">Graduation Year</span>
+            <span class="w-82 border-right">
           <input class="input" type="date" />
         </span>
-        </div>
-        <div class="row-properties flex">
-          <span class="w-20 bg-gray-1 border-right">Level</span>
-          <span class="w-82 border-right">
-          <input class="input" type="text" />
-        </span>
-        </div>
-      </div>
-    </div>
-    <div class="content-footer">
-      <div class="note flex">
-        <div class="w-9 bg-gray-1 border-top-black border-right">
-          <span>Note</span>
-        </div>
-        <div class="flex-grow-1 border-top-black border-right">
-          <input class="input" type="text" />
+          </div>
+          <div class="row-properties flex">
+            <span class="w-20 bg-gray-1 border-right">Level</span>
+            <span class="w-82 border-right">
+             <input class="input" type="text" />
+            </span>
+          </div>
         </div>
       </div>
-      <div class="history flex">
-        <div class="w-9 bg-gray-1 border-right">
-          <span>History</span>
+      <div class="content-footer">
+        <div class="note flex">
+          <div class="w-9 bg-gray-1 border-top-black border-right">
+            <span>Note</span>
+          </div>
+          <div class="flex-grow-1 border-top-black border-right">
+            <input class="input" type="text" />
+          </div>
         </div>
-        <div class="flex-grow-1 border-right">23-OTc-2018</div>
+        <div class="history flex">
+          <div class="w-9 bg-gray-1 border-right">
+            <span>History</span>
+          </div>
+          <div class="flex-grow-1 border-right">23-OTc-2018</div>
+        </div>
       </div>
-    </div>
+    </form>
   </div>
   <div class="content-actions">
     <button class="submit-btn" mat-raised-button>Submit</button>
