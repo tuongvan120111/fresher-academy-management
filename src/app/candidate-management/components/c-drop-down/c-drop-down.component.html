@@ -1,0 +1,17 @@
+<ng-container>
+  <div (clickOutside)="clickedOutside()" class="dropdown">
+    <span>{{radioValue}}</span>
+    <button (click)="toggleDropdown()" mat-raised-button>
+      <mat-icon>arrow_drop_down</mat-icon>
+    </button>
+    <div *ngIf="showDropdown" class="dropdown-c-menu">
+      <mat-card class="c-card">
+        <mat-radio-group  [(ngModel)]="radioValue" aria-label="Select an option">
+          <mat-radio-button (change)="onChange(option)" *ngFor="let option of options" [value]="option">{{option}}</mat-radio-button>
+        </mat-radio-group>
+        <div class="divider"></div>
+        <input *ngIf="isOtherSelected" type="text" placeholder="university">
+      </mat-card>
+    </div>
+  </div>
+</ng-container>

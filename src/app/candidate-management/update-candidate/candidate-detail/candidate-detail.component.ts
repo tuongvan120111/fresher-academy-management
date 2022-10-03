@@ -17,6 +17,8 @@ export class CandidateDetailComponent implements OnInit, OnChanges {
   @Input()
   candidateForm: FormGroup;
 
+  maxDate = moment(new Date()).format("YYYY-MM-DD")
+
   constructor(private router: Router, private route: ActivatedRoute) {
 
   }
@@ -46,7 +48,8 @@ export class CandidateDetailComponent implements OnInit, OnChanges {
         skill: this.candidate.skill,
         account: this.candidate.account,
         level: this.candidate.level,
-        graduateYear: moment(this.candidate.graduateYear).format("YYYY-MM-DD")
+        graduateYear: moment(this.candidate.graduateYear).format("YYYY-MM-DD"),
+        applicationDate: moment(new Date()).format("YYYY-MM-DD")
       })
     }
   }

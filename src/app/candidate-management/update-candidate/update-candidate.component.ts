@@ -42,7 +42,8 @@ export class UpdateCandidateComponent implements OnInit {
       note: new FormControl(""),
       history: new FormControl(""),
       level: new FormControl(""),
-      graduateYear: new FormControl(new Date())
+      graduateYear: new FormControl(new Date()),
+      applicationDate: new FormControl(new Date())
     });
   }
 

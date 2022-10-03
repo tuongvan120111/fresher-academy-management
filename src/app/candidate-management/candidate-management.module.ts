@@ -10,9 +10,14 @@ import { MatTabsModule } from "@angular/material/tabs";
 import { CandidateDetailComponent } from "./update-candidate/candidate-detail/candidate-detail.component";
 import { CandidateService } from "./candidate.service";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import {MatDatepickerModule} from '@angular/material/datepicker';
+import { MatDatepickerModule } from "@angular/material/datepicker";
 import { MatInputModule } from "@angular/material/input";
 import { MAT_DATE_LOCALE, MatNativeDateModule } from "@angular/material/core";
+import { CDropDownComponent } from "./components/c-drop-down/c-drop-down.component";
+import { MatCardModule } from "@angular/material/card";
+import { MatRadioModule } from "@angular/material/radio";
+import { MatDividerModule } from "@angular/material/divider";
+import { ClickOutSideDirective } from "./utils/directives/click-out-side.directive";
 
 const routes: Routes = [
   {
@@ -31,7 +36,14 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [CandidatesComponent, UpdateCandidateComponent, TableCandidateComponent, CandidateDetailComponent],
+  declarations: [
+    CandidatesComponent,
+    UpdateCandidateComponent,
+    TableCandidateComponent,
+    CandidateDetailComponent,
+    CDropDownComponent,
+    ClickOutSideDirective
+  ],
   imports: [
     CommonModule,
     MatDatepickerModule,
@@ -43,8 +55,11 @@ const routes: Routes = [
     ReactiveFormsModule,
     MatInputModule,
     FormsModule,
+    MatCardModule,
+    MatRadioModule,
+    MatDividerModule,
   ],
-  providers: [CandidateService, {provide: MAT_DATE_LOCALE, useValue: 'en-GB'}],
+  providers: [CandidateService, { provide: MAT_DATE_LOCALE, useValue: "en-GB" }],
 })
 export class CandidateManagementModule {
 }

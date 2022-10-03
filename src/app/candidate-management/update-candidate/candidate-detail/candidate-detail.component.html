@@ -14,12 +14,14 @@
           <div class="application flex">
             <span class="w-20 bg-gray-1 border-right">Application Date</span>
             <div class="w-82 p-1 border-right">
-              <input class="input" type="date" />
+              <input formControlName="applicationDate" [max]="maxDate" class="input" type="date" />
             </div>
           </div>
           <div class="row-properties flex">
             <span class="w-20 bg-gray-1 border-right">Site</span>
-            <span class="w-82 border-right">23-OTc-2018</span>
+            <span class="w-82 border-right">
+              <app-c-drop-down [label]="'university'" [options]="['Ho Chi Minh', 'Ha Noi', 'Da Nang']"></app-c-drop-down>
+            </span>
           </div>
           <div class="row-properties flex">
             <span class="w-20 bg-gray-1 border-right">Name*</span>
@@ -40,7 +42,8 @@
           <div class="row-properties flex">
             <span class="w-20 bg-gray-1 border-right">University</span>
             <span class="w-82 border-right">
-              <input class="input" formControlName="university" type="text" />
+<!--              <input class="input" formControlName="university" type="text" />-->
+              <app-c-drop-down [label]="'university'" [options]="['UIT', 'HUST', 'FPT', 'Other']"></app-c-drop-down>
             </span>
           </div>
           <div class="row-properties flex">
@@ -131,7 +134,7 @@
             <span>Note</span>
           </div>
           <div class="flex-grow-1 border-top-black border-right">
-            <input class="input" type="text" />
+            <input formControlName="note" class="input" type="text" />
           </div>
         </div>
         <div class="history flex">
