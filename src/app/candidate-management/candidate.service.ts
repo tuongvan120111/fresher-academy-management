@@ -37,10 +37,6 @@ export class CandidateService {
   }
 
   private static _formatData(candidate: FirebaseCandidateResponse): FirebaseCandidateFormat {
-    const formatTime = new Date(
-      (candidate.dob as IFirebaseDate).seconds * 1000 +
-      (candidate.dob as IFirebaseDate).nanoseconds / 1000000,
-    );
     return {
       ...candidate,
       dob: CandidateService._formatTime(candidate.dob),

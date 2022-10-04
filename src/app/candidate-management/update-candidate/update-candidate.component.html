@@ -10,7 +10,13 @@
     <div class="form-group">
       <mat-tab-group class="tab">
         <mat-tab label="Candidate Information">
-          <app-candidate-detail [candidateForm]="candidateFormGroup" [candidate]="(candidate$ | async)"></app-candidate-detail>
+          <app-candidate-detail [candidateForm]="candidateFormGroup"
+                                [candidate]="(candidate$ | async)"
+                                [universities]="(university$ | async)"
+                                [sites]="(sites$ | async)"
+                                [channels]="(channels$ | async)"
+          >
+          </app-candidate-detail>
         </mat-tab>
         <mat-tab label="Result">
           res

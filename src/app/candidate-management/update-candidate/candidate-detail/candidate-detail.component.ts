@@ -3,6 +3,9 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { FirebaseCandidateFormat } from "../../candidate.service";
 import { FormGroup } from "@angular/forms";
 import * as moment from "moment";
+import { IUniversity } from "../../services/university.service";
+import { ISite } from "../../services/sites.service";
+import { IChannel } from "../../services/channel.service";
 
 @Component({
   selector: "app-candidate-detail",
@@ -16,6 +19,15 @@ export class CandidateDetailComponent implements OnInit, OnChanges {
 
   @Input()
   candidateForm: FormGroup;
+
+  @Input()
+  universities: IUniversity[];
+
+  @Input()
+  sites: ISite[];
+
+  @Input()
+  channels: IChannel[];
 
   maxDate = moment(new Date()).format("YYYY-MM-DD")
 

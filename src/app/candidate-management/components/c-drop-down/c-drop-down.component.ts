@@ -1,4 +1,4 @@
-import { Component, EventEmitter, HostListener, Input, OnInit, Output } from "@angular/core";
+import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 
 @Component({
   selector: "app-c-drop-down",
@@ -10,7 +10,7 @@ export class CDropDownComponent implements OnInit {
   label: string = "";
 
   @Input()
-  options: string[] = [];
+  options: any[] = [];
 
   @Output()
   onValueChange = new EventEmitter<string>();
@@ -18,6 +18,8 @@ export class CDropDownComponent implements OnInit {
   showDropdown = false;
 
   radioValue: string;
+
+  otherValue: string = "";
 
   constructor() {
   }
@@ -30,14 +32,26 @@ export class CDropDownComponent implements OnInit {
   }
 
   get isOtherSelected() {
-    return this.radioValue === 'Other'
+    return this.radioValue === "Other";
   }
 
   onChange(value: string) {
-    this.onValueChange.emit(value)
+    this.onValueChange.emit(value);
   }
 
   clickedOutside() {
     this.showDropdown = false;
+    this.changeValue();
+  }
+
+  get finalValue(): string {
+    return this.radioValue !== "Other" ? this.radioValue : "";
+  }
+
+  changeValue() {
+    if (this.otherValue) {
+      this.radioValue = this.otherValue;
+      this.otherValue = "";
+    }
   }
 }

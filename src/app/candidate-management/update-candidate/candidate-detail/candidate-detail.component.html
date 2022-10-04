@@ -20,7 +20,7 @@
           <div class="row-properties flex">
             <span class="w-20 bg-gray-1 border-right">Site</span>
             <span class="w-82 border-right">
-              <app-c-drop-down [label]="'university'" [options]="['Ho Chi Minh', 'Ha Noi', 'Da Nang']"></app-c-drop-down>
+              <app-c-drop-down [label]="'university'" [options]="sites"></app-c-drop-down>
             </span>
           </div>
           <div class="row-properties flex">
@@ -42,8 +42,7 @@
           <div class="row-properties flex">
             <span class="w-20 bg-gray-1 border-right">University</span>
             <span class="w-82 border-right">
-<!--              <input class="input" formControlName="university" type="text" />-->
-              <app-c-drop-down [label]="'university'" [options]="['UIT', 'HUST', 'FPT', 'Other']"></app-c-drop-down>
+              <app-c-drop-down [label]="'university'" [options]="universities"></app-c-drop-down>
             </span>
           </div>
           <div class="row-properties flex">
@@ -75,8 +74,7 @@
         </span>
             <span class="w-82 border-right">
           <select id="channel">
-            <option value="male">1</option>
-            <option value="female">2</option>
+            <option *ngFor="let channel of channels" [value]="channel.name">{{channel.name}}</option>
           </select>
         </span>
           </div>

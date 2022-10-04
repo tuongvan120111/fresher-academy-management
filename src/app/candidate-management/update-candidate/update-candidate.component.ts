@@ -2,8 +2,17 @@ import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { CANDIDATE_TAB_TYPE } from "../utils/candidate.const";
 import { CandidateService, FirebaseCandidateFormat } from "../candidate.service";
-import { Observable, tap } from "rxjs";
+import { map, Observable, tap } from "rxjs";
 import { FormControl, FormGroup } from "@angular/forms";
+import { IUniversity, UniversityService } from "../services/university.service";
+import { ISite, SitesService } from "../services/sites.service";
+import { ChannelService, IChannel } from "../services/channel.service";
+import { FacultyService, IFaculty } from "../services/faculty.service";
+
+const OTHER_UNIVERSITY_OPTION: IUniversity = {
+  name: "Other",
+  id: "411060",
+};
 
 @Component({
   selector: "app-update-candidate",
@@ -11,19 +20,43 @@ import { FormControl, FormGroup } from "@angular/forms";
   styleUrls: ["./update-candidate.component.scss"],
 })
 export class UpdateCandidateComponent implements OnInit {
+  university$: Observable<IUniversity[]>;
+  candidate$: Observable<FirebaseCandidateFormat>;
+  sites$: Observable<ISite[]>;
+  channels$: Observable<IChannel[]>;
+  faculty$: Observable<IFaculty[]>;
 
   type = CANDIDATE_TAB_TYPE.CREATE;
   candidateId: string = "";
-  candidate$: Observable<FirebaseCandidateFormat>;
   candidateFormGroup: FormGroup;
 
-  constructor(private route: ActivatedRoute, private candidatesService: CandidateService) {
+  constructor(
+    private route: ActivatedRoute,
+    private candidatesService: CandidateService,
+    private universityService: UniversityService,
+    private sitesService: SitesService,
+    private channelService: ChannelService,
+    private facultyService: FacultyService,
+  ) {
+  }
+
+  private _initData() {
+    this.candidate$ = this.candidatesService.getCandidateById(this.candidateId).pipe(tap(console.log));
+    this.university$ = this.universityService.loadUniversity().pipe(
+      map(universities => {
+        universities.push(OTHER_UNIVERSITY_OPTION);
+        return universities;
+      }),
+    );
+    this.sites$ = this.sitesService.loadSites();
+    this.channels$ = this.channelService.loadData();
+    this.faculty$ = this.facultyService.loadData();
   }
 
   ngOnInit(): void {
     this.type = this.route.snapshot.params["type"];
     this.candidateId = this.route.snapshot.queryParams["id"];
-    this.candidate$ = this.candidatesService.getCandidateById(this.candidateId).pipe(tap(console.log));
+    this._initData();
 
     this.candidateFormGroup = new FormGroup<any>({
       name: new FormControl(""),
@@ -43,7 +76,7 @@ export class UpdateCandidateComponent implements OnInit {
       history: new FormControl(""),
       level: new FormControl(""),
       graduateYear: new FormControl(new Date()),
-      applicationDate: new FormControl(new Date())
+      applicationDate: new FormControl(new Date()),
     });
   }
 

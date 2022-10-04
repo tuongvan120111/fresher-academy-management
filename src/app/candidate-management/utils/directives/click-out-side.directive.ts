@@ -14,7 +14,6 @@ export class ClickOutSideDirective implements AfterViewInit, OnDestroy {
     private element: ElementRef,
     @Inject(DOCUMENT) private document: Document,
   ) {
-    console.log('init...')
   }
 
   ngAfterViewInit() {
