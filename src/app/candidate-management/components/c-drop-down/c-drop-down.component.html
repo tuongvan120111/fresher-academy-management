@@ -1,16 +1,16 @@
 <ng-container>
   <div (clickOutside)="clickedOutside()" class="dropdown">
-    <span>{{finalValue}}</span>
+    <span>{{finalValue || defaultValue}}</span>
     <button (click)="toggleDropdown()" mat-raised-button>
       <mat-icon>arrow_drop_down</mat-icon>
     </button>
     <div *ngIf="showDropdown" class="dropdown-c-menu">
       <mat-card class="c-card">
-        <mat-radio-group  [(ngModel)]="radioValue" aria-label="Select an option">
-          <mat-radio-button (change)="onChange(option)" *ngFor="let option of options" [value]="option.name">{{option.name}}</mat-radio-button>
+        <mat-radio-group (ngModelChange)="changeValue()" [(ngModel)]="radioValue" aria-label="Select an option">
+          <mat-radio-button *ngFor="let option of options" [value]="option.name">{{option.name}}</mat-radio-button>
         </mat-radio-group>
         <div class="divider"></div>
-        <input *ngIf="isOtherSelected" [(ngModel)]="otherValue" type="text" placeholder="university">
+        <input *ngIf="isOtherSelected" [(ngModel)]="otherValue" type="text" [placeholder]="label">
       </mat-card>
     </div>
   </div>

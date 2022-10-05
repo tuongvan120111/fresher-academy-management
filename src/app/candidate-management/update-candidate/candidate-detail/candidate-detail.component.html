@@ -20,7 +20,8 @@
           <div class="row-properties flex">
             <span class="w-20 bg-gray-1 border-right">Site</span>
             <span class="w-82 border-right">
-              <app-c-drop-down [label]="'university'" [options]="sites"></app-c-drop-down>
+              <app-c-drop-down [defaultValue]="candidate.site" (onValueChange)="onSiteChange($event)" [label]="'sites'"
+                               [options]="sites"></app-c-drop-down>
             </span>
           </div>
           <div class="row-properties flex">
@@ -42,7 +43,13 @@
           <div class="row-properties flex">
             <span class="w-20 bg-gray-1 border-right">University</span>
             <span class="w-82 border-right">
-              <app-c-drop-down [label]="'university'" [options]="universities"></app-c-drop-down>
+              <app-c-drop-down
+                (onValueChange)="onUniversityChange($event)"
+                [label]="'university'"
+                [options]="universities"
+                [defaultValue]="candidate.university"
+              >
+              </app-c-drop-down>
             </span>
           </div>
           <div class="row-properties flex">
@@ -59,7 +66,9 @@
           </div>
           <div class="row-properties flex">
             <span class="w-20 bg-gray-1 border-right">Foreign Language</span>
-            <span class="w-82 border-right">{{candidate.language}}</span>
+            <span class="w-82 border-right">
+              <input formControlName="language" class="input" type="text" />
+            </span>
           </div>
         </div>
         <div class="right-column">
@@ -73,7 +82,7 @@
           <label for="channel"> Channel </label>
         </span>
             <span class="w-82 border-right">
-          <select id="channel">
+          <select formControlName="channel" id="channel">
             <option *ngFor="let channel of channels" [value]="channel.name">{{channel.name}}</option>
           </select>
         </span>
@@ -87,7 +96,7 @@
           <div class="row-properties flex">
             <label for="gender" class="w-20 bg-gray-1 border-right">Gender</label>
             <span class="w-82 border-right">
-          <select id="gender">
+          <select formControlName="gender" id="gender">
             <option value="male">Male</option>
             <option value="female">Female</option>
           </select>
@@ -100,11 +109,14 @@
           <div class="row-properties flex">
             <span class="w-20 bg-gray-1 border-right">Faculty</span>
             <span class="w-82 border-right">
-          <select>
-            <option value="male">Male</option>
-            <option value="female">Female</option>
-          </select>
-        </span>
+               <app-c-drop-down
+                 (onValueChange)="onFacultyChange($event)"
+                 [label]="'faculty'"
+                 [options]="faculties"
+                 [defaultValue]="candidate.faculty"
+               >
+               </app-c-drop-down>
+            </span>
           </div>
           <div class="row-properties flex">
             <span class="w-20 bg-gray-1 border-right">Email</span>
@@ -145,7 +157,7 @@
     </form>
   </div>
   <div class="content-actions">
-    <button class="submit-btn" mat-raised-button>Submit</button>
+    <button (click)="submit()" class="submit-btn" mat-raised-button>Submit</button>
     <button (click)="goBack()" class="back-btn" mat-raised-button>
       <mat-icon color="warn">arrow_back</mat-icon>
       <span>Close</span>

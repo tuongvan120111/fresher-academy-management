@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { AngularFirestore, AngularFirestoreCollection } from "@angular/fire/compat/firestore";
 import { ICandidate, IFirebaseDate, STATUS } from "./model/candidate.interface";
-import { BehaviorSubject, map, Observable, shareReplay, tap } from "rxjs";
+import { BehaviorSubject, from, map, Observable, shareReplay, tap } from "rxjs";
 
 export type FirebaseCandidateResponse = ICandidate<IFirebaseDate, STATUS>;
 export type FirebaseCandidateFormat = ICandidate<Date, string>;
@@ -59,11 +59,9 @@ export class CandidateService {
         return CandidateService._formatData(candidate.data());
       }),
     );
-    return this.candidateStore$.pipe(
-      map(candidates => {
-        console.log(id);
-        return candidates.find(candidate => candidate.id === id);
-      }),
-    );
+  }
+
+  updateCandidate(id: string, candidate: Partial<FirebaseCandidateResponse>): Observable<any> {
+    return from(this.candidates.doc(id).update(candidate))
   }
 }

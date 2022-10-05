@@ -10,6 +10,9 @@ export class CDropDownComponent implements OnInit {
   label: string = "";
 
   @Input()
+  defaultValue: string;
+
+  @Input()
   options: any[] = [];
 
   @Output()
@@ -35,13 +38,8 @@ export class CDropDownComponent implements OnInit {
     return this.radioValue === "Other";
   }
 
-  onChange(value: string) {
-    this.onValueChange.emit(value);
-  }
-
   clickedOutside() {
     this.showDropdown = false;
-    this.changeValue();
   }
 
   get finalValue(): string {
@@ -53,5 +51,6 @@ export class CDropDownComponent implements OnInit {
       this.radioValue = this.otherValue;
       this.otherValue = "";
     }
+    this.onValueChange.emit(this.radioValue || this.defaultValue);
   }
 }

@@ -9,7 +9,7 @@ import { ISite, SitesService } from "../services/sites.service";
 import { ChannelService, IChannel } from "../services/channel.service";
 import { FacultyService, IFaculty } from "../services/faculty.service";
 
-const OTHER_UNIVERSITY_OPTION: IUniversity = {
+const OTHER_OPTION: IUniversity = {
   name: "Other",
   id: "411060",
 };
@@ -44,13 +44,18 @@ export class UpdateCandidateComponent implements OnInit {
     this.candidate$ = this.candidatesService.getCandidateById(this.candidateId).pipe(tap(console.log));
     this.university$ = this.universityService.loadUniversity().pipe(
       map(universities => {
-        universities.push(OTHER_UNIVERSITY_OPTION);
+        universities.push(OTHER_OPTION);
         return universities;
       }),
     );
     this.sites$ = this.sitesService.loadSites();
     this.channels$ = this.channelService.loadData();
-    this.faculty$ = this.facultyService.loadData();
+    this.faculty$ = this.facultyService.loadData().pipe(
+      map(faculties => {
+        faculties.push(OTHER_OPTION);
+        return faculties;
+      }),
+    );
   }
 
   ngOnInit(): void {
@@ -60,23 +65,21 @@ export class UpdateCandidateComponent implements OnInit {
 
     this.candidateFormGroup = new FormGroup<any>({
       name: new FormControl(""),
-      employeeId: new FormControl(""),
       account: new FormControl(""),
       dob: new FormControl(new Date()),
-      gender: new FormControl("male"),
+      gender: new FormControl(""),
       university: new FormControl(""),
       faculty: new FormControl(""),
       phone: new FormControl(""),
       email: new FormControl(""),
-      status: new FormControl(""),
       skill: new FormControl(""),
       language: new FormControl(""),
-      id: new FormControl(""),
       note: new FormControl(""),
-      history: new FormControl(""),
       level: new FormControl(""),
       graduateYear: new FormControl(new Date()),
       applicationDate: new FormControl(new Date()),
+      site: new FormControl(""),
+      channel: new FormControl(""),
     });
   }
 
@@ -84,4 +87,9 @@ export class UpdateCandidateComponent implements OnInit {
     return this.type === CANDIDATE_TAB_TYPE.CREATE;
   }
 
+  submit() {
+    this.candidatesService.updateCandidate(this.candidateId, {
+      skill: this.candidateFormGroup.value.skill,
+    }).subscribe();
+  }
 }

@@ -6,7 +6,7 @@ export interface ICandidate<E, F> {
   dob: E;
   gender: GENDER;
   university: string;
-  faculty: string | number;
+  faculty: string;
   phone: string;
   email: string;
   status: F;
@@ -14,6 +14,9 @@ export interface ICandidate<E, F> {
   language: string;
   level: string;
   graduateYear: E;
+  channel: string;
+  site: string;
+  history: any;
 }
 
 export type GENDER = "male" | "female";
