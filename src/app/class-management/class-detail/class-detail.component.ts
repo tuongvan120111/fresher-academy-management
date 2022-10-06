@@ -1,3 +1,4 @@
+import { FileService } from './../../shared/services/file.service';
 import { Router } from '@angular/router';
 import { UploadFileService } from '../../shared/services/upload-file.service';
 import {
@@ -15,6 +16,7 @@ import {
   BudgetDisplayedColumns,
   ClassAdminList,
   DeliveryTypeList,
+  EventCategoryList,
   FormatTypeList,
   ScopeList,
   SubjectTypeList,
@@ -32,6 +34,11 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { ValidationService } from 'src/app/shared/services/validation.service';
+import { CurrencyPipe } from '@angular/common';
+import { Authentications } from 'src/app/shared/models/common.model';
+import { CommonService } from 'src/app/shared/services/common.service';
+import { MatDialog } from '@angular/material/dialog';
+import { DialogSizeSComponent } from 'src/app/components/dialog-size-s/dialog-size-s.component';
 
 @Component({
   selector: 'app-class-detail',
@@ -49,6 +56,8 @@ export class NewClassComponent implements OnInit {
 
   isLoading: boolean = true;
 
+  currentDate = new Date();
+
   matcher = new MyErrorStateMatcher();
 
   budgetDisplayedColumns: string[] = BudgetDisplayedColumns;
@@ -60,13 +69,14 @@ export class NewClassComponent implements OnInit {
   learningPathFiles!: File;
   curriculumnFiles!: File;
 
-  budgetCodeList: Array<any> = BudgetCodeList;
-  subjectTypeList: Array<any> = SubjectTypeList;
-  subSubjectTypeList: Array<any> = SubSubjectTypeList;
-  deliveryTypeList: Array<any> = DeliveryTypeList;
-  formatTypeList: Array<any> = FormatTypeList;
-  scopeList: Array<any> = ScopeList;
-  classAdminList: Array<any> = ClassAdminList;
+  budgetCodeList = BudgetCodeList;
+  subjectTypeList = SubjectTypeList;
+  subSubjectTypeList = SubSubjectTypeList;
+  deliveryTypeList = DeliveryTypeList;
+  formatTypeList = FormatTypeList;
+  scopeList = ScopeList;
+  classAdminList = ClassAdminList;
+  eventCategoryList = EventCategoryList;
 
   addClassFrom!: FormGroup;
   locationList!: Observable<LocationModel[]>;
@@ -80,15 +90,26 @@ export class NewClassComponent implements OnInit {
   generalErrorMessage: string = '';
   detailErrorMessage: string = '';
 
+  userInfor: Authentications | undefined;
+
+  isDisabled: boolean = false;
+
+  totalBudget: number = 0;
+
   constructor(
     @Inject(FormBuilder) private formBuilder: FormBuilder,
     private firestore: AngularFirestore,
-    private classManagementService: ClassManagementService,
+    public classManagementService: ClassManagementService,
     private uploadFileService: UploadFileService,
     private router: Router,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private currencyPipe: CurrencyPipe,
+    commonSer: CommonService,
+    private fileService: FileService,
+    private dialog: MatDialog
   ) {
     this.initData(formBuilder);
+    this.userInfor = commonSer.getCurrentUser();
   }
 
   ngOnInit(): void {
@@ -112,12 +133,26 @@ export class NewClassComponent implements OnInit {
 
           this.classManagementData = data;
 
-          this.isLoading = false;
-
           this.selectedObjectsFromArray =
             this.classManagementData.general.classAdmin;
 
-          this.addClassFrom.patchValue(data);
+          this.getDataFormArray(
+            this.classManagementData.budget,
+            this.budgets,
+            this.budgetTable
+          );
+
+          this.getDataFormArray(
+            this.classManagementData.audit,
+            this.audits,
+            this.auditTable
+          );
+
+          this.addClassFrom.disable();
+          this.addClassFrom.patchValue(this.classManagementData);
+          this.isLoading = false;
+
+          this.isDisabled = true;
         },
         error: (err) => {
           this.isLoading = false;
@@ -152,11 +187,28 @@ export class NewClassComponent implements OnInit {
 
   onFileLearningPathChange(event: any) {
     this.learningPathFiles = event.target.files[0];
-    // console.log(this.uploadFileService.uploadFile(this.learningPathFiles));
+    this.generals
+      .get('learningPath')
+      ?.setValue(this.learningPathFiles?.name || '');
+
+    this.fileService
+      .getFileData(this.learningPathFiles)
+      .then((data: any) => {
+        // TODO: Generate Class name - Name format: Fresher Position Skill
+        this.generals
+          .get('className')
+          ?.setValue(`Fresher ${data.position} ${data.skill}`);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   onFileCurriculumnChange(event: any) {
     this.curriculumnFiles = event.target.files[0];
+    this.details
+      .get('curriculumn')
+      ?.setValue(this.curriculumnFiles?.name || '');
   }
 
   onSubmit(values: any) {
@@ -166,97 +218,53 @@ export class NewClassComponent implements OnInit {
     } = {
       expectedStartDate: 'Expected Start Date',
       expectedEndDate: 'Expected End Date',
-      locationID: 'Location',
+      location: 'Location',
       budgetCode: 'Budget Code',
       estimatedBudget: 'Estimated Budget',
-      // classAdmin: 'Class Admin',
-      // learningPath: 'Learning Path',
+      classAdmin: 'Class Admin',
+      learningPath: 'Learning Path',
     };
     for (const [key, val] of Object.entries(generalKeys)) {
       for (const [errorKey, _] of Object.entries(
         this.generals.get(key)?.errors || {}
       )) {
-        console.log(errorKey);
         this.generalErrorMessage +=
           val +
           ' ' +
           ValidationService.getValidatorErrorMessage(errorKey) +
           ', ';
-        //  + '\n';
       }
     }
 
-    if (
-      !this.selectedObjectsFromArray ||
-      this.selectedObjectsFromArray.length === 0
-    ) {
-      this.generalErrorMessage +=
-        'Class Admin ' +
-        ValidationService.getValidatorErrorMessage('required') +
-        ', ';
-    }
-
-    if (!this.learningPathFiles) {
-      this.generalErrorMessage +=
-        'Learning Path ' +
-        ValidationService.getValidatorErrorMessage('required') +
-        ', ';
-    }
     this.generalErrorMessage = this.generalErrorMessage.slice(0, -2);
-    // generalErrorMessage+=this.generals.get('budgetCode')?.errors
-    // const aaaaaa: ClassModel = {
-    //   general: {
-    //     classCode: 'Site_FR_Skill_12_12',
-    //     className: 'Test',
-    //     status: 0,
+    if (!!this.generalErrorMessage.trim()) {
+      return;
+    }
 
-    //     plannedTraineeNo: 12,
-    //     acceptedTraineeNo: 'string',
-    //     actualTraineeNo: 'string',
+    const dialogRef = this.dialog.open(DialogSizeSComponent, {
+      width: '450px',
+      data: {
+        icon: ['info'],
+        title: 'Confirm',
+        message: 'Are you sure add class?',
+        buttons: 'OK',
+        iconColor: 'green',
+      },
+    });
 
-    //     expectedStartDate: Date.now(),
-    //     expectedEndDate: Date.now(),
-
-    //     locationID: '0DKSeiH0AaHqm2kAZpsg',
-    //     location: 'Việt Nam',
-    //     detailedLocation:
-    //       'RR75+FPV, Võ Văn Hát, Long Trường, Quận 9, Thành phố Hồ Chí Minh, Việt Nam',
-
-    //     budgetCode: Math.floor(Math.random() * (3 - 0 + 1)) + 0,
-    //     estimatedBudget: 123,
-
-    //     classAdmin: [],
-    //     learningPath: '',
-
-    //     history: '',
-    //   },
-    //   detail: {
-    //     subjectType: Math.floor(Math.random() * (3 - 0 + 1)) + 0,
-    //     subSubjectType: Math.floor(Math.random() * (3 - 0 + 1)) + 0,
-    //     deliveryType: Math.floor(Math.random() * (3 - 0 + 1)) + 0,
-
-    //     formatType: Math.floor(Math.random() * (2 - 0 + 1)) + 0,
-    //     scope: Math.floor(Math.random() * (3 - 0 + 1)) + 0,
-    //     supplier: 'supplier',
-
-    //     actualStartDate: Date.now(),
-    //     actualEndDate: Date.now(),
-
-    //     masterTrainer: 'string',
-    //     trainer: [],
-
-    //     curriculumn: 'string',
-    //     remarks: 'string',
-    //   },
-
-    //   budget: [],
-    //   audit: [],
-    // };
-    // this.firestore.collection('classManagement').add(aaaaaa);
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.classManagementService.addNewClass(values);
+      }
+    });
   }
 
-  get generals(): any {
-    return this.addClassFrom.controls['general'] as FormArray;
+  get generals() {
+    return this.addClassFrom.controls['general'] as FormControl;
+  }
+
+  get details() {
+    return this.addClassFrom.controls['detail'] as FormControl;
   }
 
   get budgets() {
@@ -273,26 +281,26 @@ export class NewClassComponent implements OnInit {
         classCode: [''],
         className: [''],
         status: [''],
-        plannedTraineeNo: [''],
+        plannedTraineeNo: [1],
         acceptedTraineeNo: [''],
         actualTraineeNo: [''],
         expectedStartDate: [new Date(), Validators.required],
         expectedEndDate: [new Date(), Validators.required],
-        locationID: ['', Validators.required],
+        location: ['Việt Nam', Validators.required],
         detailedLocation: [''],
-        budgetCode: ['', Validators.required],
-        estimatedBudget: [0, Validators.required],
-        classAdmin: [[], Validators.required],
+        budgetCode: [null, Validators.required],
+        estimatedBudget: [null, Validators.required],
+        classAdmin: [null, Validators.required],
         learningPath: ['', Validators.required],
         history: [''],
       }),
 
       detail: formBuilder.group({
-        subjectType: [''],
-        subSubjectType: [''],
-        deliveryType: [''],
+        subjectType: [0],
+        subSubjectType: [0],
+        deliveryType: [0],
         formatType: [0],
-        scope: [''],
+        scope: [0],
         supplier: [''],
         actualStartDate: [new Date()],
         actualEndDate: [new Date()],
@@ -329,12 +337,41 @@ export class NewClassComponent implements OnInit {
       eventCategory: [''],
       relatedPeople: [''],
 
-      action: [0],
-      pic: [0],
+      action: [''],
+      pic: [''],
       deadline: [new Date()],
 
       note: [''],
     });
+  }
+
+  private getDataFormArray(
+    list: Array<any>,
+    form: FormArray<any>,
+    table: MatTable<any>
+  ) {
+    const length = list.length;
+    if (length === 0) {
+      form?.removeAt(0);
+      return;
+    }
+    for (let index = 0; index < length - 1; index++) {
+      form?.push(this.initBudget());
+    }
+    form?.patchValue(list);
+    table?.renderRows();
+  }
+
+  transformAmount(element: any) {
+    const val = element.get('amount')?.value;
+    return this.currencyPipe.transform(val, '0');
+  }
+
+  onChangeExpectedStartDate(event: { value: Date }) {
+    const chooseDate = event.value;
+    if (chooseDate > this.generals.get('expectedEndDate')?.value) {
+      this.generals.get('expectedEndDate')?.setValue(chooseDate);
+    }
   }
 }
 export class MyErrorStateMatcher implements ErrorStateMatcher {

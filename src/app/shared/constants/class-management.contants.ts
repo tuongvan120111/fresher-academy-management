@@ -1,249 +1,104 @@
-export const BudgetCodeList = [
-  {
-    id: 0,
-    name: 'CTC_Project_ADP',
-  },
-  {
-    id: 1,
-    name: 'CTC_Fresher_Allowance',
-  },
-  {
-    id: 2,
-    name: 'CTC_Fresher_Training',
-  },
-  {
-    id: 3,
-    name: 'CTC_Specific_Fresher_Allowance',
-  },
-  {
-    id: 4,
-    name: 'CTC_Specific_Fresher_Training',
-  },
-  {
-    id: 5,
-    name: 'CTC_Specific_Fresher_Training_Award',
-  },
-  {
-    id: 6,
-    name: 'CTC_FU',
-  },
-  {
-    id: 7,
-    name: 'CTC_Uni',
-  },
-];
-
-export const SubjectTypeList = [
-  {
-    id: 0,
-    name: 'Organizational Overview & Culture',
-  },
-  {
-    id: 1,
-    name: 'Company Process',
-  },
-  {
-    id: 2,
-    name: 'Standard Process',
-  },
-  {
-    id: 3,
-    name: 'IT Technical',
-  },
-  {
-    id: 4,
-    name: 'Non-IT Technical',
-  },
-  {
-    id: 5,
-    name: 'Foreign Language',
-  },
-  {
-    id: 6,
-    name: 'Soft Skill',
-  },
-  {
-    id: 7,
-    name: 'Management',
-  },
-];
-
-export const SubSubjectTypeList = [
-  {
-    id: 0,
-    name: 'Cloud',
-  },
-  {
-    id: 1,
-    name: 'Big Data',
-  },
-  {
-    id: 2,
-    name: 'CAD',
-  },
-  {
-    id: 3,
-    name: 'CAE',
-  },
-  {
-    id: 4,
-    name: 'SAP',
-  },
-  {
-    id: 5,
-    name: 'IT General',
-  },
-  {
-    id: 6,
-    name: 'Test',
-  },
-  {
-    id: 7,
-    name: 'Others',
-  },
-];
-
-export const DeliveryTypeList = [
-  {
-    id: 0,
-    name: 'Class',
-  },
-  {
-    id: 1,
-    name: 'Seminar',
-  },
-  {
-    id: 2,
-    name: 'Exam',
-  },
-  {
-    id: 3,
-    name: 'Contest',
-  },
-  {
-    id: 4,
-    name: 'Certificate',
-  },
-  {
-    id: 5,
-    name: 'Club',
-  },
-  {
-    id: 6,
-    name: 'OJT',
-  },
-  {
-    id: 7,
-    name: 'Others',
-  },
-];
-
-export const FormatTypeList = [
-  {
-    id: 0,
-    name: 'Online',
-  },
-  {
-    id: 1,
-    name: 'Offline',
-  },
-  {
-    id: 2,
-    name: 'Blended',
-  },
-];
-
-export const ScopeList = [
-  {
-    id: 0,
-    name: 'Company',
-  },
-  {
-    id: 1,
-    name: 'Unit',
-  },
-  {
-    id: 2,
-    name: 'Outside',
-  },
-];
-
-export const EventCategoryList = [
-  {
-    id: 0,
-    name: 'Trainer',
-  },
-  {
-    id: 1,
-    name: 'Trainee',
-  },
-  {
-    id: 2,
-    name: 'Courseware',
-  },
-  {
-    id: 3,
-    name: 'Organization',
-  },
-  {
-    id: 4,
-    name: 'Logistics',
-  },
-  {
-    id: 5,
-    name: 'Management',
-  },
-  {
-    id: 6,
-    name: 'Calendar',
-  },
-  {
-    id: 7,
-    name: 'Others',
-  },
-];
-
-export const ClassAdminList = [
-  {
-    id: 0,
-    name: 'Extra cheese',
-  },
-  {
-    id: 1,
-    name: 'Mushroom',
-  },
-  {
-    id: 2,
-    name: 'Onion',
-  },
-  {
-    id: 3,
-    name: 'Pepperoni',
-  },
-  {
-    id: 4,
-    name: 'Sausage',
-  },
-  {
-    id: 5,
-    name: 'Tomato',
-  },
-];
-
-export const ClassStatus: StatusType = {
-  0: 'Planned',
-  1: 'In-progress',
-  2: 'Pending for review',
-  3: 'Draft',
-  4: 'Closed',
-  5: 'Wating for more information',
-  6: 'Rejected',
-  7: 'Declined',
-  8: 'Canceled',
+export const BudgetCodeList = {
+  CTC_Project_ADP: 'CTC_Project_ADP',
+  CTC_Fresher_Allowance: 'CTC_Fresher_Allowance',
+  CTC_Fresher_Training: 'CTC_Fresher_Training',
+  CTC_Specific_Fresher_Allowance: 'CTC_Specific_Fresher_Allowance',
+  CTC_Specific_Fresher_Training: 'CTC_Specific_Fresher_Training',
+  CTC_Specific_Fresher_Training_Award: 'CTC_Specific_Fresher_Training_Award',
+  CTC_FU: 'CTC_FU',
+  CTC_Uni: 'CTC_Uni',
 };
 
-type StatusType = {
-  [key: number]: string;
+export const SubjectTypeList = {
+  OrganizationalOverviewCulture: 'Organizational Overview & Culture',
+  CompanyProcess: 'Company Process',
+  StandardProcess: 'Standard Process',
+  ITTechnical: 'IT Technical',
+  NonITTechnical: 'Non-IT Technical',
+  ForeignLanguage: 'Foreign Language',
+  SoftSkill: 'Soft Skill',
+  Management: 'Management',
+};
+
+export const SubSubjectTypeList = {
+  Cloud: 'Cloud',
+  BigData: 'Big Data',
+  CAD: 'CAD',
+  CAE: 'CAE',
+  SAP: 'SAP',
+  ITGeneral: 'IT General',
+  Test: 'Test',
+  Others: 'Others',
+};
+
+export const DeliveryTypeList = {
+  Class: 'Class',
+  Seminar: 'Seminar',
+  Exam: 'Exam',
+  Contest: 'Contest',
+  Certificate: 'Certificate',
+  Club: 'Club',
+  OJT: 'OJT',
+  Others: 'Others',
+};
+
+export const FormatTypeList = {
+  Online: 'Online',
+  Offline: 'Offline',
+  Blended: 'Blended',
+};
+export const ScopeList = {
+  Company: 'Company',
+  Unit: 'Unit',
+  Outside: 'Outside',
+};
+
+export const EventCategoryList = {
+  Trainer: 'Trainer',
+  Trainee: 'Trainee',
+  Courseware: 'Courseware',
+  Organization: 'Organization',
+  Logistics: 'Logistics',
+  Management: 'Management',
+  Calendar: 'Calendar',
+  Others: 'Others',
+};
+
+export const ClassAdminList = {
+  ExtraCheese: 'Extra cheese',
+};
+
+// export enum ClassStatus {
+//   Planning = 0,
+//   Planned,
+//   InProgress,
+//   Pending,
+//   Draft,
+//   Submitted,
+//   Closed,
+//   Wating,
+//   Rejected,
+//   Declined,
+//   Canceled,
+//   Approved,
+// }
+
+export const ClassStatusString = {
+  Planning: 'Planning',
+  Planned: 'Planned',
+  InProgress: 'In-progress',
+  Pending: 'Pending for review',
+  Draft: 'Draft',
+  Closed: 'Closed',
+  Wating: 'Wating for more information',
+  Rejected: 'Rejected',
+  Declined: 'Declined',
+  Canceled: 'Canceled',
+  Submitted: 'Submitted',
+  Approved: 'Approved',
+  Started: 'Started',
+  Requested: 'Requested',
+  Finished: 'Finished',
 };
 
 export const ClassManagementColumns: string[] = [
@@ -279,3 +134,16 @@ export const AuditDisplayedColumns: string[] = [
   'deadline',
   'note',
 ];
+
+export enum ButtonType {
+  Submit = 0,
+  Start,
+  Finish,
+  Cancel,
+  Approve,
+  Reject,
+  Close,
+  Request,
+  Accept,
+  Decline,
+}

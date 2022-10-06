@@ -1,11 +1,13 @@
-table {
-  width: 100%;
-}
-
 table,
 th,
 td {
   border: 1px solid;
+  width: 6vw;
+  & > p {
+    width: 6vw;
+    margin: auto;
+    padding: 5px;
+  }
 }
 
 th.mat-header-cell:first-of-type,
@@ -79,10 +81,19 @@ h3 {
   div {
     width: 100%;
   }
-
-  .mat-form-field:has(input:not(.date-input):read-only) {
-    background-color: lightgrey;
+  .mat-form-field:has(input:not(.date-input):read-only),
+  .mat-form-field:has(input:not(.date-input):not(.file-input):disabled) {
+    background-color: #d3d3d3;
+    color: black;
   }
+
+  .mat-form-field:has(input.file-input:read-only) {
+    background-color: #fff;
+  }
+}
+td.mat-cell:has(input:disabled),
+td.mat-cell:has(button:disabled) {
+  background-color: lightgrey;
 }
 
 fieldset:not(:first-child) {
@@ -94,6 +105,10 @@ form > button {
 }
 
 :host ::ng-deep {
+  table {
+    box-sizing: border-box;
+    width: 100%;
+  }
   input:read-only {
     cursor: default;
   }
@@ -118,6 +133,47 @@ form > button {
   .mat-form-field-appearance-outline.mat-focused .mat-form-field-outline-thick {
     color: transparent;
   }
+
+  .file-input {
+    background: none;
+  }
+
+  .mat-form-field.mat-form-field-disabled {
+    background: #d3d3d3;
+    color: black;
+    width: 100%;
+  }
+
+  th.mat-header-cell:last-of-type,
+  td.mat-cell:last-of-type,
+  td.mat-footer-cell:last-of-type {
+    padding: 0;
+  }
+
+  .mat-expansion-panel-header {
+    padding: 0;
+    display: contents;
+  }
+  .mat-expansion-panel-header-title {
+    flex: 1;
+    display: block;
+    margin: 0;
+  }
+  .mat-content.mat-content-hide-toggle {
+    margin: 0;
+  }
+
+  .mat-expansion-panel:not([class*="mat-elevation-z"]) {
+    box-shadow: none;
+  }
+  .mat-expansion-panel-body {
+    padding: 0;
+  }
+
+  .mat-form-field-outline-start,
+  .mat-form-field-outline-end {
+    border-radius: 0 !important;
+  }
 }
 
 input[type="file"] {
@@ -134,4 +190,12 @@ input[type="number"]::-webkit-inner-spin-button {
 /* Firefox */
 input[type="number"] {
   -moz-appearance: textfield;
+}
+
+input.file-input {
+  cursor: pointer;
+}
+
+.date-input {
+  cursor: pointer !important;
 }

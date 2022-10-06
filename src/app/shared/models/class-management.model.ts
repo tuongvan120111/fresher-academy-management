@@ -4,19 +4,23 @@ export interface ClassModel {
   general: ClassGeneral;
   detail: ClassDetail;
 
-  budget?: Array<ClassBudget>;
-  audit?: Array<ClassAudit>;
+  budget: Array<ClassBudget>;
+  audit: Array<ClassAudit>;
+
+  createdDate: Date | number;
+  updatedDate: Date | number;
 }
 
 export interface LocationModel {
   id: string;
   name?: string;
+  acronym?: string;
 }
 
 interface ClassGeneral {
   classCode: string; // Site_FR_Skill_YY_XX || Site_CP_Skill_YY_XX  auto gen - Block
   className: string; // auto gen - Block
-  status: number;
+  status: string;
 
   plannedTraineeNo: number;
   acceptedTraineeNo: string; // Block
@@ -29,7 +33,7 @@ interface ClassGeneral {
   locationID: string; // drop down
   detailedLocation: string;
 
-  budgetCode: number;
+  budgetCode: string;
   estimatedBudget: number;
 
   classAdmin: Array<number>;
@@ -59,7 +63,7 @@ interface ClassDetail {
 
 export interface ClassBudget {
   total: number;
-  overBudget: number;
+  // overBudget: number;
 
   item: string;
   unit: string;
@@ -69,7 +73,7 @@ export interface ClassBudget {
   amount: number;
   tax: number;
 
-  sum: number;
+  // sum: number;
   note: string;
 }
 

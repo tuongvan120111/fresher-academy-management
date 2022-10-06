@@ -43,4 +43,6 @@ export interface DialogCommonData {
   message: string;
   buttons: string;
   isOneButton?: boolean;
+  iconColor?: string;
+  isShowInputMessage?: boolean;
 }

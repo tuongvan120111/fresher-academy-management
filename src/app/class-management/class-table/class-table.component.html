@@ -2,73 +2,97 @@
   <h3>Class Listing</h3>
 
   <div class="content-container">
-    <div class="flex-container">
-      <div class="item-container">
-        <p>Location</p>
-        <mat-form-field appearance="fill">
-          <mat-select [(value)]="locationSelected">
-            <mat-option *ngFor="let data of location" [value]="data.value">
-              {{ data.viewValue }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
+    <form [formGroup]="searchData" (ngSubmit)="search(searchData.value)">
+      <div class="flex-container">
+        <div class="item-container">
+          <p>Location</p>
+          <mat-form-field appearance="outline">
+            <mat-select formControlName="location">
+              <mat-option *ngFor="let data of location" [value]="data.id">
+                {{ data.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="item-container">
+          <p>Class Name</p>
+          <mat-form-field appearance="outline">
+            <input
+              matInput
+              placeholder="Class Name"
+              value=""
+              formControlName="name"
+            />
+          </mat-form-field>
+        </div>
+
+        <div class="item-container">
+          <p>Status</p>
+          <mat-form-field appearance="outline">
+            <mat-select formControlName="status">
+              <mat-option
+                *ngFor="let data of classStatus | keyvalue"
+                [value]="data.key"
+              >
+                {{ data.value }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="button-container">
+          <button mat-stroked-button>
+            <mat-icon
+              aria-hidden="false"
+              aria-label="Search icon"
+              fontIcon="search"
+            ></mat-icon>
+            Search
+          </button>
+        </div>
       </div>
 
-      <div class="item-container">
-        <p>Class Name</p>
-        <mat-form-field appearance="fill">
-          <input matInput placeholder="Class Name" value="" />
-        </mat-form-field>
-      </div>
+      <div class="flex-container">
+        <div class="item-container">
+          <p>From Date</p>
+          <mat-form-field appearance="outline">
+            <input
+              matInput
+              [matDatepicker]="fromDate"
+              formControlName="fromDate"
+              (click)="fromDate.open()"
+              style="cursor: pointer"
+              readonly
+            />
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="fromDate"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #fromDate></mat-datepicker>
+          </mat-form-field>
+        </div>
 
-      <div class="item-container">
-        <p>Status</p>
-        <mat-form-field appearance="fill">
-          <mat-select [(value)]="statusSelected">
-            <mat-option *ngFor="let data of status" [value]="data.value">
-              {{ data.viewValue }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
+        <div class="item-container">
+          <p>To Date</p>
+          <mat-form-field appearance="outline">
+            <input
+              matInput
+              [matDatepicker]="toDate"
+              formControlName="toDate"
+              (click)="toDate.open()"
+              style="cursor: pointer"
+              readonly
+            />
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="toDate"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #toDate></mat-datepicker>
+          </mat-form-field>
+        </div>
       </div>
-
-      <div class="button-container">
-        <button mat-stroked-button>
-          <mat-icon
-            aria-hidden="false"
-            aria-label="Search icon"
-            fontIcon="search"
-          ></mat-icon>
-          Search
-        </button>
-      </div>
-    </div>
-
-    <div class="flex-container">
-      <div class="item-container">
-        <p>From Date</p>
-        <mat-form-field appearance="fill">
-          <input matInput [matDatepicker]="fromDate" />
-          <mat-datepicker-toggle
-            matSuffix
-            [for]="fromDate"
-          ></mat-datepicker-toggle>
-          <mat-datepicker #fromDate></mat-datepicker>
-        </mat-form-field>
-      </div>
-
-      <div class="item-container">
-        <p>To Date</p>
-        <mat-form-field appearance="fill">
-          <input matInput [matDatepicker]="toDate" />
-          <mat-datepicker-toggle
-            matSuffix
-            [for]="toDate"
-          ></mat-datepicker-toggle>
-          <mat-datepicker #toDate></mat-datepicker>
-        </mat-form-field>
-      </div>
-    </div>
+    </form>
 
     <mat-progress-bar
       mode="indeterminate"
@@ -124,14 +148,14 @@
         <ng-container matColumnDef="actualStartDate">
           <th mat-header-cell *matHeaderCellDef>Actual Start Date</th>
           <td mat-cell *matCellDef="let element">
-            {{ element.detail.actualStartDate | date: "yyyy-MM-dd" }}
+            {{ convertNumberToDate(element.detail.actualStartDate) }}
           </td>
         </ng-container>
 
         <ng-container matColumnDef="actualEndDate">
           <th mat-header-cell *matHeaderCellDef>Actual End Date</th>
           <td mat-cell *matCellDef="let element">
-            {{ element.detail.actualEndDate | date: "yyyy-MM-dd" }}
+            {{ convertNumberToDate(element.detail.actualEndDate) }}
           </td>
         </ng-container>
 
@@ -145,7 +169,7 @@
         <ng-container matColumnDef="status">
           <th mat-header-cell *matHeaderCellDef>Status</th>
           <td mat-cell *matCellDef="let element">
-            {{ getStatusClass(element.general.status) }}
+            {{ element.general.status }}
           </td>
         </ng-container>
 
@@ -165,6 +189,7 @@
       [pageSizeOptions]="[5, 10, 20]"
       showFirstLastButtons
       aria-label="Select page of periodic elements"
+      (page)="handlePageEvent($event)"
     >
     </mat-paginator>
 
@@ -195,7 +220,13 @@
         </mat-icon>
         Update Class
       </button>
-      <button mat-stroked-button (click)="openDialog()">
+      <button
+        mat-stroked-button
+        (click)="cancelClass()"
+        [disabled]="
+          selection.selected.length === 0 && isMeetConditionShowCancelButton
+        "
+      >
         <mat-icon
           aria-hidden="false"
           aria-label="Search icon"

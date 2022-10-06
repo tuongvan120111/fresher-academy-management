@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, CurrencyPipe } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { MatTableModule } from '@angular/material/table';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -20,6 +20,7 @@ import { NewClassComponent } from './class-detail/class-detail.component';
 import { ClassManagementComponent } from './class-management.component';
 import { FooterButtonComponent } from './footer-button/footer-button.component';
 import { ClassTableComponent } from './class-table/class-table.component';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 const routes: Routes = [
   { path: '', component: ClassTableComponent },
@@ -52,7 +53,9 @@ const routes: Routes = [
     MatDialogModule,
     DialogModule,
     MatProgressBarModule,
+    MatExpansionModule,
     RouterModule.forChild(routes),
   ],
+  providers: [CurrencyPipe],
 })
 export class ClassManagementModule {}

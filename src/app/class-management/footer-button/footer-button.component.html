@@ -29,7 +29,7 @@
 
 <ng-template #buttonUpdate>
   <div class="btn-container">
-    <button mat-stroked-button type="submit">
+    <button mat-stroked-button type="submit" [disabled]="isFARec()">
       <mat-icon
         aria-hidden="false"
         aria-label="Search icon"
@@ -39,7 +39,14 @@
       </mat-icon>
       Update Class
     </button>
-    <button mat-stroked-button>
+    <button
+      mat-stroked-button
+      [disabled]="
+        isTrainer() || isFARec() || status !== ClassStatusString.Draft
+      "
+      (click)="onClickButon(ButtonType.Submit)"
+      type="button"
+    >
       <mat-icon
         aria-hidden="false"
         aria-label="Search icon"
@@ -49,7 +56,14 @@
       </mat-icon>
       Submit Class
     </button>
-    <button mat-stroked-button>
+    <button
+      mat-stroked-button
+      type="button"
+      (click)="onClickButon(ButtonType.Start)"
+      [disabled]="
+        isTrainer() || isFARec() || status !== ClassStatusString.Planned
+      "
+    >
       <mat-icon
         aria-hidden="false"
         aria-label="Search icon"
@@ -59,7 +73,14 @@
       </mat-icon>
       Start Class
     </button>
-    <button mat-stroked-button>
+    <button
+      mat-stroked-button
+      type="button"
+      (click)="onClickButon(ButtonType.Finish)"
+      [disabled]="
+        isTrainer() || isFARec() || status !== ClassStatusString.InProgress
+      "
+    >
       <mat-icon
         aria-hidden="false"
         aria-label="Search icon"
@@ -80,7 +101,12 @@
       Close
     </button>
 
-    <button mat-stroked-button>
+    <button
+      mat-stroked-button
+      type="button"
+      (click)="onClickButon(ButtonType.Cancel)"
+      [disabled]="isClassAdmin() || isTrainer() || isFARec()"
+    >
       <mat-icon
         aria-hidden="false"
         aria-label="Search icon"
@@ -88,9 +114,19 @@
         [ngStyle]="{ color: 'red' }"
       >
       </mat-icon>
-      Cancle Class
+      Cancel Class
     </button>
-    <button mat-stroked-button>
+    <button
+      mat-stroked-button
+      type="button"
+      (click)="onClickButon(ButtonType.Approve)"
+      [disabled]="
+        isClassAdmin() ||
+        isTrainer() ||
+        isFARec() ||
+        status !== ClassStatusString.Submitted
+      "
+    >
       <mat-icon
         aria-hidden="false"
         aria-label="Search icon"
@@ -100,7 +136,17 @@
       </mat-icon>
       Approve Class
     </button>
-    <button mat-stroked-button>
+    <button
+      mat-stroked-button
+      type="button"
+      (click)="onClickButon(ButtonType.Reject)"
+      [disabled]="
+        isClassAdmin() ||
+        isTrainer() ||
+        isFARec() ||
+        status !== ClassStatusString.Submitted
+      "
+    >
       <mat-icon
         aria-hidden="false"
         aria-label="Search icon"
@@ -110,7 +156,17 @@
       </mat-icon>
       Reject Class
     </button>
-    <button mat-stroked-button>
+    <button
+      mat-stroked-button
+      type="button"
+      (click)="onClickButon(ButtonType.Close)"
+      [disabled]="
+        isClassAdmin() ||
+        isTrainer() ||
+        isFARec() ||
+        status !== ClassStatusString.Pending
+      "
+    >
       <mat-icon
         aria-hidden="false"
         aria-label="Search icon"
@@ -120,7 +176,17 @@
       </mat-icon>
       Close Class
     </button>
-    <button mat-stroked-button>
+    <button
+      mat-stroked-button
+      type="button"
+      (click)="onClickButon(ButtonType.Request)"
+      [disabled]="
+        isClassAdmin() ||
+        isTrainer() ||
+        isFARec() ||
+        status !== ClassStatusString.Pending
+      "
+    >
       <mat-icon
         aria-hidden="false"
         aria-label="Search icon"
@@ -131,7 +197,18 @@
       Request Info
     </button>
 
-    <button mat-stroked-button>
+    <button
+      mat-stroked-button
+      type="button"
+      (click)="onClickButon(ButtonType.Accept)"
+      [disabled]="
+        isDeliveryManager() ||
+        isClassAdmin() ||
+        isTrainer() ||
+        isFARec() ||
+        status !== ClassStatusString.Planned
+      "
+    >
       <mat-icon
         aria-hidden="false"
         aria-label="Search icon"
@@ -141,7 +218,18 @@
       </mat-icon>
       Accept Class
     </button>
-    <button mat-stroked-button>
+    <button
+      mat-stroked-button
+      type="button"
+      (click)="onClickButon(ButtonType.Decline)"
+      [disabled]="
+        isDeliveryManager() ||
+        isClassAdmin() ||
+        isTrainer() ||
+        isFARec() ||
+        status !== ClassStatusString.Planned
+      "
+    >
       <mat-icon
         aria-hidden="false"
         aria-label="Search icon"

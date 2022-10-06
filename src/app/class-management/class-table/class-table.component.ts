@@ -1,3 +1,6 @@
+import { RoleUser } from 'src/app/shared/constants/common.constants';
+import { CommonService } from 'src/app/shared/services/common.service';
+import { Authentications } from 'src/app/shared/models/common.model';
 import { ClassManagementService } from '../../shared/services/class-management.service';
 
 import {
@@ -10,14 +13,20 @@ import {
 } from '@angular/core';
 import { SelectionModel } from '@angular/cdk/collections';
 import { MatTableDataSource } from '@angular/material/table';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatDialog } from '@angular/material/dialog';
 import {
   ClassManagementColumns,
-  ClassStatus,
+  ClassStatusString,
 } from 'src/app/shared/constants/class-management.contants';
-import { ClassModel } from 'src/app/shared/models/class-management.model';
-import { DialogComponent } from 'src/app/components/dialog/dialog.component';
+import {
+  ClassModel,
+  LocationModel,
+} from 'src/app/shared/models/class-management.model';
+import { DialogSizeSComponent } from 'src/app/components/dialog-size-s/dialog-size-s.component';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { Observable, tap } from 'rxjs';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-class-table',
@@ -25,17 +34,22 @@ import { DialogComponent } from 'src/app/components/dialog/dialog.component';
   styleUrls: ['./class-table.component.scss'],
 })
 export class ClassTableComponent implements OnInit, AfterViewInit, OnChanges {
+  private userInfo: Authentications | undefined;
   displayedColumns: string[] = ClassManagementColumns;
   classData = new MatTableDataSource<ClassModel>([]);
   selection = new SelectionModel<ClassModel>(true, []);
 
-  location: SelectData[] = [{ value: 'all', viewValue: 'All' }];
-  locationSelected = 'all';
-
-  status: SelectData[] = [{ value: 'all', viewValue: 'All' }];
-  statusSelected = 'all';
+  location!: LocationModel[];
 
   isLoading: boolean = true;
+  isMeetConditionShowCancelButton: boolean = false;
+
+  classStatus = {};
+  searchData!: FormGroup;
+  paganationData = {
+    pageSize: 5,
+    pageIndex: 0,
+  };
 
   isAllSelected() {
     const numSelected = this.selection.selected.length;
@@ -52,10 +66,18 @@ export class ClassTableComponent implements OnInit, AfterViewInit, OnChanges {
     this.selection.select(...this.classData.data);
   }
 
+  temp:boolean=false;
   /** The label for the checkbox on the passed row */
   checkboxLabel(row?: ClassModel): string {
     if (!row) {
       return `${this.isAllSelected() ? 'deselect' : 'select'} all`;
+    }
+    if (this.selection.isSelected(row)){
+
+      this.temp = [ClassStatusString.Draft, ClassStatusString.Submitted].includes(
+        row.general.status
+      )
+      console.log(this.temp)
     }
     return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${
       (row.id || '') + 1
@@ -70,14 +92,30 @@ export class ClassTableComponent implements OnInit, AfterViewInit, OnChanges {
 
   constructor(
     private classManagementService: ClassManagementService,
-    public dialog: MatDialog
-  ) {}
+    private commonSer: CommonService,
+    private dialog: MatDialog,
+    formBuilder: FormBuilder
+  ) {
+    this.userInfo = this.commonSer.getCurrentUser();
+    const role = this.userInfo?.role || 0;
+    this.isMeetConditionShowCancelButton = [
+      RoleUser.SystemAdmin,
+      RoleUser.FAManager,
+      RoleUser.DeliveryManager,
+    ].includes(role);
+
+    this.initSearchForm(formBuilder);
+  }
 
   ngOnInit(): void {
-    this.classManagementService.getListClass().subscribe((data: any) => {
-      this.isLoading = false;
-      this.classData = new MatTableDataSource<ClassModel>(data);
-    });
+    this.classManagementService
+      .getListClass(this.paganationData.pageIndex, this.paganationData.pageSize)
+      .subscribe({
+        next: (data) => {
+          this.isLoading = false;
+          this.classData = new MatTableDataSource<ClassModel>(data);
+        },
+      });
   }
 
   ngOnChanges(changes: SimpleChanges): void {}
@@ -86,29 +124,118 @@ export class ClassTableComponent implements OnInit, AfterViewInit, OnChanges {
     this.classData.paginator = this.paginator;
   }
 
-  toggleIsCreateClass(): void {
-    this.isCreateClass = !this.isCreateClass;
-  }
-
-  toggleIsUpdateClass(): void {
-    this.isUpdateClass = !this.isUpdateClass;
-  }
-
-  getStatusClass(status: number = 0): string {
-    return ClassStatus[status] || 'None';
-  }
-
   openDialog(): void {
-    const dialogRef = this.dialog.open(DialogComponent, {
-      width: '400px',
+    const dialogRef = this.dialog.open(DialogSizeSComponent, {
+      width: '450px',
+      data: {
+        icon: ['info'],
+        title: 'Confirm',
+        message: 'Do you want to cancel class?',
+        buttons: 'Ok',
+      },
     });
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        this.classManagementService.cancleClass(this.selection.selected[0]);
+        this.classManagementService.updateStatusClass(
+          this.selection.selected[0],
+          ClassStatusString.Canceled
+        );
         this.selection.clear();
       }
     });
+  }
+
+  handlePageEvent(event: PageEvent) {
+    const { pageSize, pageIndex } = event;
+    this.paganationData = {
+      pageSize,
+      pageIndex,
+    };
+    this.isLoading = true;
+    this.selection.clear();
+    this.classData = new MatTableDataSource<ClassModel>([]);
+    this.classManagementService
+      .getListClass(pageIndex, pageSize)
+      .subscribe((data: any) => {
+        setTimeout(() => {
+          this.isLoading = false;
+          this.classData = new MatTableDataSource<ClassModel>(data);
+        }, 1000);
+      });
+  }
+
+  cancelClass() {
+    const dialogRef = this.dialog.open(DialogSizeSComponent, {
+      width: '450px',
+      data: {
+        icon: ['info'],
+        title: 'Confirm',
+        message: 'Are you sure to cancel?',
+        iconColor: 'green',
+        buttons: 'OK',
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.selection.selected.forEach((data: ClassModel) => {
+          this.classManagementService.updateStatusClass(
+            data,
+            ClassStatusString.Canceled
+          );
+        });
+      }
+    });
+  }
+
+  private initSearchForm = (formBuilder: FormBuilder) => {
+    this.searchData = formBuilder.group({
+      location: ['All'],
+      name: [''],
+      status: ['All'],
+      fromDate: [],
+      toDate: [],
+    });
+    this.classManagementService
+      .getListLocations()
+      .pipe(
+        tap((data) => {
+          data.unshift({
+            id: 'All',
+            name: 'All',
+          });
+        })
+      )
+      .subscribe((data) => (this.location = data));
+
+    this.classStatus = {
+      All: 'All',
+      ...ClassStatusString,
+    };
+  };
+
+  search(value: {}) {
+    this.isLoading = true;
+    console.log(value);
+
+    const { pageSize, pageIndex } = this.paganationData;
+    this.selection.clear();
+    this.classData = new MatTableDataSource<ClassModel>([]);
+    this.classManagementService
+      .getListClass(pageIndex, pageSize, value)
+      .subscribe((data: any) => {
+        setTimeout(() => {
+          this.isLoading = false;
+          this.classData = new MatTableDataSource<ClassModel>(data);
+        }, 1000);
+      });
+  }
+
+  private datePipe = new DatePipe('en-US');
+  convertNumberToDate(val: number) {
+    // return this.datePipe.transform(val, 'yyyy-MM-ddTHH:mm');
+    return val;
   }
 }
 
