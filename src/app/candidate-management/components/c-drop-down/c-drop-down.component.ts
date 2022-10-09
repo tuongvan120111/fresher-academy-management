@@ -40,6 +40,7 @@ export class CDropDownComponent implements OnInit {
 
   clickedOutside() {
     this.showDropdown = false;
+    this.changeValue();
     this.onValueChange.emit(this.finalValue || this.defaultValue);
   }
 

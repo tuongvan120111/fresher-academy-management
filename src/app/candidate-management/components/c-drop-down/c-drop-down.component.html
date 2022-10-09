@@ -1,6 +1,6 @@
 <ng-container>
   <div (clickOutside)="clickedOutside()" class="dropdown">
-    <span>{{finalValue || defaultValue}}</span>
+    <span>{{finalValue || defaultValue || '' }}</span>
     <button (click)="toggleDropdown()" mat-raised-button>
       <mat-icon>arrow_drop_down</mat-icon>
     </button>

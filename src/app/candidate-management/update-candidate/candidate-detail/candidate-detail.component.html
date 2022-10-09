@@ -1,4 +1,4 @@
-<ng-container *ngIf="candidate">
+<ng-container>
   <div class="candidate-detail">
     <div class="content-title">
       <span>Personal Information</span>
@@ -8,7 +8,7 @@
         <div class="left-column">
           <div class="employee">
             <span class="w-20 border-right bg-gray-1">Empl ID</span>
-            <span class="w-60 border-right bg-gray-2">{{ candidate.employeeId }}</span>
+            <span class="w-60 border-right bg-gray-2">{{ candidate?.employeeId || autoId }}</span>
             <span class="w-20 border-right bg-gray-1">Type</span>
           </div>
           <div class="application flex">
@@ -20,7 +20,7 @@
           <div class="row-properties flex">
             <span class="w-20 bg-gray-1 border-right">Site</span>
             <span class="w-82 border-right">
-              <app-c-drop-down [defaultValue]="candidate.site" (onValueChange)="onSiteChange($event)" [label]="'sites'"
+              <app-c-drop-down [defaultValue]="candidate?.site" (onValueChange)="onSiteChange($event)" [label]="'sites'"
                                [options]="sites"></app-c-drop-down>
             </span>
           </div>
@@ -47,7 +47,7 @@
                 (onValueChange)="onUniversityChange($event)"
                 [label]="'university'"
                 [options]="universities"
-                [defaultValue]="candidate.university"
+                [defaultValue]="candidate?.university"
               >
               </app-c-drop-down>
             </span>
@@ -107,7 +107,7 @@
           </div>
           <div class="row-properties flex">
             <span class="w-20 bg-gray-1 border-right">CV</span>
-            <span class="w-82 border-right">23-OTc-2018</span>
+            <span class="w-82 border-right"></span>
           </div>
           <div class="row-properties flex">
             <span class="w-20 bg-gray-1 border-right">Faculty</span>
@@ -116,7 +116,7 @@
                  (onValueChange)="onFacultyChange($event)"
                  [label]="'faculty'"
                  [options]="faculties"
-                 [defaultValue]="candidate.faculty"
+                 [defaultValue]="candidate?.faculty"
                >
                </app-c-drop-down>
             </span>
@@ -156,14 +156,17 @@
             <span>History</span>
           </div>
           <div class="flex-grow-1 border-right">{{
-            candidate.history
+            candidate?.history
             }}</div>
         </div>
       </div>
     </form>
   </div>
   <div class="content-actions">
-    <button (click)="submit()" class="submit-btn" mat-raised-button>Submit</button>
+    <button *ngIf="isCreate; else update" (click)="submit()" class="submit-btn" mat-raised-button>Submit</button>
+    <ng-template #update>
+      <button (click)="submit()" class="submit-btn" mat-raised-button>update candidate</button>
+    </ng-template>
     <button (click)="goBack()" class="back-btn" mat-raised-button>
       <mat-icon color="warn">arrow_back</mat-icon>
       <span>Close</span>

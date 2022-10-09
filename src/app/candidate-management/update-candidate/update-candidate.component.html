@@ -16,6 +16,8 @@
                                 [sites]="(sites$ | async)"
                                 [channels]="(channels$ | async)"
                                 [faculties]="(faculty$ | async)"
+                                [isCreate]="isCreate"
+                                [autoId]="emplId"
                                 (onSubmit)="submit()"
           >
           </app-candidate-detail>

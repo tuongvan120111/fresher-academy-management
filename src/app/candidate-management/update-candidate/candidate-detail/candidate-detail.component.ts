@@ -16,6 +16,7 @@ import { IUniversity } from "../../services/university.service";
 import { ISite } from "../../services/sites.service";
 import { IChannel } from "../../services/channel.service";
 import { IFaculty } from "../../services/faculty.service";
+import { autoGenerateId } from "../../utils/helpers";
 
 @Component({
   selector: "app-candidate-detail",
@@ -45,6 +46,13 @@ export class CandidateDetailComponent implements OnInit, OnChanges {
   @Input()
   faculties: IFaculty[];
 
+  //Create or update candidate.
+  @Input()
+  isCreate: boolean;
+
+  @Input()
+  autoId: string;
+
   @Output()
   onSubmit = new EventEmitter();
 
@@ -56,8 +64,6 @@ export class CandidateDetailComponent implements OnInit, OnChanges {
   }
 
   ngOnInit(): void {
-    console.log(this.candidateForm.get("email"), "<== candidate");
-
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -67,6 +73,7 @@ export class CandidateDetailComponent implements OnInit, OnChanges {
   goBack() {
     this.router.navigate(["candidate-management"]);
   }
+
 
   setValue() {
     if (this.candidate) {
@@ -87,6 +94,11 @@ export class CandidateDetailComponent implements OnInit, OnChanges {
         faculty: this.candidate.faculty,
         note: this.candidate.note
       });
+    }
+    else {
+      this.candidateForm.patchValue({
+        applicationDate: moment(new Date()).format("YYYY-MM-DD")
+      })
     }
   }
 

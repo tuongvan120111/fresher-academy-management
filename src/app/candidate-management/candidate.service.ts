@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { AngularFirestore, AngularFirestoreCollection } from "@angular/fire/compat/firestore";
-import { ICandidate, IFirebaseDate, STATUS } from "./model/candidate.interface";
+import { ICandidate, IFirebaseDate, STATUS, STATUS_ARRAY } from "./model/candidate.interface";
 import { BehaviorSubject, from, map, Observable, shareReplay, tap } from "rxjs";
 
 export type FirebaseCandidateResponse = ICandidate<IFirebaseDate, STATUS>;
@@ -37,10 +37,11 @@ export class CandidateService {
   }
 
   private static _formatData(candidate: FirebaseCandidateResponse): FirebaseCandidateFormat {
+    console.log(STATUS_ARRAY[candidate.status])
     return {
       ...candidate,
       dob: CandidateService._formatTime(candidate.dob),
-      status: candidate.status === STATUS.PASS ? "pass" : "failed",
+      status: STATUS_ARRAY[candidate.status],
       graduateYear: CandidateService._formatTime(candidate.graduateYear),
       applicationDate: CandidateService._formatTime(candidate.applicationDate),
     };
@@ -64,5 +65,9 @@ export class CandidateService {
 
   updateCandidate(id: string, candidate: Partial<FirebaseCandidateResponse>): Observable<any> {
     return from(this.candidates.doc(id).update(candidate));
+  }
+
+  createCandidate(candidate: FirebaseCandidateResponse): Observable<any> {
+    return from(this.candidates.add(candidate));
   }
 }

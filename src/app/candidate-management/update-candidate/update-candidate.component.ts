@@ -12,7 +12,9 @@ import firebase from "firebase/compat/app";
 import * as moment from "moment";
 import { ConfirmDialogComponent } from "../components/confirm-dialog/confirm-dialog.component";
 import { MatDialog } from "@angular/material/dialog";
+import { autoGenerateId } from "../utils/helpers";
 import firestore = firebase.firestore;
+import { STATUS } from "../model/candidate.interface";
 
 const OTHER_OPTION: IUniversity = {
   name: "Other",
@@ -34,6 +36,7 @@ export class UpdateCandidateComponent implements OnInit {
   type = CANDIDATE_TAB_TYPE.CREATE;
   candidateId: string = "";
   candidateFormGroup: FormGroup;
+  emplId: string;
 
   constructor(
     private route: ActivatedRoute,
@@ -47,7 +50,11 @@ export class UpdateCandidateComponent implements OnInit {
   }
 
   private _initData() {
-    this.candidate$ = this.candidatesService.getCandidateById(this.candidateId).pipe(tap(console.log));
+    if (this.isCreate) {
+      this.generateEmplId();
+    } else {
+      this.candidate$ = this.candidatesService.getCandidateById(this.candidateId).pipe(tap(console.log));
+    }
     this.university$ = this.universityService.loadUniversity().pipe(
       map(universities => {
         universities.push(OTHER_OPTION);
@@ -103,58 +110,84 @@ export class UpdateCandidateComponent implements OnInit {
     return firestore.Timestamp.fromDate(momentDate);
   }
 
+  generateEmplId() {
+    this.emplId = autoGenerateId();
+  }
+
   submit() {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       width: "250px",
     });
     dialogRef.afterClosed().pipe(
       switchMap(result => {
-        if (result.ok) {
-          if (this.candidateFormGroup.valid) {
-            const {
-              skill,
-              note,
-              name,
-              site,
-              dob,
-              university,
-              applicationDate,
-              phone,
-              language,
-              channel,
-              account,
-              gender,
-              faculty,
-              email,
-              graduateYear,
-              level,
-            } = this.candidateFormGroup.value;
-            return this.candidatesService.updateCandidate(this.candidateId, {
-              skill: skill,
-              applicationDate: this._formatFirebaseDate(applicationDate),
-              note: note,
-              name: name,
-              site: site,
-              dob: this._formatFirebaseDate(dob),
-              university,
-              phone,
-              language,
-              history: `HoangPT11 ${moment(new Date()).format("DD-MMM-YYYY")}`,
-              channel,
-              account,
-              gender,
-              faculty,
-              email,
-              graduateYear: this._formatFirebaseDate(graduateYear),
-              level,
-            });
+        if (result.ok && this.candidateFormGroup.valid) {
+          if (!this.isCreate) {
+            return this.updateCandidate();
           } else {
-            return of(null);
+            return this.createCandidate();
           }
         } else {
           return of(null);
         }
       }),
     ).subscribe();
+  }
+
+  updateCandidate(): Observable<any> {
+    const {
+      skill,
+      note,
+      name,
+      site,
+      dob,
+      university,
+      applicationDate,
+      phone,
+      language,
+      channel,
+      account,
+      gender,
+      faculty,
+      email,
+      graduateYear,
+      level,
+    } = this.candidateFormGroup.value;
+    return this.candidatesService.updateCandidate(this.candidateId, {
+      skill: skill,
+      applicationDate: this._formatFirebaseDate(applicationDate),
+      note: note,
+      name: name,
+      site: site,
+      dob: this._formatFirebaseDate(dob),
+      university,
+      phone,
+      language,
+      history: `HoangPT11 ${moment(new Date()).format("DD-MMM-YYYY")}`,
+      channel,
+      account,
+      gender,
+      faculty,
+      email,
+      graduateYear: this._formatFirebaseDate(graduateYear),
+      level,
+    });
+  }
+
+  createCandidate(): Observable<any> {
+    const {
+      dob,
+      applicationDate,
+      graduateYear,
+    } = this.candidateFormGroup.value;
+    return this.candidatesService.createCandidate({
+      ...this.candidateFormGroup.value,
+      employeeId: this.emplId,
+      applicationDate: this._formatFirebaseDate(applicationDate),
+      dob: this._formatFirebaseDate(dob),
+      history: `ADMIN11 ${moment(new Date()).format("DD-MMM-YYYY")}`,
+      graduateYear: this._formatFirebaseDate(graduateYear),
+      account: 'DamLT1',
+      status: STATUS.NEW
+    });
   }
 }

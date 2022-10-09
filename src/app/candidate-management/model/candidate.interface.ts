@@ -29,7 +29,12 @@ export interface IFirebaseDate {
 }
 
 export enum STATUS {
-  PASS,
-  FAILED,
+  INTERVIEW_PASS,
+  INTERVIEW_FAILED,
+  NEW,
+  TEST_PASS,
+  TEST_FAILED
 }
+
+export const STATUS_ARRAY = ["interview - pass", "interview - failed", "new", "test - pass", "test - failed"]
 
