@@ -99,6 +99,7 @@ export class CandidateDetailComponent implements OnInit, OnChanges {
       this.candidateForm.patchValue({
         applicationDate: moment(new Date()).format("YYYY-MM-DD")
       })
+      this.candidateForm.get('account').disable();
     }
   }
 

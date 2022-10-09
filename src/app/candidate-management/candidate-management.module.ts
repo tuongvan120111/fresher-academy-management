@@ -20,6 +20,7 @@ import { MatDividerModule } from "@angular/material/divider";
 import { ClickOutSideDirective } from "./utils/directives/click-out-side.directive";
 import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
 import { MatDialogModule } from "@angular/material/dialog";
+import { CandidateResultComponent } from './update-candidate/candidate-result/candidate-result.component';
 
 const routes: Routes = [
   {
@@ -45,7 +46,8 @@ const routes: Routes = [
     CandidateDetailComponent,
     CDropDownComponent,
     ClickOutSideDirective,
-    ConfirmDialogComponent
+    ConfirmDialogComponent,
+    CandidateResultComponent
   ],
   imports: [
     CommonModule,

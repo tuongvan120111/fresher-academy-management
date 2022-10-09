@@ -1,0 +1,20 @@
+.candidate-result {
+  width: 95%;
+  margin: 20px auto 0px auto;
+  table {
+    width: 100%;
+    border: 1px solid black;
+  }
+  .table-header {
+    background: rgb(149, 188, 242);
+    border-bottom: 0.5px solid black;
+  }
+
+  .border-r {
+    border-right: 1px solid black;
+  }
+
+  .border-b {
+    border-bottom: 1px solid black;
+  }
+}
