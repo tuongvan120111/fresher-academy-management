@@ -18,6 +18,8 @@ import { MatCardModule } from "@angular/material/card";
 import { MatRadioModule } from "@angular/material/radio";
 import { MatDividerModule } from "@angular/material/divider";
 import { ClickOutSideDirective } from "./utils/directives/click-out-side.directive";
+import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
+import { MatDialogModule } from "@angular/material/dialog";
 
 const routes: Routes = [
   {
@@ -42,7 +44,8 @@ const routes: Routes = [
     TableCandidateComponent,
     CandidateDetailComponent,
     CDropDownComponent,
-    ClickOutSideDirective
+    ClickOutSideDirective,
+    ConfirmDialogComponent
   ],
   imports: [
     CommonModule,
@@ -58,6 +61,7 @@ const routes: Routes = [
     MatCardModule,
     MatRadioModule,
     MatDividerModule,
+    MatDialogModule,
   ],
   providers: [CandidateService, { provide: MAT_DATE_LOCALE, useValue: "en-GB" }],
 })

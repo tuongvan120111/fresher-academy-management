@@ -2,12 +2,17 @@ import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { CANDIDATE_TAB_TYPE } from "../utils/candidate.const";
 import { CandidateService, FirebaseCandidateFormat } from "../candidate.service";
-import { map, Observable, tap } from "rxjs";
-import { FormControl, FormGroup } from "@angular/forms";
+import { map, Observable, of, switchMap, tap } from "rxjs";
+import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { IUniversity, UniversityService } from "../services/university.service";
 import { ISite, SitesService } from "../services/sites.service";
 import { ChannelService, IChannel } from "../services/channel.service";
 import { FacultyService, IFaculty } from "../services/faculty.service";
+import firebase from "firebase/compat/app";
+import * as moment from "moment";
+import { ConfirmDialogComponent } from "../components/confirm-dialog/confirm-dialog.component";
+import { MatDialog } from "@angular/material/dialog";
+import firestore = firebase.firestore;
 
 const OTHER_OPTION: IUniversity = {
   name: "Other",
@@ -37,6 +42,7 @@ export class UpdateCandidateComponent implements OnInit {
     private sitesService: SitesService,
     private channelService: ChannelService,
     private facultyService: FacultyService,
+    private dialog: MatDialog,
   ) {
   }
 
@@ -70,8 +76,8 @@ export class UpdateCandidateComponent implements OnInit {
       gender: new FormControl(""),
       university: new FormControl(""),
       faculty: new FormControl(""),
-      phone: new FormControl(""),
-      email: new FormControl(""),
+      phone: new FormControl("", [Validators.minLength(10), Validators.maxLength(14)]),
+      email: new FormControl("", [Validators.email]),
       skill: new FormControl(""),
       language: new FormControl(""),
       note: new FormControl(""),
@@ -87,9 +93,68 @@ export class UpdateCandidateComponent implements OnInit {
     return this.type === CANDIDATE_TAB_TYPE.CREATE;
   }
 
+  private _formatFirebaseDate(date: string | Date) {
+    let momentDate;
+    if (typeof date === "string") {
+      momentDate = moment(date).toDate();
+    } else {
+      momentDate = date;
+    }
+    return firestore.Timestamp.fromDate(momentDate);
+  }
+
   submit() {
-    this.candidatesService.updateCandidate(this.candidateId, {
-      skill: this.candidateFormGroup.value.skill,
-    }).subscribe();
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: "250px",
+    });
+    dialogRef.afterClosed().pipe(
+      switchMap(result => {
+        if (result.ok) {
+          if (this.candidateFormGroup.valid) {
+            const {
+              skill,
+              note,
+              name,
+              site,
+              dob,
+              university,
+              applicationDate,
+              phone,
+              language,
+              channel,
+              account,
+              gender,
+              faculty,
+              email,
+              graduateYear,
+              level,
+            } = this.candidateFormGroup.value;
+            return this.candidatesService.updateCandidate(this.candidateId, {
+              skill: skill,
+              applicationDate: this._formatFirebaseDate(applicationDate),
+              note: note,
+              name: name,
+              site: site,
+              dob: this._formatFirebaseDate(dob),
+              university,
+              phone,
+              language,
+              history: `HoangPT11 ${moment(new Date()).format("DD-MMM-YYYY")}`,
+              channel,
+              account,
+              gender,
+              faculty,
+              email,
+              graduateYear: this._formatFirebaseDate(graduateYear),
+              level,
+            });
+          } else {
+            return of(null);
+          }
+        } else {
+          return of(null);
+        }
+      }),
+    ).subscribe();
   }
 }

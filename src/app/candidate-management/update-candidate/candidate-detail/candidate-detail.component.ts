@@ -10,7 +10,7 @@ import {
 } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { FirebaseCandidateFormat } from "../../candidate.service";
-import { FormGroup } from "@angular/forms";
+import { FormGroup, Validators } from "@angular/forms";
 import * as moment from "moment";
 import { IUniversity } from "../../services/university.service";
 import { ISite } from "../../services/sites.service";
@@ -56,7 +56,8 @@ export class CandidateDetailComponent implements OnInit, OnChanges {
   }
 
   ngOnInit(): void {
-    console.log(this.candidate, "<== candidate");
+    console.log(this.candidateForm.get("email"), "<== candidate");
+
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -69,7 +70,6 @@ export class CandidateDetailComponent implements OnInit, OnChanges {
 
   setValue() {
     if (this.candidate) {
-      console.log(this.candidate.channel, "<== channel")
       this.candidateForm.patchValue({
         name: this.candidate.name,
         email: this.candidate.email,
@@ -84,7 +84,8 @@ export class CandidateDetailComponent implements OnInit, OnChanges {
         language: this.candidate.language,
         channel: this.candidate.channel,
         gender: this.candidate.gender,
-        faculty: this.candidate.faculty
+        faculty: this.candidate.faculty,
+        note: this.candidate.note
       });
     }
   }
@@ -106,12 +107,16 @@ export class CandidateDetailComponent implements OnInit, OnChanges {
   }
 
   submit() {
-    this.onSubmit.emit()
+    this.onSubmit.emit();
   }
 
   onFacultyChange(faculty: string) {
     this.candidateForm.patchValue({
       faculty,
     });
+  }
+
+  getControlsError(controlName: string, errorName: string): boolean | null {
+    return this.candidateForm.get(controlName).errors?.[errorName];
   }
 }

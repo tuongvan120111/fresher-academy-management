@@ -55,7 +55,10 @@
           <div class="row-properties flex">
             <span class="w-20 bg-gray-1 border-right">Phone</span>
             <span class="w-82 border-right">
-          <input class="input" formControlName="phone" type="text" />
+          <input class="input"
+                 [ngClass]="{'error': getControlsError('phone', 'minlength') ||
+                                      getControlsError('phone', 'maxlength')}"
+                 formControlName="phone" type="text" />
         </span>
           </div>
           <div class="row-properties flex">
@@ -121,13 +124,14 @@
           <div class="row-properties flex">
             <span class="w-20 bg-gray-1 border-right">Email</span>
             <span class="w-82 border-right">
-              <input formControlName="email" class="input" type="text" />
+              <input formControlName="email" class="input"
+                     [ngClass]="{'error': getControlsError('email', 'email')}" type="text" />
             </span>
           </div>
           <div class="row-properties flex">
             <span class="w-20 bg-gray-1 border-right">Graduation Year</span>
             <span class="w-82 border-right">
-              <input class="input" formControlName="graduateYear" type="date" />
+              <input class="input" [max]="maxDate" formControlName="graduateYear" type="date" />
             </span>
           </div>
           <div class="row-properties flex">
@@ -151,7 +155,9 @@
           <div class="w-9 bg-gray-1 border-right">
             <span>History</span>
           </div>
-          <div class="flex-grow-1 border-right">23-OTc-2018</div>
+          <div class="flex-grow-1 border-right">{{
+            candidate.history
+            }}</div>
         </div>
       </div>
     </form>

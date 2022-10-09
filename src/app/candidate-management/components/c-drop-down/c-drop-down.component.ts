@@ -40,6 +40,7 @@ export class CDropDownComponent implements OnInit {
 
   clickedOutside() {
     this.showDropdown = false;
+    this.onValueChange.emit(this.finalValue || this.defaultValue);
   }
 
   get finalValue(): string {
@@ -51,6 +52,5 @@ export class CDropDownComponent implements OnInit {
       this.radioValue = this.otherValue;
       this.otherValue = "";
     }
-    this.onValueChange.emit(this.radioValue || this.defaultValue);
   }
 }

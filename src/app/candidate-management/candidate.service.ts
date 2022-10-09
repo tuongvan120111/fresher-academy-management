@@ -41,7 +41,8 @@ export class CandidateService {
       ...candidate,
       dob: CandidateService._formatTime(candidate.dob),
       status: candidate.status === STATUS.PASS ? "pass" : "failed",
-      graduateYear: CandidateService._formatTime(candidate.graduateYear)
+      graduateYear: CandidateService._formatTime(candidate.graduateYear),
+      applicationDate: CandidateService._formatTime(candidate.applicationDate),
     };
   }
 
@@ -62,6 +63,6 @@ export class CandidateService {
   }
 
   updateCandidate(id: string, candidate: Partial<FirebaseCandidateResponse>): Observable<any> {
-    return from(this.candidates.doc(id).update(candidate))
+    return from(this.candidates.doc(id).update(candidate));
   }
 }

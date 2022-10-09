@@ -17,6 +17,8 @@ export interface ICandidate<E, F> {
   channel: string;
   site: string;
   history: any;
+  applicationDate: E;
+  note: string;
 }
 
 export type GENDER = "male" | "female";
