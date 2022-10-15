@@ -21,11 +21,13 @@ import { ClassManagementComponent } from './class-management.component';
 import { FooterButtonComponent } from './footer-button/footer-button.component';
 import { ClassTableComponent } from './class-table/class-table.component';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { SpinnerModule } from '../components/spinner/spinner.module';
 
 const routes: Routes = [
   { path: '', component: ClassTableComponent },
   { path: 'new-class', component: NewClassComponent },
   { path: ':id', component: NewClassComponent },
+  { path: ':id/update', component: NewClassComponent },
   { path: '**', redirectTo: '/' },
 ];
 
@@ -54,6 +56,7 @@ const routes: Routes = [
     DialogModule,
     MatProgressBarModule,
     MatExpansionModule,
+    SpinnerModule,
     RouterModule.forChild(routes),
   ],
   providers: [CurrencyPipe],

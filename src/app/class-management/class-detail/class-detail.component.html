@@ -1,4 +1,5 @@
-<h3>Create Class</h3>
+<app-spinner *ngIf="isSpinnerLoading"></app-spinner>
+<h3>{{ title }}</h3>
 
 <mat-tab-group mat-align-tabs="start">
   <mat-tab label="Information">
@@ -110,7 +111,8 @@
                   (click)="expectedStartDate.open()"
                   readonly
                   (dateChange)="onChangeExpectedStartDate($event)"
-                  [min]="currentDate"
+                  [min]="isUpdateData ? '' : currentDate"
+                  [disabled]="isDisabled"
                 />
                 <mat-datepicker-toggle
                   matSuffix
@@ -129,6 +131,8 @@
                   [errorStateMatcher]="matcher"
                   (click)="expectedEndDate.open()"
                   [min]="generals.get('expectedStartDate')?.value"
+                  readonly
+                  [disabled]="isDisabled"
                 />
                 <mat-datepicker-toggle
                   matSuffix
@@ -147,7 +151,7 @@
                 >
                   <mat-option
                     *ngFor="let data of locationList | async"
-                    [value]="data.name"
+                    [value]="data.id"
                   >
                     {{ data.name }}
                   </mat-option>
@@ -204,16 +208,16 @@
                   required="true"
                 >
                   <!-- <mat-select-trigger>
-                  {{classAdmin.value?.[0] || ''}}
-                  <span *ngIf="(classAdmin.value?.length || 0) > 2">
-                    (+{{ (classAdmin.value?.length || 0) - 2 }}
-                    {{ classAdmin.value?.length === 3 ? "other" : "others" }})
-                  </span>
-                </mat-select-trigger> -->
+                    {{generals.get('classAdmin')?.value?.[0]?.account || ''}}
+                    <span *ngIf="(generals.get('classAdmin')?.value?.length || 0) > 2">
+                      (+{{ (generals.get('classAdmin')?.value?.length || 0) - 2 }}
+                      {{ generals.get('classAdmin')?.value?.length === 3 ? "other" : "others" }})
+                    </span>
+                  </mat-select-trigger> -->
                   <mat-option
-                    *ngFor="let data of classAdminList | keyvalue"
-                    [value]="data.key"
-                    >{{ data.value }}</mat-option
+                    *ngFor="let data of classAdminList | async"
+                    [value]="data.id"
+                    >{{ data.account }}</mat-option
                   >
                 </mat-select>
               </mat-form-field>
@@ -227,6 +231,7 @@
                   [errorStateMatcher]="matcher"
                   (click)="learningPath.click()"
                   placeholder="No file chosen"
+                  [disabled]="isDisabled"
                   readonly
                 />
                 <mat-icon matSuffix>file_upload</mat-icon>
@@ -235,13 +240,13 @@
             <div class="flex-container">
               <p style="width: 20%">History</p>
               <mat-form-field appearance="outline" [hideRequiredMarker]="true">
-                <input
+                <textarea
                   matInput
                   placeholder=""
                   value=""
                   formControlName="history"
                   readonly
-                />
+                ></textarea>
               </mat-form-field>
             </div>
           </mat-expansion-panel>
@@ -373,22 +378,30 @@
               <mat-form-field appearance="outline" [hideRequiredMarker]="true">
                 <mat-select matNativeControl formControlName="masterTrainer">
                   <mat-option
-                    *ngFor="let data of scopeList | keyvalue"
-                    [value]="data.key"
+                    *ngFor="let data of masterTrainerList | async"
+                    [value]="data.id"
                   >
-                    {{ data.value }}
+                    {{ data.account }}
                   </mat-option>
                 </mat-select>
               </mat-form-field>
 
               <p>Trainer</p>
               <mat-form-field appearance="outline" [hideRequiredMarker]="true">
-                <input
-                  matInput
-                  placeholder=""
-                  value=""
-                  formControlName="trainer"
-                />
+                <mat-select matNativeControl multiple formControlName="trainer">
+                  <!-- <mat-select-trigger>
+                    {{details.get('trainer')?.value?.[0]?.account || ''}}
+                    <span *ngIf="(details.get('trainer')?.value?.length || 0) > 1">
+                      (+{{ (details.get('trainer')?.value?.length || 0) - 1 }}
+                      {{ details.get('trainer')?.value?.length === 2 ? "other" : "others" }})
+                    </span>
+                  </mat-select-trigger> -->
+                  <mat-option
+                    *ngFor="let data of masterTrainerList | async"
+                    [value]="data.id"
+                    >{{ data.account }}</mat-option
+                  >
+                </mat-select>
               </mat-form-field>
             </div>
             <div class="flex-container">
@@ -401,6 +414,7 @@
                   formControlName="curriculumn"
                   (click)="curriculumn.click()"
                   placeholder="No file chosen"
+                  [disabled]="isDisabled"
                   readonly
                 />
                 <mat-icon matSuffix>file_upload</mat-icon>
@@ -446,19 +460,33 @@
             <p>Budget</p>
           </div>
           <div class="flex-container">
-            <p>Total</p>
-            <mat-form-field appearance="outline" [hideRequiredMarker]="true">
-              <input matInput placeholder="" value="" readonly />
-            </mat-form-field>
-            <p>Over Budget</p>
-            <mat-form-field appearance="outline" [hideRequiredMarker]="true">
-              <input matInput placeholder="" value="" readonly />
-            </mat-form-field>
+            <p style="width: 10%">Total</p>
+            <p>
+              {{
+                totalBudget.toLocaleString("it-IT", {
+                  style: "currency",
+                  currency: "VND"
+                })
+              }}
+            </p>
+            <p style="width: 10%">Over Budget</p>
+            <p>
+              {{
+                totalBudget > generals.get("estimatedBudget")?.value
+                  ? "Yes"
+                  : "No"
+              }}
+            </p>
           </div>
         </mat-panel-title>
       </mat-expansion-panel-header>
 
-      <table #budgetTable mat-table [dataSource]="budgetDataSource">
+      <table
+        #budgetTable
+        mat-table
+        [dataSource]="budgetDataSource"
+        [class.edit-form]="isDisabled"
+      >
         <!-- Checkbox Column -->
         <ng-container matColumnDef="add">
           <th mat-header-cell *matHeaderCellDef>
@@ -466,6 +494,7 @@
               mat-icon-button
               (click)="addFieldBudgetData()"
               [disabled]="isDisabled"
+              type="button"
             >
               <mat-icon
                 aria-hidden="false"
@@ -481,6 +510,7 @@
               mat-icon-button
               (click)="removeFieldBudgetData(i)"
               [disabled]="isDisabled"
+              type="button"
             >
               <mat-icon
                 aria-hidden="false"
@@ -522,6 +552,8 @@
                 placeholder="Unit Expense"
                 formControlName="unitExpense"
                 type="number"
+                min="0"
+                [max]="MAX_SAFE_INTEGER"
               />
             </mat-form-field>
           </td>
@@ -537,6 +569,8 @@
                 placeholder="Quantity"
                 formControlName="quantity"
                 type="number"
+                min="1"
+                max="100000"
               />
             </mat-form-field>
           </td>
@@ -548,8 +582,13 @@
             <!-- TODO: Remove Unit expense * Quantity -->
             <p>
               {{
-                (element.get("unitExpense")?.value || 0) *
+                (
+                  (element.get("unitExpense")?.value || 0) *
                   (element.get("quantity")?.value || 0)
+                ).toLocaleString("it-IT", {
+                  style: "currency",
+                  currency: "VND"
+                })
               }}
             </p>
           </td>
@@ -560,7 +599,7 @@
           <td mat-cell *matCellDef="let element" [formGroup]="element">
             <mat-form-field appearance="outline" [hideRequiredMarker]="true">
               <input matInput placeholder="Tax" formControlName="tax" />
-              <p matSuffix>%</p>
+              <i matSuffix>%</i>
             </mat-form-field>
           </td>
         </ng-container>
@@ -571,9 +610,14 @@
             <!-- TODO: Amount + (Amount * Tax) -->
             <p>
               {{
-                (element.get("unitExpense")?.value || 0) *
+                (
+                  (element.get("unitExpense")?.value || 0) *
                   (element.get("quantity")?.value || 0) *
                   (1 + (element.get("tax")?.value || 0) / 100)
+                ).toLocaleString("it-IT", {
+                  style: "currency",
+                  currency: "VND"
+                })
               }}
             </p>
           </td>
@@ -611,7 +655,12 @@
         </mat-panel-title>
       </mat-expansion-panel-header>
 
-      <table #auditTable mat-table [dataSource]="auditDataSource">
+      <table
+        #auditTable
+        mat-table
+        [dataSource]="auditDataSource"
+        [class.edit-form]="isDisabled"
+      >
         <div>
           <ng-container matColumnDef="add">
             <th mat-header-cell *matHeaderCellDef>
@@ -619,6 +668,7 @@
                 mat-icon-button
                 (click)="addFieldAuditData()"
                 [disabled]="isDisabled"
+                type="button"
               >
                 <mat-icon
                   aria-hidden="false"
@@ -634,6 +684,7 @@
                 mat-icon-button
                 (click)="removeFieldAuditData(i)"
                 [disabled]="isDisabled"
+                type="button"
               >
                 <mat-icon
                   aria-hidden="false"
@@ -659,6 +710,7 @@
                   (click)="date.open()"
                   readonly
                   [min]="currentDate"
+                  [disabled]="isDisabled"
                 />
                 <mat-datepicker-toggle
                   matSuffix
@@ -733,6 +785,7 @@
                   (click)="deadline.open()"
                   readonly
                   [min]="currentDate"
+                  [disabled]="isDisabled"
                 />
                 <mat-datepicker-toggle
                   matSuffix
@@ -768,7 +821,7 @@
   class="form-control"
   (change)="onFileLearningPathChange($event)"
   required
-  accept=".xlx,.xlsx"
+  [accept]="fileFormats.toString()"
   hidden
 />
 
@@ -778,6 +831,6 @@
   class="form-control"
   (change)="onFileCurriculumnChange($event)"
   required
-  accept=".xlx,.xlsx"
+  [accept]="fileFormats.toString()"
   hidden
 />

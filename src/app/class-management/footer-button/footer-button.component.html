@@ -1,12 +1,6 @@
-<ng-container
-  [ngTemplateOutlet]="buttonAdd"
-  *ngIf="routerURI.includes('/new-class')"
->
+<ng-container [ngTemplateOutlet]="buttonAdd" *ngIf="isShowSubmitButton">
 </ng-container>
-<ng-container
-  [ngTemplateOutlet]="buttonUpdate"
-  *ngIf="!routerURI.includes('/new-class')"
->
+<ng-container [ngTemplateOutlet]="buttonUpdate" *ngIf="!isShowSubmitButton">
 </ng-container>
 
 <ng-template #buttonAdd>
@@ -29,7 +23,7 @@
 
 <ng-template #buttonUpdate>
   <div class="btn-container">
-    <button mat-stroked-button type="submit" [disabled]="isFARec()">
+    <button mat-stroked-button type="button" [disabled]="isFARec()" routerLink="update">
       <mat-icon
         aria-hidden="false"
         aria-label="Search icon"

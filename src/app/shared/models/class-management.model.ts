@@ -9,6 +9,9 @@ export interface ClassModel {
 
   createdDate: Date | number;
   updatedDate: Date | number;
+
+  budgetTotal: number;
+  idNumber: any;
 }
 
 export interface LocationModel {
@@ -17,6 +20,25 @@ export interface LocationModel {
   acronym?: string;
 }
 
+export interface ClassAdminModel {
+  id: string;
+  account?: string;
+  email?: string;
+}
+
+export interface TrainerModel {
+  id: string;
+  account?: string;
+  email?: string;
+}
+
+export interface ClassFilter {
+  location: string;
+  name: string;
+  status: string;
+  fromDate: Date;
+  toDate: Date;
+}
 interface ClassGeneral {
   classCode: string; // Site_FR_Skill_YY_XX || Site_CP_Skill_YY_XX  auto gen - Block
   className: string; // auto gen - Block
@@ -30,7 +52,6 @@ interface ClassGeneral {
   expectedEndDate: Date | number; // Cannot input past date
 
   location: string; // drop down
-  locationID: string; // drop down
   detailedLocation: string;
 
   budgetCode: string;

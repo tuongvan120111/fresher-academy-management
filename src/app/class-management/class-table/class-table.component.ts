@@ -1,3 +1,4 @@
+import { ClassFilter } from './../../shared/models/class-management.model';
 import { RoleUser } from 'src/app/shared/constants/common.constants';
 import { CommonService } from 'src/app/shared/services/common.service';
 import { Authentications } from 'src/app/shared/models/common.model';
@@ -66,18 +67,18 @@ export class ClassTableComponent implements OnInit, AfterViewInit, OnChanges {
     this.selection.select(...this.classData.data);
   }
 
-  temp:boolean=false;
+  temp: boolean = false;
   /** The label for the checkbox on the passed row */
   checkboxLabel(row?: ClassModel): string {
     if (!row) {
       return `${this.isAllSelected() ? 'deselect' : 'select'} all`;
     }
-    if (this.selection.isSelected(row)){
-
-      this.temp = [ClassStatusString.Draft, ClassStatusString.Submitted].includes(
-        row.general.status
-      )
-      console.log(this.temp)
+    if (this.selection.isSelected(row)) {
+      this.temp = [
+        ClassStatusString.Draft,
+        ClassStatusString.Submitted,
+      ].includes(row.general.status);
+      console.log(this.temp);
     }
     return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${
       (row.id || '') + 1
@@ -110,12 +111,16 @@ export class ClassTableComponent implements OnInit, AfterViewInit, OnChanges {
   ngOnInit(): void {
     this.classManagementService
       .getListClass(this.paganationData.pageIndex, this.paganationData.pageSize)
-      .subscribe({
-        next: (data) => {
-          this.isLoading = false;
-          this.classData = new MatTableDataSource<ClassModel>(data);
-        },
+      .then((data) => {
+        this.isLoading = false;
+        this.classData = new MatTableDataSource<ClassModel>(data);
       });
+    // .subscribe({
+    //   next: (data) => {
+    //     this.isLoading = false;
+    //     this.classData = new MatTableDataSource<ClassModel>(data);
+    //   },
+    // });
   }
 
   ngOnChanges(changes: SimpleChanges): void {}
@@ -137,8 +142,10 @@ export class ClassTableComponent implements OnInit, AfterViewInit, OnChanges {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
+        const data = this.selection.selected[0];
         this.classManagementService.updateStatusClass(
-          this.selection.selected[0],
+          data.id || '',
+          data,
           ClassStatusString.Canceled
         );
         this.selection.clear();
@@ -156,12 +163,10 @@ export class ClassTableComponent implements OnInit, AfterViewInit, OnChanges {
     this.selection.clear();
     this.classData = new MatTableDataSource<ClassModel>([]);
     this.classManagementService
-      .getListClass(pageIndex, pageSize)
-      .subscribe((data: any) => {
-        setTimeout(() => {
-          this.isLoading = false;
-          this.classData = new MatTableDataSource<ClassModel>(data);
-        }, 1000);
+      .getListClass(this.paganationData.pageIndex, this.paganationData.pageSize)
+      .then((data) => {
+        this.isLoading = false;
+        this.classData = new MatTableDataSource<ClassModel>(data);
       });
   }
 
@@ -181,6 +186,7 @@ export class ClassTableComponent implements OnInit, AfterViewInit, OnChanges {
       if (result) {
         this.selection.selected.forEach((data: ClassModel) => {
           this.classManagementService.updateStatusClass(
+            data.id || '',
             data,
             ClassStatusString.Canceled
           );
@@ -215,7 +221,7 @@ export class ClassTableComponent implements OnInit, AfterViewInit, OnChanges {
     };
   };
 
-  search(value: {}) {
+  search(value: ClassFilter) {
     this.isLoading = true;
     console.log(value);
 
@@ -223,19 +229,21 @@ export class ClassTableComponent implements OnInit, AfterViewInit, OnChanges {
     this.selection.clear();
     this.classData = new MatTableDataSource<ClassModel>([]);
     this.classManagementService
-      .getListClass(pageIndex, pageSize, value)
-      .subscribe((data: any) => {
-        setTimeout(() => {
-          this.isLoading = false;
-          this.classData = new MatTableDataSource<ClassModel>(data);
-        }, 1000);
+      .getListClass(
+        this.paganationData.pageIndex,
+        this.paganationData.pageSize,
+        value
+      )
+      .then((data) => {
+        this.isLoading = false;
+        this.classData = new MatTableDataSource<ClassModel>(data);
       });
   }
 
   private datePipe = new DatePipe('en-US');
   convertNumberToDate(val: number) {
-    // return this.datePipe.transform(val, 'yyyy-MM-ddTHH:mm');
-    return val;
+    return this.datePipe.transform(val, 'yyyy-MM-ddTHH:mm');
+    // return val;
   }
 }
 

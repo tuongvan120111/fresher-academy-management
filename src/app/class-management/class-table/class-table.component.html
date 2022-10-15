@@ -98,7 +98,11 @@
       mode="indeterminate"
       [hidden]="!isLoading"
     ></mat-progress-bar>
-    <section class="example-container mat-elevation-z8" tabindex="0">
+    <section
+      class="example-container mat-elevation-z8"
+      tabindex="0"
+      style="overflow-x: auto"
+    >
       <table mat-table [dataSource]="classData">
         <!-- Checkbox Column -->
         <ng-container matColumnDef="select">

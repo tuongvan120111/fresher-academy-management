@@ -99,6 +99,7 @@ export const ClassStatusString = {
   Started: 'Started',
   Requested: 'Requested',
   Finished: 'Finished',
+  Updated: 'Updated',
 };
 
 export const ClassManagementColumns: string[] = [
@@ -147,3 +148,5 @@ export enum ButtonType {
   Accept,
   Decline,
 }
+
+export const FileFormats = ['.xlx', '.xlsx'];

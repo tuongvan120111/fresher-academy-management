@@ -1,11 +1,14 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestoreCollection, DocumentChangeAction } from '@angular/fire/compat/firestore';
+import {
+  AngularFirestoreCollection,
+  DocumentChangeAction,
+} from '@angular/fire/compat/firestore';
 import { BehaviorSubject, map, Observable, of, take } from 'rxjs';
 import { Loclastorage, RoleUser } from '../constants/common.constants';
 import { Authentications, LoginInfor } from '../models/common.model';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class CommonService {
   loginSignal$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
@@ -49,18 +52,28 @@ export class CommonService {
   }
 
   async digestMessage(message: string) {
-    const msgUint8 = new TextEncoder().encode(message);                           // encode as (utf-8) Uint8Array
-    const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8);           // hash the message
-    const hashArray = Array.from(new Uint8Array(hashBuffer));                     // convert buffer to byte array
-    const hashHex = hashArray.map((b) => b.toString(16).padStart(2, '0')).join(''); // convert bytes to hex string
+    const msgUint8 = new TextEncoder().encode(message); // encode as (utf-8) Uint8Array
+    const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8); // hash the message
+    const hashArray = Array.from(new Uint8Array(hashBuffer)); // convert buffer to byte array
+    const hashHex = hashArray
+      .map((b) => b.toString(16).padStart(2, '0'))
+      .join(''); // convert bytes to hex string
     return hashHex;
   }
 
-  getListDataFromApi(collection: AngularFirestoreCollection<any>): Observable<any[]> {
-    return collection.snapshotChanges().pipe((map((changes: DocumentChangeAction<any>[]) => {
-      const data = changes.map((c) => ({ id: c.payload.doc.id, ...c.payload.doc.data() }))
-      return data;
-    })), take(1))
+  getListDataFromApi(
+    collection: AngularFirestoreCollection<any>
+  ): Observable<any[]> {
+    return collection.snapshotChanges().pipe(
+      map((changes: DocumentChangeAction<any>[]) => {
+        const data = changes.map((c) => ({
+          id: c.payload.doc.id,
+          ...c.payload.doc.data(),
+        }));
+        return data;
+      }),
+      take(1)
+    );
   }
 
   getCurrentUser(): Authentications | undefined {
@@ -72,4 +85,7 @@ export class CommonService {
     return JSON.parse(user || '');
   }
 
+  getTwoDigitYear(date: Date): string {
+    return date.getFullYear().toString().slice(-2);
+  }
 }

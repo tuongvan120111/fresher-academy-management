@@ -12,6 +12,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { MainPageComponent } from './components/main-page/main-page.component';
 import { AngularFireStorageModule } from '@angular/fire/compat/storage';
 import { AuthGuard } from './auth/auth.guard';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 const routes: Routes = [
   {
@@ -41,6 +42,7 @@ const routes: Routes = [
     HeaderModule,
     BottomModule,
     ToggleMenuModule,
+    MatSnackBarModule,
     AngularFireStorageModule
     // AppRoutingModule
   ],

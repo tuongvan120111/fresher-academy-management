@@ -1,5 +1,5 @@
 import { RoleUser } from './../../shared/constants/common.constants';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Component, Input, OnInit } from '@angular/core';
 import {
   ButtonType,
@@ -20,18 +20,24 @@ export class FooterButtonComponent implements OnInit {
   @Input() classManagementData!: ClassModel;
 
   status!: string;
-  routerURI!: string;
   private dialogRef!: MatDialogRef<DialogSizeSComponent>;
 
+  isShowSubmitButton: boolean = true;
+  classID: string = '';
+
   constructor(
-    private router: Router,
     private dialog: MatDialog,
-    private classSer: ClassManagementService
+    private classSer: ClassManagementService,
+    private router: Router,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
     this.status = this.classManagementData?.general.status;
-    this.routerURI = this.router.url;
+    const routerURI = this.router.url;
+    this.classID = this.route.snapshot.paramMap.get('id') || '';
+    console.log('routerURI: ', routerURI);
+    this.isShowSubmitButton = !this.classID || routerURI.includes('/update');
   }
 
   isFARec(): boolean {
@@ -41,6 +47,7 @@ export class FooterButtonComponent implements OnInit {
     return RoleUser.Trainer === this.userRole;
   }
   isClassAdmin(): boolean {
+    console.log(this.userRole===RoleUser.ClassAdmin)
     return RoleUser.ClassAdmin === this.userRole;
   }
   isDeliveryManager(): boolean {
@@ -150,7 +157,11 @@ export class FooterButtonComponent implements OnInit {
           return;
         }
 
-        this.classSer.updateStatusClass(this.classManagementData, status);
+        this.classSer.updateStatusClass(
+          this.classID,
+          this.classManagementData,
+          status
+        );
       }
     });
   }
@@ -170,7 +181,12 @@ export class FooterButtonComponent implements OnInit {
 
     dialogRemarkRef.afterClosed().subscribe((result) => {
       if (result) {
-        this.classSer.updateStatusClass(this.classManagementData, status, '');
+        this.classSer.updateStatusClass(
+          this.classID,
+          this.classManagementData,
+          status,
+          ''
+        );
       }
     });
   }

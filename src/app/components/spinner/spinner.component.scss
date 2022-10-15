@@ -1,0 +1,16 @@
+.container-spinner {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  position: fixed;
+  top: 0;
+  left: 0;
+  align-items: center;
+  justify-content: center;
+  z-index: 999999;
+  background: rgb(0 0 0 / 30%);
+}
+
+:host ::ng-deep body {
+  overflow: hidden;
+}
