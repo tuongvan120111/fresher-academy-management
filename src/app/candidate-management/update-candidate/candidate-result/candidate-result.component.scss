@@ -1,3 +1,6 @@
+@import "src/mixins";
+@import "src/variable.scss";
+
 .candidate-result {
   width: 95%;
   margin: 20px auto 0px auto;
@@ -5,9 +8,45 @@
     width: 100%;
     border: 1px solid black;
   }
+
   .table-header {
     background: rgb(149, 188, 242);
     border-bottom: 0.5px solid black;
+  }
+
+  .icon-col {
+    display: flex;
+    justify-content: center;
+  }
+
+  tbody {
+    tr:first-child {
+      border-bottom: 1px solid black;
+    }
+
+    .content-row:not(:last-child) {
+      border-bottom: 1px solid black;
+    }
+
+    .content-row {
+      td:not(:last-child) {
+        border-right: 1px solid black;
+      }
+    }
+
+
+  }
+
+  .icon {
+    cursor: pointer;
+  }
+
+  .red {
+    color: red;
+  }
+
+  .blue {
+    color: blue;
   }
 
   .border-r {
@@ -16,5 +55,17 @@
 
   .border-b {
     border-bottom: 1px solid black;
+  }
+}
+
+.actions {
+  padding: 30px;
+  button {
+    margin-right: 10px;
+  }
+
+  .submit-btn {
+    background: $blue;
+    color: white;
   }
 }

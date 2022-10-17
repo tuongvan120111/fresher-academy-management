@@ -1,36 +1,67 @@
 <div class="candidate-result">
   <table>
     <thead>
-      <tr class="table-header">
-        <td class="border-r">
-            <mat-icon>
-                arrow_drop_down
-            </mat-icon>
-        </td>
-        <td>Entry test</td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-      </tr>
+    <tr class="table-header">
+      <td class="border-r icon-col">
+        <mat-icon (click)="toggleEntryTest()" class="icon">
+          arrow_drop_down
+        </mat-icon>
+      </td>
+      <td>Entry test</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
     </thead>
-    <tbody>
-      <tr>
-        <td>Plus icon</td>
-        <td *ngFor="let col of cols">{{col}}</td>
-      </tr>
-      <tr>
-        <td>Delete icon</td>
-        <td>Delete icon</td>
-        <td>Delete icon</td>
-        <td>Delete icon</td>
-        <td>Delete icon</td>
-        <td>Delete icon</td>
-        <td>Delete icon</td>
-      </tr>
+    <tbody [formGroup]="resultsForm">
+    <tr class="content-row">
+      <td class="icon-col">
+        <mat-icon class="icon blue" (click)="onCreateNewEntryRow()">add</mat-icon>
+      </td>
+      <td *ngFor="let col of cols">{{col}}</td>
+    </tr>
+    <ng-container formArrayName="entriesTest">
+      <ng-container *ngFor="let row of entriesTest.controls; let i = index">
+        <tr class="content-row">
+          <td class="icon-col">
+            <mat-icon (click)="onRemoveEntryRow(i)" class="icon red">delete_forever</mat-icon>
+          </td>
+          <ng-container [formGroupName]="i">
+            <td>
+              <input class="my-css-input" type="text" formControlName="time">
+            </td>
+            <td>
+              <input class="my-css-input" type="date" [max]="maxDate">
+            </td>
+            <td>
+              <input class="my-css-input" type="text" name="" formControlName="languageValuator">
+            </td>
+            <td>
+              <input class="my-css-input" type="number" formControlName="languagePoint">
+            </td>
+            <td>
+              <input class="my-css-input" type="text" formControlName="technicalValuator">
+            </td>
+            <td>
+              <input class="my-css-input" type="number" formControlName="technicalPoint">
+            </td>
+            <td>
+              <select id="channel" formControlName="result">
+                <option *ngFor="let option of resultOptions" [value]="option">{{option}}</option>
+              </select>
+            </td>
+          </ng-container>
+        </tr>
+      </ng-container>
+    </ng-container>
     </tbody>
   </table>
+</div>
+<div class="actions">
+  <button mat-raised-button (click)="submit()" class="submit-btn">Submit</button>
+  <button mat-raised-button>Close</button>
 </div>

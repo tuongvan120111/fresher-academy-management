@@ -3,7 +3,7 @@ import { ActivatedRoute } from "@angular/router";
 import { CANDIDATE_TAB_TYPE } from "../utils/candidate.const";
 import { CandidateService, FirebaseCandidateFormat } from "../candidate.service";
 import { map, Observable, of, switchMap, tap } from "rxjs";
-import { FormControl, FormGroup, Validators } from "@angular/forms";
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
 import { IUniversity, UniversityService } from "../services/university.service";
 import { ISite, SitesService } from "../services/sites.service";
 import { ChannelService, IChannel } from "../services/channel.service";
@@ -13,8 +13,8 @@ import * as moment from "moment";
 import { ConfirmDialogComponent } from "../components/confirm-dialog/confirm-dialog.component";
 import { MatDialog } from "@angular/material/dialog";
 import { autoGenerateId } from "../utils/helpers";
-import firestore = firebase.firestore;
 import { STATUS } from "../model/candidate.interface";
+import firestore = firebase.firestore;
 
 const OTHER_OPTION: IUniversity = {
   name: "Other",
@@ -36,6 +36,7 @@ export class UpdateCandidateComponent implements OnInit {
   type = CANDIDATE_TAB_TYPE.CREATE;
   candidateId: string = "";
   candidateFormGroup: FormGroup;
+  candidateResultsForm: FormGroup;
   emplId: string;
 
   constructor(
@@ -46,6 +47,7 @@ export class UpdateCandidateComponent implements OnInit {
     private channelService: ChannelService,
     private facultyService: FacultyService,
     private dialog: MatDialog,
+    private fb: FormBuilder,
   ) {
   }
 
@@ -71,11 +73,37 @@ export class UpdateCandidateComponent implements OnInit {
     );
   }
 
+  private _initNewForm() {
+    let form = this.fb.group({
+      time: new FormControl(moment(new Date()).format("MM/DD/YYYY")),
+      date: new FormControl(new Date()),
+      languageValuator: new FormControl(),
+      languagePoint: new FormControl(),
+      technicalValuator: new FormControl(),
+      technicalPoint: new FormControl(),
+      result: new FormControl("Test - Pass"),
+    });
+    form.get("time").disable();
+    return form;
+  }
+
+  private _initFormArray() {
+    let newForm = this._initNewForm();
+    this.candidateResultsForm = this.fb.group({
+      entriesTest: new FormArray([newForm]),
+    });
+  }
+
+  onCreateNewTest() {
+    let form = this._initNewForm();
+    (this.candidateResultsForm.get("entriesTest") as FormArray).push(form);
+  }
+
   ngOnInit(): void {
     this.type = this.route.snapshot.params["type"];
     this.candidateId = this.route.snapshot.queryParams["id"];
     this._initData();
-
+    this._initFormArray();
     this.candidateFormGroup = new FormGroup<any>({
       name: new FormControl(""),
       account: new FormControl(""),
@@ -186,8 +214,12 @@ export class UpdateCandidateComponent implements OnInit {
       dob: this._formatFirebaseDate(dob),
       history: `ADMIN11 ${moment(new Date()).format("DD-MMM-YYYY")}`,
       graduateYear: this._formatFirebaseDate(graduateYear),
-      account: 'DamLT1',
-      status: STATUS.NEW
+      account: "DamLT1",
+      status: STATUS.NEW,
     });
+  }
+
+  onDeleteEntryRow(index) {
+    (this.candidateResultsForm.get("entriesTest") as FormArray).removeAt(index);
   }
 }
