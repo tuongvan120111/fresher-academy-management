@@ -25,7 +25,9 @@
         <mat-tab label="Result">
           <app-candidate-result [resultsForm]="candidateResultsForm"
                                 (createNewTestEvent)="onCreateNewTest()"
-                                (deleteEntryRowEvent)="onDeleteEntryRow($event)"></app-candidate-result>
+                                (deleteEntryRowEvent)="onDeleteEntryRow($event)"
+                                [candidate]="(candidate$ | async)"
+          ></app-candidate-result>
         </mat-tab>
       </mat-tab-group>
     </div>

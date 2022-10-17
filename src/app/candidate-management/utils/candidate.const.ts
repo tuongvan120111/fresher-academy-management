@@ -3,4 +3,9 @@ export const CANDIDATE_TAB_TYPE = {
   UPDATE: "1",
 };
 
-export const CANDIDATE_DB_FIREBASE = 'candidates'
+export const CANDIDATE_DB_FIREBASE = "candidates";
+
+export enum CANDIDATE_TYPE_RESULT {
+  ENTRY,
+  INTERVIEW
+};

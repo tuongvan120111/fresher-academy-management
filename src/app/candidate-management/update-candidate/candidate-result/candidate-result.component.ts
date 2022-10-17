@@ -1,13 +1,16 @@
-import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from "@angular/core";
 import { FormArray, FormGroup } from "@angular/forms";
 import * as moment from "moment";
+import { ActivatedRoute } from "@angular/router";
+import { FirebaseCandidateFormat } from "../../candidate.service";
+import { ResultsService } from "../../services/results.service";
 
 @Component({
   selector: "app-candidate-result",
   templateUrl: "./candidate-result.component.html",
   styleUrls: ["./candidate-result.component.scss"],
 })
-export class CandidateResultComponent implements OnInit {
+export class CandidateResultComponent implements OnInit,OnChanges {
   cols = [
     "Time",
     "Date",
@@ -20,10 +23,13 @@ export class CandidateResultComponent implements OnInit {
 
   isShowEntryTest: boolean = true;
   maxDate = moment(new Date()).format("YYYY-MM-DD");
-  resultOptions = ['Test - Pass', 'Test - Fail']
+  resultOptions = ["Test - Pass", "Test - Fail"];
 
   @Input()
   resultsForm: FormGroup;
+
+  @Input()
+  candidate: FirebaseCandidateFormat;
 
   @Output()
   createNewTestEvent = new EventEmitter<void>();
@@ -31,10 +37,17 @@ export class CandidateResultComponent implements OnInit {
   @Output()
   deleteEntryRowEvent = new EventEmitter<number>();
 
-  constructor() {
+  constructor(private route: ActivatedRoute, private resultService: ResultsService) {
   }
 
   ngOnInit(): void {
+
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if(this.candidate) {
+      this.resultService.loadDataById(this.candidate.employeeId);
+    }
   }
 
   onCreateNewEntryRow() {
@@ -54,6 +67,6 @@ export class CandidateResultComponent implements OnInit {
   }
 
   submit() {
-    console.log(this.entriesTest.controls[0].getRawValue(), "<== value")
+    console.log(this.entriesTest.controls[0].getRawValue(), "<== value");
   }
 }
