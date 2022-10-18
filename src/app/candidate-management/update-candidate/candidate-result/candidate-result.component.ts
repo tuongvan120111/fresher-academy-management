@@ -1,16 +1,28 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from "@angular/core";
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges,
+} from "@angular/core";
 import { FormArray, FormGroup } from "@angular/forms";
 import * as moment from "moment";
 import { ActivatedRoute } from "@angular/router";
 import { FirebaseCandidateFormat } from "../../candidate.service";
 import { ResultsService } from "../../services/results.service";
+import { map, Observable, Subject, tap } from "rxjs";
+import { IResult, TEST_STATUS } from "../../model/result.interface";
+import { UtilService } from "../../utils/util.service";
+import { IFirebaseDate } from "../../model/candidate.interface";
 
 @Component({
   selector: "app-candidate-result",
   templateUrl: "./candidate-result.component.html",
   styleUrls: ["./candidate-result.component.scss"],
 })
-export class CandidateResultComponent implements OnInit,OnChanges {
+export class CandidateResultComponent implements OnInit, OnChanges {
   cols = [
     "Time",
     "Date",
@@ -24,6 +36,7 @@ export class CandidateResultComponent implements OnInit,OnChanges {
   isShowEntryTest: boolean = true;
   maxDate = moment(new Date()).format("YYYY-MM-DD");
   resultOptions = ["Test - Pass", "Test - Fail"];
+  resutIds = [];
 
   @Input()
   resultsForm: FormGroup;
@@ -37,16 +50,55 @@ export class CandidateResultComponent implements OnInit,OnChanges {
   @Output()
   deleteEntryRowEvent = new EventEmitter<number>();
 
-  constructor(private route: ActivatedRoute, private resultService: ResultsService) {
-  }
+  entryResults$: Observable<IResult<Date>[]> = new Subject();
+  constructor(
+    private route: ActivatedRoute,
+    private resultService: ResultsService,
+    private utilService: UtilService
+  ) {}
 
   ngOnInit(): void {
-
+    this.utilService._generateAccountName("Phan Thanh Hoang");
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if(this.candidate) {
-      this.resultService.loadDataById(this.candidate.employeeId);
+    if (this.candidate) {
+      this.entryResults$ = this.resultService.loadDataById(
+        this.candidate.employeeId
+      );
+      this.entryResults$
+        .pipe(
+          map((value) => {
+            return value.map((entryTest) => {
+              return {
+                ...entryTest,
+                time: moment(entryTest.time).format("MM/DD/YYYY"),
+                Date: moment(entryTest.Date).format("YYYY-MM-DD"),
+              };
+            });
+          }),
+          tap((entries) => {
+            entries.forEach((entry, index) => {
+              this.resutIds.push(entry.id);
+              if(index > this.entriesTest.length - 1) {
+                this.createNewTestEvent.emit();
+              }
+
+              this.entriesTest.controls[index].patchValue({
+                time: entry.time,
+                date: entry.Date,
+                languageValuator: entry.languageValuator,
+                languagePoint: entry.languagePoint,
+                technicalValuator: entry.technicalValuator,
+                technicalPoint: entry.technicalPoint,
+                result: entry.result,
+              });
+            });
+          })
+        )
+        .subscribe();
+    } else {
+      //TODO: Do something with create status
     }
   }
 
@@ -67,6 +119,19 @@ export class CandidateResultComponent implements OnInit,OnChanges {
   }
 
   submit() {
-    console.log(this.entriesTest.controls[0].getRawValue(), "<== value");
+    this.entriesTest.controls.forEach((control, index) => {
+      const formValue = control.getRawValue();
+      const data: IResult<IFirebaseDate> = {
+        ...formValue,
+        time: this.utilService._formatFirebaseDate(formValue.time),
+        Date: this.utilService._formatFirebaseDate(formValue.date),
+        employeeId: this.candidate.employeeId
+      };
+      if (index <= this.resutIds.length - 1) {
+        this.resultService.updateResultById(this.resutIds[index], data);
+      } else {
+        this.resultService.createResult(data);
+      }
+    });
   }
 }

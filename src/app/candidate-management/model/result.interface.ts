@@ -9,5 +9,11 @@ export interface IResult<T> {
   technicalValuator: string;
   technicalPoint: number;
   time: T,
-  type: CANDIDATE_TYPE_RESULT
+  type: CANDIDATE_TYPE_RESULT;
+  result: string;
+}
+
+export const TEST_STATUS = {
+  pass: 'Test - Pass',
+  fail: 'Test - Fail',
 }

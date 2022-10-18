@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import { AngularFirestore, AngularFirestoreCollection } from "@angular/fire/compat/firestore";
 import { ICandidate, IFirebaseDate, STATUS, STATUS_ARRAY } from "./model/candidate.interface";
 import { BehaviorSubject, from, map, Observable, shareReplay, tap } from "rxjs";
+import { UtilService } from "./utils/util.service";
 
 export type FirebaseCandidateResponse = ICandidate<IFirebaseDate, STATUS>;
 export type FirebaseCandidateFormat = ICandidate<Date, string>;
@@ -13,7 +14,7 @@ export class CandidateService {
 
   private candidates!: AngularFirestoreCollection<FirebaseCandidateResponse>;
 
-  constructor(private db: AngularFirestore) {
+  constructor(private db: AngularFirestore, private utilService: UtilService) {
     this.candidates = db.collection("candidates");
   }
 
@@ -25,7 +26,7 @@ export class CandidateService {
           return actions.map((a) => {
             const data = a.payload.doc.data() as FirebaseCandidateResponse;
             data.id = a.payload.doc.id;
-            return CandidateService._formatData(data);
+            return this._formatData(data);
           });
         }),
         tap((val) => {
@@ -36,29 +37,23 @@ export class CandidateService {
       .subscribe();
   }
 
-  private static _formatData(candidate: FirebaseCandidateResponse): FirebaseCandidateFormat {
-    console.log(STATUS_ARRAY[candidate.status])
+  private _formatData(candidate: FirebaseCandidateResponse): FirebaseCandidateFormat {
     return {
       ...candidate,
-      dob: CandidateService._formatTime(candidate.dob),
+      dob: this.utilService._formatTime(candidate.dob),
       status: STATUS_ARRAY[candidate.status],
-      graduateYear: CandidateService._formatTime(candidate.graduateYear),
-      applicationDate: CandidateService._formatTime(candidate.applicationDate),
+      graduateYear: this.utilService._formatTime(candidate.graduateYear),
+      applicationDate: this.utilService._formatTime(candidate.applicationDate),
     };
   }
 
-  private static _formatTime(value: IFirebaseDate): Date {
-    return new Date(
-      value.seconds * 1000 +
-      value.nanoseconds / 1000000,
-    );
-  }
+
 
   //v.payload.doc.id
   getCandidateById(id: string): Observable<FirebaseCandidateFormat> {
     return this.candidates.doc(id).get().pipe(
       map(candidate => {
-        return CandidateService._formatData(candidate.data());
+        return this._formatData(candidate.data());
       }),
     );
   }

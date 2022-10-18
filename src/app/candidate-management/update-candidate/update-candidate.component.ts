@@ -55,7 +55,7 @@ export class UpdateCandidateComponent implements OnInit {
     if (this.isCreate) {
       this.generateEmplId();
     } else {
-      this.candidate$ = this.candidatesService.getCandidateById(this.candidateId).pipe(tap(console.log));
+      this.candidate$ = this.candidatesService.getCandidateById(this.candidateId);
     }
     this.university$ = this.universityService.loadUniversity().pipe(
       map(universities => {
