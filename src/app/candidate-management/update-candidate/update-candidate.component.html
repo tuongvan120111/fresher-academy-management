@@ -26,6 +26,8 @@
           <app-candidate-result [resultsForm]="candidateResultsForm"
                                 (createNewTestEvent)="onCreateNewTest()"
                                 (deleteEntryRowEvent)="onDeleteEntryRow($event)"
+                                (createNewInterviewRow)="onCreateNewInterview()"
+                                (deleteInterviewRowEvent)="onDeleteInterviewRow($event)"
                                 [candidate]="(candidate$ | async)"
           ></app-candidate-result>
         </mat-tab>

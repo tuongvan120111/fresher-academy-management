@@ -59,6 +59,7 @@ export class CandidateService {
   }
 
   updateCandidate(id: string, candidate: Partial<FirebaseCandidateResponse>): Observable<any> {
+    console.log(candidate, "<== candidate")
     return from(this.candidates.doc(id).update(candidate));
   }
 

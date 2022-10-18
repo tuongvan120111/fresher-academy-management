@@ -2,7 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { CANDIDATE_TAB_TYPE } from "../utils/candidate.const";
 import { CandidateService, FirebaseCandidateFormat } from "../candidate.service";
-import { map, Observable, of, switchMap, tap } from "rxjs";
+import { map, Observable, of, switchMap } from "rxjs";
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
 import { IUniversity, UniversityService } from "../services/university.service";
 import { ISite, SitesService } from "../services/sites.service";
@@ -73,7 +73,7 @@ export class UpdateCandidateComponent implements OnInit {
     );
   }
 
-  private _initNewForm() {
+  private _initNewEntryTestForm() {
     let form = this.fb.group({
       time: new FormControl(moment(new Date()).format("MM/DD/YYYY")),
       date: new FormControl(new Date()),
@@ -87,15 +87,29 @@ export class UpdateCandidateComponent implements OnInit {
     return form;
   }
 
+  private _initNewInterviewForm() {
+    let form = this.fb.group({
+      time: new FormControl(moment(new Date()).format("MM/DD/YYYY")),
+      date: new FormControl(new Date()),
+      interview: new FormControl(""),
+      comment: new FormControl(""),
+      result: new FormControl("Test - Pass"),
+    });
+    form.get("time").disable();
+    return form;
+  }
+
   private _initFormArray() {
-    let newForm = this._initNewForm();
+    let newEntryForm = this._initNewEntryTestForm();
+    let newInterviewForm = this._initNewInterviewForm();
     this.candidateResultsForm = this.fb.group({
-      entriesTest: new FormArray([newForm]),
+      entriesTest: new FormArray([newEntryForm]),
+      interviews: new FormArray([newInterviewForm]),
     });
   }
 
   onCreateNewTest() {
-    let form = this._initNewForm();
+    let form = this._initNewEntryTestForm();
     (this.candidateResultsForm.get("entriesTest") as FormArray).push(form);
   }
 
@@ -179,7 +193,7 @@ export class UpdateCandidateComponent implements OnInit {
       email,
       graduateYear,
       level,
-    } = this.candidateFormGroup.value;
+    } = this.candidateFormGroup.getRawValue();
     return this.candidatesService.updateCandidate(this.candidateId, {
       skill: skill,
       applicationDate: this._formatFirebaseDate(applicationDate),
@@ -221,5 +235,14 @@ export class UpdateCandidateComponent implements OnInit {
 
   onDeleteEntryRow(index) {
     (this.candidateResultsForm.get("entriesTest") as FormArray).removeAt(index);
+  }
+
+  onCreateNewInterview() {
+    let form = this._initNewInterviewForm();
+    (this.candidateResultsForm.get("interviews") as FormArray).push(form);
+  }
+
+  onDeleteInterviewRow(index: number) {
+    (this.candidateResultsForm.get("interviews") as FormArray).removeAt(index);
   }
 }

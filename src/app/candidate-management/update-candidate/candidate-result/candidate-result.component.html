@@ -61,6 +61,63 @@
     </tbody>
   </table>
 </div>
+<div class="candidate-result">
+  <table>
+    <thead>
+    <tr class="table-header">
+      <td class="border-r icon-col">
+        <mat-icon (click)="toggleEntryTest()" class="icon">
+          arrow_drop_down
+        </mat-icon>
+      </td>
+      <td>Interview</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    </thead>
+    <tbody [formGroup]="resultsForm">
+    <tr class="content-row">
+      <td class="icon-col">
+        <mat-icon class="icon blue" (click)="onCreateNewInterviewRow()">add</mat-icon>
+      </td>
+      <td *ngFor="let col of interviewCols">{{col}}</td>
+    </tr>
+    <ng-container formArrayName="interviews">
+      <ng-container *ngFor="let row of interviews.controls; let i = index">
+        <tr class="content-row">
+          <td class="icon-col">
+            <mat-icon class="icon red" (click)="onRemoveInterviewRow(i)">delete_forever</mat-icon>
+          </td>
+          <ng-container [formGroupName]="i">
+            <td>
+              <input class="my-css-input" type="text" formControlName="time">
+            </td>
+            <td>
+              <input class="my-css-input" type="date" formControlName="date" [max]="maxDate">
+            </td>
+            <td>
+              <input class="my-css-input" type="text" name="" formControlName="interview">
+            </td>
+            <td>
+              <input class="my-css-input" type="number" formControlName="comment">
+            </td>
+            <td>
+              <select formControlName="result">
+                <option *ngFor="let option of resultOptions" [value]="option">{{option}}</option>
+              </select>
+            </td>
+          </ng-container>
+        </tr>
+      </ng-container>
+    </ng-container>
+    </tbody>
+  </table>
+</div>
 <div class="actions">
   <button mat-raised-button (click)="submit()" class="submit-btn">Submit</button>
   <button mat-raised-button>Close</button>

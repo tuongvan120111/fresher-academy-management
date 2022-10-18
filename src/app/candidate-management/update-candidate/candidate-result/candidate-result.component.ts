@@ -1,21 +1,15 @@
-import {
-  Component,
-  EventEmitter,
-  Input,
-  OnChanges,
-  OnInit,
-  Output,
-  SimpleChanges,
-} from "@angular/core";
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from "@angular/core";
 import { FormArray, FormGroup } from "@angular/forms";
 import * as moment from "moment";
 import { ActivatedRoute } from "@angular/router";
 import { FirebaseCandidateFormat } from "../../candidate.service";
 import { ResultsService } from "../../services/results.service";
-import { map, Observable, Subject, tap } from "rxjs";
-import { IResult, TEST_STATUS } from "../../model/result.interface";
+import { map, Observable, of, Subject, switchMap, tap } from "rxjs";
+import { IResult } from "../../model/result.interface";
 import { UtilService } from "../../utils/util.service";
 import { IFirebaseDate } from "../../model/candidate.interface";
+import { MatDialog } from "@angular/material/dialog";
+import { ConfirmDialogComponent } from "../../components/confirm-dialog/confirm-dialog.component";
 
 @Component({
   selector: "app-candidate-result",
@@ -30,6 +24,14 @@ export class CandidateResultComponent implements OnInit, OnChanges {
     "Language Point",
     "Technical Valuator",
     "Technical Point",
+    "Result",
+  ];
+
+  interviewCols = [
+    "Time",
+    "Date",
+    "Interview",
+    "Comment",
     "Result",
   ];
 
@@ -48,14 +50,23 @@ export class CandidateResultComponent implements OnInit, OnChanges {
   createNewTestEvent = new EventEmitter<void>();
 
   @Output()
+  createNewInterviewRow = new EventEmitter<void>();
+
+  @Output()
   deleteEntryRowEvent = new EventEmitter<number>();
 
+  @Output()
+  deleteInterviewRowEvent = new EventEmitter<number>();
+
   entryResults$: Observable<IResult<Date>[]> = new Subject();
+
   constructor(
     private route: ActivatedRoute,
     private resultService: ResultsService,
-    private utilService: UtilService
-  ) {}
+    private utilService: UtilService,
+    private dialog: MatDialog,
+  ) {
+  }
 
   ngOnInit(): void {
     this.utilService._generateAccountName("Phan Thanh Hoang");
@@ -64,7 +75,7 @@ export class CandidateResultComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges) {
     if (this.candidate) {
       this.entryResults$ = this.resultService.loadDataById(
-        this.candidate.employeeId
+        this.candidate.employeeId,
       );
       this.entryResults$
         .pipe(
@@ -80,7 +91,7 @@ export class CandidateResultComponent implements OnInit, OnChanges {
           tap((entries) => {
             entries.forEach((entry, index) => {
               this.resutIds.push(entry.id);
-              if(index > this.entriesTest.length - 1) {
+              if (index > this.entriesTest.length - 1) {
                 this.createNewTestEvent.emit();
               }
 
@@ -94,7 +105,7 @@ export class CandidateResultComponent implements OnInit, OnChanges {
                 result: entry.result,
               });
             });
-          })
+          }),
         )
         .subscribe();
     } else {
@@ -110,28 +121,51 @@ export class CandidateResultComponent implements OnInit, OnChanges {
     return this.resultsForm.get("entriesTest") as FormArray;
   }
 
+  get interviews() {
+    return this.resultsForm.get("interviews") as FormArray;
+  }
+
   toggleEntryTest() {
     this.isShowEntryTest = !this.isShowEntryTest;
   }
 
   onRemoveEntryRow(index: number) {
+    this.resultService.deleteResult(this.resutIds[index]);
     this.deleteEntryRowEvent.emit(index);
   }
 
   submit() {
-    this.entriesTest.controls.forEach((control, index) => {
-      const formValue = control.getRawValue();
-      const data: IResult<IFirebaseDate> = {
-        ...formValue,
-        time: this.utilService._formatFirebaseDate(formValue.time),
-        Date: this.utilService._formatFirebaseDate(formValue.date),
-        employeeId: this.candidate.employeeId
-      };
-      if (index <= this.resutIds.length - 1) {
-        this.resultService.updateResultById(this.resutIds[index], data);
-      } else {
-        this.resultService.createResult(data);
-      }
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: "250px",
     });
+    dialogRef.afterClosed().pipe(
+      switchMap((result) => {
+        if (result.ok) {
+          this.entriesTest.controls.forEach((control, index) => {
+            const formValue = control.getRawValue();
+            const data: IResult<IFirebaseDate> = {
+              ...formValue,
+              time: this.utilService._formatFirebaseDate(formValue.time),
+              Date: this.utilService._formatFirebaseDate(formValue.date),
+              employeeId: this.candidate.employeeId,
+            };
+            if (index <= this.resutIds.length - 1) {
+              return this.resultService.updateResultById(this.resutIds[index], data);
+            } else {
+              return this.resultService.createResult(data);
+            }
+          });
+        }
+        return of(null);
+      }),
+    ).subscribe();
+  }
+
+  onCreateNewInterviewRow() {
+    this.createNewInterviewRow.emit();
+  }
+
+  onRemoveInterviewRow(i: number) {
+    this.deleteInterviewRowEvent.emit(i);
   }
 }

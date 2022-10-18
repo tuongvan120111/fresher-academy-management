@@ -56,4 +56,8 @@ export class ResultsService extends ADropDownService<IResult<IFirebaseDate>> {
   createResult(data: IResult<IFirebaseDate>) {
     return from(this.collection.add(data));
   }
+
+  deleteResult(resultId: string) {
+    return from(this.collection.doc(resultId).delete())
+  }
 }
