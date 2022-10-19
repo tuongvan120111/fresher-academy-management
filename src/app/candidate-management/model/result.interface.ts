@@ -1,4 +1,5 @@
 import { CANDIDATE_TYPE_RESULT } from "../utils/candidate.const";
+import { IFirebaseDate } from "./candidate.interface";
 
 export interface IResult<T> {
   id: string;
@@ -8,12 +9,18 @@ export interface IResult<T> {
   languagePoint: number;
   technicalValuator: string;
   technicalPoint: number;
-  time: T,
+  time: T;
   type: CANDIDATE_TYPE_RESULT;
   result: string;
 }
 
-export const TEST_STATUS = {
-  pass: 'Test - Pass',
-  fail: 'Test - Fail',
+export interface IInterviewResult<T>
+  extends Pick<IResult<T>, "Date" | "time" | "result" | "id" | "employeeId"> {
+  interview: string;
+  comment: string;
 }
+
+export const TEST_STATUS = {
+  pass: "Test - Pass",
+  fail: "Test - Fail",
+};

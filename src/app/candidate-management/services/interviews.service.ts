@@ -1,26 +1,28 @@
-import { ADropDownService } from "./dropdown.service";
-import { IResult } from "../model/result.interface";
-import { IFirebaseDate } from "../model/candidate.interface";
-import { AngularFirestore } from "@angular/fire/compat/firestore";
-import { from, map, Observable, tap } from "rxjs";
-import { UtilService } from "../utils/util.service";
 import { Injectable } from "@angular/core";
+import { AngularFirestore } from "@angular/fire/compat/firestore";
+import { from, map, Observable, of } from "rxjs";
+import { IFirebaseDate } from "../model/candidate.interface";
+import { IInterviewResult } from "../model/result.interface";
+import { UtilService } from "../utils/util.service";
+import { ADropDownService } from "./dropdown.service";
 
 @Injectable({
   providedIn: "root",
 })
-export class ResultsService extends ADropDownService<IResult<IFirebaseDate>> {
-  private static readonly RESULT_COLLECTION = "candidateResults";
+export class InterviewsService extends ADropDownService<
+  IInterviewResult<IFirebaseDate>
+> {
+  private static readonly INTERVIEW_COLLECTION = "interviewResults";
 
   constructor(private fs: AngularFirestore, private utilService: UtilService) {
-    super(fs, ResultsService.RESULT_COLLECTION);
+    super(fs, InterviewsService.INTERVIEW_COLLECTION);
   }
 
-  override loadData(): Observable<IResult<IFirebaseDate>[]> {
+  loadData(): Observable<IInterviewResult<IFirebaseDate>[]> {
     return this.collection.snapshotChanges().pipe(
       map((actions) => {
         return actions.map((a) => {
-          const data = a.payload.doc.data() as IResult<IFirebaseDate>;
+          const data = a.payload.doc.data() as IInterviewResult<IFirebaseDate>;
           data.id = a.payload.doc.id;
           return data;
         });
@@ -33,11 +35,11 @@ export class ResultsService extends ADropDownService<IResult<IFirebaseDate>> {
       this.collection.ref.where("employeeId", "==", employeeId).get()
     ).pipe(
       map((value) => {
-        let results: IResult<Date>[] = [];
+        let results: IInterviewResult<Date>[] = [];
         value.forEach((doc) => {
-          let data = doc.data() as IResult<IFirebaseDate>;
+          let data = doc.data() as IInterviewResult<IFirebaseDate>;
           data.id = doc.id;
-          const formatData: IResult<Date> = {
+          const formatData: IInterviewResult<Date> = {
             ...data,
             time: this.utilService._formatTime(data.time),
             Date: this.utilService._formatTime(data.Date),
@@ -49,15 +51,18 @@ export class ResultsService extends ADropDownService<IResult<IFirebaseDate>> {
     );
   }
 
-  updateResultById(resultId: string, data: Partial<IResult<IFirebaseDate>>) {
+  updateResultById(
+    resultId: string,
+    data: Partial<IInterviewResult<IFirebaseDate>>
+  ) {
     return from(this.collection.doc(resultId).update(data));
   }
 
-  createResult(data: IResult<IFirebaseDate>) {
+  createResult(data: IInterviewResult<IFirebaseDate>) {
     return from(this.collection.add(data));
   }
 
   deleteResult(resultId: string) {
-    return from(this.collection.doc(resultId).delete())
+    return from(this.collection.doc(resultId).delete());
   }
 }
