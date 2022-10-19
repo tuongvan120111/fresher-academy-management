@@ -80,6 +80,7 @@ export class CandidateResultComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges) {
     if (this.candidate) {
       this._loadEntries();
+      this._loadInterviews();
     }
   }
 
@@ -106,7 +107,7 @@ export class CandidateResultComponent implements OnInit, OnChanges {
               this.createNewInterviewRowEvent.emit();
             }
 
-            this.entriesTest.controls[index].patchValue({
+            this.interviews.controls[index].patchValue({
               time: entry.time,
               date: entry.Date,
               interview: entry.interview,
@@ -187,6 +188,7 @@ export class CandidateResultComponent implements OnInit, OnChanges {
         switchMap((result) => {
           if (result.ok) {
             this.updateCreateEntries();
+            this.updateCreateInterviews();
           }
           return of(null);
         })
@@ -207,6 +209,24 @@ export class CandidateResultComponent implements OnInit, OnChanges {
         this.resultService.updateResultById(this.resutIds[index], data);
       } else {
         this.resultService.createResult(data);
+      }
+    });
+  }
+
+  private updateCreateInterviews(): void {
+    this.interviews.controls.forEach((control, index) => {
+      const formValue = control.getRawValue();
+      const data: IInterviewResult<IFirebaseDate> = {
+        ...formValue,
+        time: this.utilService._formatFirebaseDate(formValue.time),
+        Date: this.utilService._formatFirebaseDate(formValue.date),
+        employeeId: this.candidate.employeeId,
+      };
+
+      if (index <= this.interviewIds.length - 1) {
+        this.interviewsService.updateResultById(this.resutIds[index], data);
+      } else {
+        this.interviewsService.createResult(data);
       }
     });
   }
