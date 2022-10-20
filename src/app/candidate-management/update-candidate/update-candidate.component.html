@@ -29,6 +29,7 @@
                                 (createNewInterviewRow)="onCreateNewInterview()"
                                 (deleteInterviewRowEvent)="onDeleteInterviewRow($event)"
                                 [candidate]="(candidate$ | async)"
+                                [autoId]="emplId"
           ></app-candidate-result>
         </mat-tab>
       </mat-tab-group>

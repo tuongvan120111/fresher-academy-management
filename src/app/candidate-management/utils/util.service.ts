@@ -29,7 +29,7 @@ export class UtilService {
     const lastName = accountName.pop();
     accountName.unshift(lastName);
     for (let i = 1; i < accountName.length; i++) {
-      accountName[i] = accountName[i][0];
+      accountName[i] = accountName[i][0].toUpperCase();
     }
     accountName = accountName.join("");
     return accountName;

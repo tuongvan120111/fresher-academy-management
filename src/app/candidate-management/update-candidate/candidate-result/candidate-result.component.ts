@@ -45,6 +45,9 @@ export class CandidateResultComponent implements OnInit, OnChanges {
   interviewIds = [];
 
   @Input()
+  autoId: string;
+
+  @Input()
   resultsForm: FormGroup;
 
   @Input()
@@ -203,7 +206,7 @@ export class CandidateResultComponent implements OnInit, OnChanges {
         ...formValue,
         time: this.utilService._formatFirebaseDate(formValue.time),
         Date: this.utilService._formatFirebaseDate(formValue.date),
-        employeeId: this.candidate.employeeId,
+        employeeId: this.candidate.employeeId || this.autoId,
       };
       if (index <= this.resutIds.length - 1) {
         this.resultService.updateResultById(this.resutIds[index], data);

@@ -1,4 +1,4 @@
-<div  class="candidates-container">
+<div class="candidates-container">
   <h2 class="title">Candidate Listing</h2>
   <div class="content">
     <div class="form-group">
@@ -40,32 +40,32 @@
     <div *ngIf="(candidates$ | async) as candidates" class="table">
       <table>
         <thead>
-        <tr class="table-header">
-          <td>
-            <input (click)="toggleSelected()" [checked]="isSelectedAll" type="checkbox" name="select-all">
-          </td>
-          <td *ngFor="let item of cols">{{item}}</td>
-        </tr>
+          <tr class="table-header">
+            <td>
+              <input (click)="toggleSelected()" [checked]="isSelectedAll" type="checkbox" name="select-all">
+            </td>
+            <td *ngFor="let item of cols">{{item}}</td>
+          </tr>
         </thead>
         <tbody>
-        <tr *ngFor="let candidate of candidates; index as i">
-          <td>
-            <input [checked]="isSelectedAll" type="checkbox" name="select">
-          </td>
-          <td>{{i + 1}}</td>
-          <td class="employee-id" (click)="navigateToUpdate(candidate.id)">
-            {{candidate.employeeId}}
-          </td>
-          <td>{{candidate.account}}</td>
-          <td>{{candidate.name}}</td>
-          <td>{{candidate.dob | date: 'dd/MM/yyyy'}}</td>
-          <td>{{candidate.gender}}</td>
-          <td>{{candidate.university}}</td>
-          <td>{{candidate.faculty}}</td>
-          <td>{{candidate.phone}}</td>
-          <td>{{candidate.email}}</td>
-          <td>{{candidate.status}}</td>
-        </tr>
+          <tr *ngFor="let candidate of candidates; index as i">
+            <td>
+              <input (click)="toggleSelectedRow(i)" [checked]="isSelectedAll" type="checkbox" name="select">
+            </td>
+            <td>{{i + 1}}</td>
+            <td class="employee-id" (click)="navigateToUpdate(candidate.id)">
+              {{candidate.employeeId}}
+            </td>
+            <td>{{candidate.account}}</td>
+            <td>{{candidate.name}}</td>
+            <td>{{candidate.dob | date: 'dd/MM/yyyy'}}</td>
+            <td>{{candidate.gender}}</td>
+            <td>{{candidate.university}}</td>
+            <td>{{candidate.faculty}}</td>
+            <td>{{candidate.phone}}</td>
+            <td>{{candidate.email}}</td>
+            <td>{{candidate.status}}</td>
+          </tr>
         </tbody>
       </table>
     </div>
@@ -78,7 +78,7 @@
         <mat-icon class="update-icon">arrow_circle_up</mat-icon>
         Update Candidate
       </button>
-      <button class="delete-btn" mat-raised-button>
+      <button (click)="deleteCandidate()" class="delete-btn" mat-raised-button>
         <mat-icon class="delete-icon">cancel</mat-icon>
         Delete Candidate
       </button>

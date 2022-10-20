@@ -1,9 +1,18 @@
 import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { CANDIDATE_TAB_TYPE } from "../utils/candidate.const";
-import { CandidateService, FirebaseCandidateFormat } from "../candidate.service";
+import {
+  CandidateService,
+  FirebaseCandidateFormat,
+} from "../candidate.service";
 import { map, Observable, of, switchMap } from "rxjs";
-import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
+import {
+  FormArray,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from "@angular/forms";
 import { IUniversity, UniversityService } from "../services/university.service";
 import { ISite, SitesService } from "../services/sites.service";
 import { ChannelService, IChannel } from "../services/channel.service";
@@ -15,6 +24,7 @@ import { MatDialog } from "@angular/material/dialog";
 import { autoGenerateId } from "../utils/helpers";
 import { STATUS } from "../model/candidate.interface";
 import firestore = firebase.firestore;
+import { UtilService } from "../utils/util.service";
 
 const OTHER_OPTION: IUniversity = {
   name: "Other",
@@ -48,28 +58,30 @@ export class UpdateCandidateComponent implements OnInit {
     private facultyService: FacultyService,
     private dialog: MatDialog,
     private fb: FormBuilder,
-  ) {
-  }
+    private utilService: UtilService
+  ) {}
 
   private _initData() {
     if (this.isCreate) {
       this.generateEmplId();
     } else {
-      this.candidate$ = this.candidatesService.getCandidateById(this.candidateId);
+      this.candidate$ = this.candidatesService.getCandidateById(
+        this.candidateId
+      );
     }
     this.university$ = this.universityService.loadUniversity().pipe(
-      map(universities => {
+      map((universities) => {
         universities.push(OTHER_OPTION);
         return universities;
-      }),
+      })
     );
     this.sites$ = this.sitesService.loadSites();
     this.channels$ = this.channelService.loadData();
     this.faculty$ = this.facultyService.loadData().pipe(
-      map(faculties => {
+      map((faculties) => {
         faculties.push(OTHER_OPTION);
         return faculties;
-      }),
+      })
     );
   }
 
@@ -125,7 +137,10 @@ export class UpdateCandidateComponent implements OnInit {
       gender: new FormControl(""),
       university: new FormControl(""),
       faculty: new FormControl(""),
-      phone: new FormControl("", [Validators.minLength(10), Validators.maxLength(14)]),
+      phone: new FormControl("", [
+        Validators.minLength(10),
+        Validators.maxLength(14),
+      ]),
       email: new FormControl("", [Validators.email]),
       skill: new FormControl(""),
       language: new FormControl(""),
@@ -160,19 +175,22 @@ export class UpdateCandidateComponent implements OnInit {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       width: "250px",
     });
-    dialogRef.afterClosed().pipe(
-      switchMap(result => {
-        if (result.ok && this.candidateFormGroup.valid) {
-          if (!this.isCreate) {
-            return this.updateCandidate();
+    dialogRef
+      .afterClosed()
+      .pipe(
+        switchMap((result) => {
+          if (result.ok && this.candidateFormGroup.valid) {
+            if (!this.isCreate) {
+              return this.updateCandidate();
+            } else {
+              return this.createCandidate();
+            }
           } else {
-            return this.createCandidate();
+            return of(null);
           }
-        } else {
-          return of(null);
-        }
-      }),
-    ).subscribe();
+        })
+      )
+      .subscribe();
   }
 
   updateCandidate(): Observable<any> {
@@ -216,11 +234,8 @@ export class UpdateCandidateComponent implements OnInit {
   }
 
   createCandidate(): Observable<any> {
-    const {
-      dob,
-      applicationDate,
-      graduateYear,
-    } = this.candidateFormGroup.value;
+    const { dob, applicationDate, graduateYear, name } =
+      this.candidateFormGroup.value;
     return this.candidatesService.createCandidate({
       ...this.candidateFormGroup.value,
       employeeId: this.emplId,
@@ -228,7 +243,7 @@ export class UpdateCandidateComponent implements OnInit {
       dob: this._formatFirebaseDate(dob),
       history: `ADMIN11 ${moment(new Date()).format("DD-MMM-YYYY")}`,
       graduateYear: this._formatFirebaseDate(graduateYear),
-      account: "DamLT1",
+      account: this.utilService._generateAccountName(name) + "01",
       status: STATUS.NEW,
     });
   }
