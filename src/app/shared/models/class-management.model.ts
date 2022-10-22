@@ -57,7 +57,7 @@ interface ClassGeneral {
   budgetCode: string;
   estimatedBudget: number;
 
-  classAdmin: Array<number>;
+  classAdmin: Array<string>;
   learningPath: string;
 
   history: string;
@@ -75,7 +75,7 @@ interface ClassDetail {
   actualStartDate: Date | number;
   actualEndDate: Date | number;
 
-  masterTrainer: number;
+  masterTrainer: string;
   trainer: Array<string>;
 
   curriculumn: string;

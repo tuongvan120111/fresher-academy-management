@@ -5,15 +5,21 @@ td {
   // width: 6vw;
   & > p {
     // width: 6vw;
-    margin: auto;
+    // margin: auto;
     padding: 5px;
+    margin: auto;
   }
+
+  // &:has(:disabled) button{
+  //   background-color: #95bcf2;
+  //   display: none;
+  // }
 }
 
 th.mat-header-cell:first-of-type,
 td.mat-cell:first-of-type {
   padding-left: 0;
-  width: 60px;
+  // width: 60px;
   text-align: center;
 }
 
@@ -103,8 +109,6 @@ h3 {
   .mat-form-field:has(.date-input:read-only) {
     background-color: #ffffff;
   }
-
-
 }
 td.mat-cell:has(input:disabled),
 td.mat-cell:has(textarea:disabled),
@@ -131,10 +135,10 @@ form > button {
   }
   td:has(p) {
     background: lightgrey;
-    p {
-      width: 12vw !important;
-      line-break: anywhere;
-    }
+    // p {
+    //   max-width: 12vw !important;
+    //   line-break: anywhere;
+    // }
   }
   input:read-only {
     cursor: default;
@@ -143,7 +147,8 @@ form > button {
     cursor: default;
   }
   .mat-form-field-flex > .mat-form-field-infix {
-    padding: 0 0 8px 0;
+    // padding: 0 0 8px 0;
+    padding: 8px 0;
     width: auto;
   }
 
@@ -204,6 +209,14 @@ form > button {
   .mat-form-field-outline-start,
   .mat-form-field-outline-end {
     border-radius: 0 !important;
+  }
+
+  .mat-cell .mat-form-field {
+    width: 100%;
+  }
+
+  .mat-input-element:disabled {
+    color: black;
   }
 }
 

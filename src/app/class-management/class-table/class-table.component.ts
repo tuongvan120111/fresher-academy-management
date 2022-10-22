@@ -61,7 +61,6 @@ export class ClassTableComponent implements OnInit, AfterViewInit, OnChanges {
   toggleAllRows() {
     if (this.isAllSelected()) {
       this.selection.clear();
-      console.log(this.selection);
       return;
     }
     this.selection.select(...this.classData.data);
@@ -78,7 +77,6 @@ export class ClassTableComponent implements OnInit, AfterViewInit, OnChanges {
         ClassStatusString.Draft,
         ClassStatusString.Submitted,
       ].includes(row.general.status);
-      console.log(this.temp);
     }
     return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${
       (row.id || '') + 1
@@ -106,15 +104,14 @@ export class ClassTableComponent implements OnInit, AfterViewInit, OnChanges {
     ].includes(role);
 
     this.initSearchForm(formBuilder);
+    this.classManagementService.getListClass().then((data) => {
+      this.isLoading = false;
+      this.classData = new MatTableDataSource<ClassModel>(data);
+      this.classData.paginator = this.paginator;
+    });
   }
 
   ngOnInit(): void {
-    this.classManagementService
-      .getListClass(this.paganationData.pageIndex, this.paganationData.pageSize)
-      .then((data) => {
-        this.isLoading = false;
-        this.classData = new MatTableDataSource<ClassModel>(data);
-      });
     // .subscribe({
     //   next: (data) => {
     //     this.isLoading = false;
@@ -140,10 +137,10 @@ export class ClassTableComponent implements OnInit, AfterViewInit, OnChanges {
       },
     });
 
-    dialogRef.afterClosed().subscribe((result) => {
+    dialogRef.afterClosed().subscribe(async (result) => {
       if (result) {
         const data = this.selection.selected[0];
-        this.classManagementService.updateStatusClass(
+        await this.classManagementService.updateStatusClass(
           data.id || '',
           data,
           ClassStatusString.Canceled
@@ -159,15 +156,6 @@ export class ClassTableComponent implements OnInit, AfterViewInit, OnChanges {
       pageSize,
       pageIndex,
     };
-    this.isLoading = true;
-    this.selection.clear();
-    this.classData = new MatTableDataSource<ClassModel>([]);
-    this.classManagementService
-      .getListClass(this.paganationData.pageIndex, this.paganationData.pageSize)
-      .then((data) => {
-        this.isLoading = false;
-        this.classData = new MatTableDataSource<ClassModel>(data);
-      });
   }
 
   cancelClass() {
@@ -223,7 +211,6 @@ export class ClassTableComponent implements OnInit, AfterViewInit, OnChanges {
 
   search(value: ClassFilter) {
     this.isLoading = true;
-    console.log(value);
 
     const { pageSize, pageIndex } = this.paganationData;
     this.selection.clear();
@@ -237,6 +224,7 @@ export class ClassTableComponent implements OnInit, AfterViewInit, OnChanges {
       .then((data) => {
         this.isLoading = false;
         this.classData = new MatTableDataSource<ClassModel>(data);
+        this.classData.paginator = this.paginator;
       });
   }
 

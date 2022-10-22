@@ -7,6 +7,7 @@ import {
   ClassModel,
   ClassAdminModel,
   TrainerModel,
+  ClassAudit,
 } from '../../shared/models/class-management.model';
 import { ClassManagementService } from '../../shared/services/class-management.service';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
@@ -15,10 +16,17 @@ import {
   Inject,
   Input,
   IterableDiffers,
+  OnDestroy,
   OnInit,
   ViewChild,
 } from '@angular/core';
-import { firstValueFrom, lastValueFrom, Observable } from 'rxjs';
+import {
+  firstValueFrom,
+  lastValueFrom,
+  Observable,
+  Subject,
+  takeUntil,
+} from 'rxjs';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
 import {
   AuditDisplayedColumns,
@@ -52,14 +60,14 @@ import { CommonService } from 'src/app/shared/services/common.service';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogSizeSComponent } from 'src/app/components/dialog-size-s/dialog-size-s.component';
 import { NotificationService } from 'src/app/shared/services/notification.service';
-import isEqual from 'lodash.isequal';
 
 @Component({
   selector: 'app-class-detail',
   templateUrl: './class-detail.component.html',
   styleUrls: ['./class-detail.component.scss'],
 })
-export class NewClassComponent implements OnInit {
+export class NewClassComponent implements OnInit, OnDestroy {
+  destroy$ = new Subject();
   title?: string;
   @Input() classManagementData!: ClassModel;
 
@@ -128,6 +136,7 @@ export class NewClassComponent implements OnInit {
   isUpdateData: boolean = false;
 
   classID: string = '';
+  dataClass: Observable<ClassModel> = new Observable<any>();
 
   constructor(
     @Inject(FormBuilder) private formBuilder: FormBuilder,
@@ -167,6 +176,7 @@ export class NewClassComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.addClassFrom.reset();
     this.budgetDataSource = new MatTableDataSource(this.budgets.controls);
     this.auditDataSource = new MatTableDataSource(this.audits.controls);
     this.isLoading = true;
@@ -187,12 +197,8 @@ export class NewClassComponent implements OnInit {
     if (this.router.url.includes('/update')) {
       this.title = 'Update Class';
     }
-    console.log(
-      isEqual({ a: 123, c: 1, b: 33333 }, { a: 123, b: 33333, c: 1123 })
-    );
-
-    console.log(this.title);
-    this.classManagementService.getClassByID(this.classID).subscribe({
+    this.dataClass = this.classManagementService.getClassByID(this.classID);
+    this.dataClass.pipe(takeUntil(this.destroy$)).subscribe({
       next: (data: ClassModel) => {
         if (!data) {
           this.showDialog(
@@ -206,8 +212,21 @@ export class NewClassComponent implements OnInit {
         data.general.expectedStartDate = new Date(
           data.general.expectedStartDate
         );
-        data.detail.actualEndDate = new Date(data.detail.actualEndDate);
-        data.detail.actualStartDate = new Date(data.detail.actualStartDate);
+        if (!!data.detail.actualEndDate) {
+          data.detail.actualEndDate = new Date(data.detail.actualEndDate);
+        }
+        if (!!data.detail.actualStartDate) {
+          data.detail.actualStartDate = new Date(data.detail.actualStartDate);
+        }
+
+        let auditData: ClassAudit[] = [];
+        data.audit.map((audit) => {
+          audit.deadline = new Date(audit.deadline);
+          audit.date = new Date(audit.date);
+          auditData.push(audit);
+        });
+
+        data.audit = auditData;
 
         this.classManagementData = data;
 
@@ -215,24 +234,70 @@ export class NewClassComponent implements OnInit {
           this.classManagementData.general.classAdmin;
 
         this.getDataFormArray(
-          this.classManagementData.budget,
+          data.budget,
           this.budgets,
-          this.budgetTable
+          this.budgetTable,
+          true
         );
 
-        this.getDataFormArray(
-          this.classManagementData.audit,
-          this.audits,
-          this.auditTable
-        );
+        this.getDataFormArray(data.audit, this.audits, this.auditTable);
 
-        this.addClassFrom.patchValue(this.classManagementData);
+        if (data.budget.length > 0) {
+          this.totalBudget = data.budget
+            .map(
+              (bud) => bud.unitExpense * bud.quantity * (1 + bud.tax / 100.0)
+            )
+            .reduce((a, b) => a + b);
+        }
+
+        if (this.router.url.includes('/update')) {
+          this.addClassFrom.disable();
+          switch (data.general.status) {
+            case ClassStatusString.Draft:
+              this.generals.enable();
+              this.details.enable();
+              this.budgets.enable();
+              this.auditDisplayedColumns = this.auditDisplayedColumns.filter(
+                (item) => item !== 'add'
+              );
+              this.budgetDisplayedColumns.includes('add')
+                ? ''
+                : this.budgetDisplayedColumns.unshift('add');
+              break;
+            case ClassStatusString.InProgress:
+              this.audits.enable();
+
+              this.auditDisplayedColumns.includes('add')
+                ? ''
+                : this.auditDisplayedColumns.unshift('add');
+              this.budgetDisplayedColumns = this.budgetDisplayedColumns.filter(
+                (item) => item !== 'add'
+              );
+              break;
+
+            default:
+              this.auditDisplayedColumns = this.auditDisplayedColumns.filter(
+                (item) => item !== 'add'
+              );
+              this.budgetDisplayedColumns = this.budgetDisplayedColumns.filter(
+                (item) => item !== 'add'
+              );
+              break;
+          }
+        }
+
+        this.addClassFrom?.patchValue(this.classManagementData);
         this.isLoading = false;
       },
       error: (err) => {
         this.isLoading = false;
       },
     });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next(true);
+    this.destroy$.complete();
   }
 
   addFieldBudgetData(): void {
@@ -255,13 +320,8 @@ export class NewClassComponent implements OnInit {
     this.auditTable?.renderRows();
   }
 
-  onclick = () => {
-    console.log(this.addClassFrom.value);
-  };
-
   onFileLearningPathChange = async (event: any) => {
     const file = event.target.files[0] as File;
-    console.log(file);
     if (!file) {
       return;
     }
@@ -273,20 +333,6 @@ export class NewClassComponent implements OnInit {
     this.learningPathFiles = file;
     this.generals.get('learningPath')?.setValue(file.name);
     this.learningPathData = await this.fileService.getFileData(file);
-
-    // .then(async (data: any) => {
-
-    //   return;
-    //   const { typeOfClass, skillOfClass } = data;
-    //   const classCode = `${location}_${typeOfClass}_${skillOfClass}_`;
-    //   // TODO: Generate Class name - Name format: Fresher Position Skill
-    //   this.generals
-    //     .get('className')
-    //     ?.setValue(`Fresher ${data.position} ${data.skill}`);
-    // })
-    // .catch((err) => {
-    //   console.log(err);
-    // });
   };
 
   onFileCurriculumnChange(event: any) {
@@ -345,46 +391,72 @@ export class NewClassComponent implements OnInit {
       },
     });
 
-    dialogRef.afterClosed().subscribe(async (result) => {
-      if (result) {
-        this.isSpinnerLoading = true;
-        if (this.learningPathFiles) {
-          const locationID = values.general.location;
-          const location = await firstValueFrom(
-            this.classManagementService.getLocationByID(locationID)
-          );
-          // TODO: Còn Serial number of skill
-          values.general.classCode = `${location.acronym}_${
-            this.learningPathData?.typeOfClass
-          }_${
-            this.learningPathData?.skillOfClass
-          }_${this.commonSer.getTwoDigitYear(
-            new Date(values.general.expectedStartDate)
-          )}_12`;
-          values.general.className = `Fresher ${this.learningPathData?.position} ${this.learningPathData?.skillOfClass}`;
-        }
-
-        try {
-          if (this.isUpdateData) {
-            this.classManagementService.updateStatusClass(
-              this.classID,
-              values,
-              ClassStatusString.Updated
+    dialogRef
+      .afterClosed()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(async (result) => {
+        if (result) {
+          this.isSpinnerLoading = true;
+          if (this.learningPathFiles) {
+            const locationID = values.general.location;
+            const location = await firstValueFrom(
+              this.classManagementService.getLocationByID(locationID)
             );
-            this.notificationService.success('Update successfully');
-            this.router.navigateByUrl(`/class-management/${this.classID}`);
-          } else {
-            await this.classManagementService.addNewClass(values);
-            this.notificationService.success('Create successfully');
-            this.router.navigateByUrl('/class-management');
+            // TODO: Còn Serial number of skill
+            values.general.classCode = `${location.acronym}_${
+              this.learningPathData?.typeOfClass
+            }_${
+              this.learningPathData?.skillOfClass
+            }_${this.commonSer.getTwoDigitYear(
+              new Date(values.general.expectedStartDate)
+            )}_12`;
+            values.general.className = `Fresher ${this.learningPathData?.position} ${this.learningPathData?.skillOfClass}`;
           }
 
-          this.isSpinnerLoading = false;
-        } catch (error) {
-          this.notificationService.error('Create failure');
+          try {
+            if (this.isUpdateData) {
+              const { general, detail, budget, audit } = values;
+
+              if (!audit) {
+                this.classManagementData.audit = audit;
+              } else {
+                this.classManagementData.general = general;
+                this.classManagementData.detail = detail;
+                this.classManagementData.budget = budget;
+              }
+              // let status = ClassStatusString.Updated;
+              // if (
+              //   !(
+              //     isEqual(general, oldGeneral) &&
+              //     isEqual(detail, oldDetail) &&
+              //     isEqual(budget, oldBudget)
+              //   )
+              // ) {
+              //   status = ClassStatusString.Draft;
+              // }
+              // if (!isEqual(audit, oldAudit)) {
+              //   status = ClassStatusString.InProgress;
+              // }
+              await this.classManagementService.updateStatusClass(
+                this.classID,
+                this.classManagementData,
+                ClassStatusString.Updated
+              );
+              this.notificationService.success('Update successfully');
+              this.router.navigateByUrl(`/class-management/${this.classID}`);
+            } else {
+              await this.classManagementService.addNewClass(values);
+              this.notificationService.success('Create successfully');
+              this.router.navigateByUrl('/class-management');
+            }
+
+            this.isSpinnerLoading = false;
+          } catch (error) {
+            this.isSpinnerLoading = false;
+            this.notificationService.error('Create failure: ' + error);
+          }
         }
-      }
-    });
+      });
   }
   get generals() {
     return this.addClassFrom.controls['general'] as FormControl;
@@ -429,68 +501,69 @@ export class NewClassComponent implements OnInit {
         formatType: [0],
         scope: [0],
         supplier: [''],
-        actualStartDate: [new Date()],
-        actualEndDate: [new Date()],
+        actualStartDate: [0],
+        actualEndDate: [0],
         masterTrainer: [''],
         trainer: [[]],
         curriculumn: [''],
         remarks: [0],
       }),
 
-      // budget: formBuilder.array([this.initBudget()]),
       budget: formBuilder.array([]),
-      // audit: formBuilder.array([this.initAudit()]),
       audit: formBuilder.array([]),
     });
     this.locationList = this.classManagementService.getListLocations();
     this.classAdminList = this.classManagementService.getListClassAdmins();
-    this.masterTrainerList = this.classManagementService.getListMasterTrainers();
+    this.masterTrainerList =
+      this.classManagementService.getListMasterTrainers();
   };
 
   private initBudget() {
+    const index: number = this.budgets.length;
     return this.formBuilder.group({
-      item: [''],
-      unit: [''],
-      unitExpense: [''],
+      item: [`Item_${index + 1}`, Validators.required],
+      unit: [`Unit_${index + 1}`, Validators.required],
+      unitExpense: [0, Validators.required],
 
-      quantity: [''],
-      amount: [''],
-      tax: [''],
+      quantity: [1, Validators.required],
+      amount: [0, Validators.required],
+      tax: [0, Validators.required],
 
-      sum: [''],
-      note: [''],
+      sum: [0, Validators.required],
+      note: [`Note_${index + 1}`],
     });
   }
 
   private initAudit() {
+    const index: number = this.audits.length;
     return this.formBuilder.group({
       date: [new Date()],
-      eventCategory: [''],
-      relatedPeople: [''],
+      eventCategory: ['Trainer'],
+      relatedPeople: [`Related_People_${index + 1}`],
 
-      action: [''],
-      pic: [''],
+      action: [`Action_${index + 1}`],
+      pic: [`PIC_${index + 1}`],
       deadline: [new Date()],
 
-      note: [''],
+      note: [`Note_${index + 1}`],
     });
   }
 
   private getDataFormArray(
     list: Array<any>,
     form: FormArray<any>,
-    table: MatTable<any>
+    table: MatTable<any>,
+    isBudget: boolean = false
   ) {
+    form.clear();
+    form.patchValue(list);
     const length = list.length;
-    if (length === 0) {
-      form?.removeAt(0);
-      return;
+    for (let index = 0; index < length; index++) {
+      form?.push(isBudget ? this.initBudget() : this.initAudit());
     }
-    for (let index = 0; index < length - 1; index++) {
-      form?.push(this.initBudget());
-    }
-    form?.patchValue(list);
-    table?.renderRows();
+    try {
+      table?.renderRows();
+    } catch (error) {}
   }
 
   transformAmount(element: any) {
@@ -518,11 +591,27 @@ export class NewClassComponent implements OnInit {
       },
     });
 
-    dialogRef.afterClosed().subscribe(async (result) => {
-      if (result) {
-        this.router.navigateByUrl(navigate);
-      }
-    });
+    dialogRef
+      .afterClosed()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(async (result) => {
+        if (result) {
+          this.router.navigateByUrl(navigate);
+        }
+      });
+  }
+
+  validateInputNumber(event: KeyboardEvent) {
+    const regex = /[^\e\-\+\.]/g;
+    const { max, value } = event.target as HTMLInputElement;
+
+    const currentValue = new Number(value + event.key);
+    if (!regex.test(event.key) || (!!max && new Number(max) <= currentValue))
+      event.preventDefault();
+  }
+
+  setSpinnerLoading(val: boolean = true) {
+    this.isSpinnerLoading = val;
   }
 }
 export class MyErrorStateMatcher implements ErrorStateMatcher {

@@ -13,24 +13,39 @@ import { MainPageComponent } from './components/main-page/main-page.component';
 import { AngularFireStorageModule } from '@angular/fire/compat/storage';
 import { AuthGuard } from './auth/auth.guard';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { HttpClientModule } from '@angular/common/http';
 
 const routes: Routes = [
   {
-    path: '', component: MainPageComponent,
+    path: '',
+    component: MainPageComponent,
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
-      { path: 'login', loadChildren: () => import('./login/login.module').then(m => m.LoginModule) },
-      { path: 'dashboard', loadChildren: () => import('./dashboard/dashboard.module').then(m => m.DashboardModule), canActivate: [AuthGuard] },
-      { path: 'class-management', loadChildren: () => import('./class-management/class-management.module').then(m => m.ClassManagementModule), canActivate: [AuthGuard] },
-    ]
+      {
+        path: 'login',
+        loadChildren: () =>
+          import('./login/login.module').then((m) => m.LoginModule),
+      },
+      {
+        path: 'dashboard',
+        loadChildren: () =>
+          import('./dashboard/dashboard.module').then((m) => m.DashboardModule),
+        canActivate: [AuthGuard],
+      },
+      {
+        path: 'class-management',
+        loadChildren: () =>
+          import('./class-management/class-management.module').then(
+            (m) => m.ClassManagementModule
+          ),
+        canActivate: [AuthGuard],
+      },
+    ],
   },
 ];
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    MainPageComponent
-  ],
+  declarations: [AppComponent, MainPageComponent],
   imports: [
     BrowserModule,
     AngularFireModule.initializeApp(environment.firebase),
@@ -43,10 +58,11 @@ const routes: Routes = [
     BottomModule,
     ToggleMenuModule,
     MatSnackBarModule,
-    AngularFireStorageModule
+    AngularFireStorageModule,
+    HttpClientModule,
     // AppRoutingModule
   ],
   providers: [],
   bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

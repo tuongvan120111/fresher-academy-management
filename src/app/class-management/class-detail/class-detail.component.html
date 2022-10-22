@@ -70,10 +70,12 @@
               <mat-form-field appearance="outline" [hideRequiredMarker]="true">
                 <input
                   matInput
+                  placeholder="Only allow numeric values"
                   formControlName="plannedTraineeNo"
                   type="number"
                   [defaultValue]="1"
                   min="1"
+                  (keydown)="validateInputNumber($event)"
                 />
               </mat-form-field>
 
@@ -216,7 +218,7 @@
                   </mat-select-trigger> -->
                   <mat-option
                     *ngFor="let data of classAdminList | async"
-                    [value]="data.id"
+                    [value]="data.email"
                     >{{ data.account }}</mat-option
                   >
                 </mat-select>
@@ -348,6 +350,7 @@
                   [matDatepicker]="actualStartDate"
                   formControlName="actualStartDate"
                   [disabled]="true"
+                  readonly
                 />
                 <mat-datepicker-toggle
                   matSuffix
@@ -364,6 +367,7 @@
                   [matDatepicker]="actualEndDate"
                   formControlName="actualEndDate"
                   [disabled]="true"
+                  readonly
                 />
                 <mat-datepicker-toggle
                   matSuffix
@@ -379,7 +383,7 @@
                 <mat-select matNativeControl formControlName="masterTrainer">
                   <mat-option
                     *ngFor="let data of masterTrainerList | async"
-                    [value]="data.id"
+                    [value]="data.email"
                   >
                     {{ data.account }}
                   </mat-option>
@@ -398,7 +402,7 @@
                   </mat-select-trigger> -->
                   <mat-option
                     *ngFor="let data of masterTrainerList | async"
-                    [value]="data.id"
+                    [value]="data.email"
                     >{{ data.account }}</mat-option
                   >
                 </mat-select>
@@ -439,7 +443,8 @@
       </div>
       <app-footer-button
         [userRole]="userInfor?.role || 0"
-        [classManagementData]="classManagementData"
+        [dataClass]="dataClass"
+        (setLoading)="setSpinnerLoading($event)"
       ></app-footer-button>
     </form>
   </mat-tab>
@@ -527,7 +532,12 @@
           <th mat-header-cell *matHeaderCellDef>Item</th>
           <td mat-cell *matCellDef="let element" [formGroup]="element">
             <mat-form-field appearance="outline" [hideRequiredMarker]="true">
-              <input matInput placeholder="Item" formControlName="item" />
+              <input
+                matInput
+                placeholder="Item"
+                formControlName="item"
+                [readonly]="isDisabled"
+              />
             </mat-form-field>
           </td>
         </ng-container>
@@ -537,7 +547,12 @@
           <th mat-header-cell *matHeaderCellDef>Unit</th>
           <td mat-cell *matCellDef="let element" [formGroup]="element">
             <mat-form-field appearance="outline" [hideRequiredMarker]="true">
-              <input matInput placeholder="Unit" formControlName="unit" />
+              <input
+                matInput
+                placeholder="Unit"
+                formControlName="unit"
+                [readonly]="isDisabled"
+              />
             </mat-form-field>
           </td>
         </ng-container>
@@ -549,11 +564,13 @@
             <mat-form-field appearance="outline" [hideRequiredMarker]="true">
               <input
                 matInput
-                placeholder="Unit Expense"
+                placeholder="Only allow numeric values"
                 formControlName="unitExpense"
                 type="number"
                 min="0"
                 [max]="MAX_SAFE_INTEGER"
+                (keydown)="validateInputNumber($event)"
+                [readonly]="isDisabled"
               />
             </mat-form-field>
           </td>
@@ -566,11 +583,13 @@
             <mat-form-field appearance="outline" [hideRequiredMarker]="true">
               <input
                 matInput
-                placeholder="Quantity"
+                placeholder="Only allow numeric values"
                 formControlName="quantity"
                 type="number"
                 min="1"
                 max="100000"
+                (keydown)="validateInputNumber($event)"
+                [readonly]="isDisabled"
               />
             </mat-form-field>
           </td>
@@ -598,7 +617,16 @@
           <th mat-header-cell *matHeaderCellDef>Tax</th>
           <td mat-cell *matCellDef="let element" [formGroup]="element">
             <mat-form-field appearance="outline" [hideRequiredMarker]="true">
-              <input matInput placeholder="Tax" formControlName="tax" />
+              <input
+                matInput
+                placeholder="Only allow numeric values"
+                formControlName="tax"
+                type="number"
+                min="0"
+                max="500"
+                (keydown)="validateInputNumber($event)"
+                [readonly]="isDisabled"
+              />
               <i matSuffix>%</i>
             </mat-form-field>
           </td>
@@ -627,7 +655,12 @@
           <th mat-header-cell *matHeaderCellDef>Note</th>
           <td mat-cell *matCellDef="let element" [formGroup]="element">
             <mat-form-field appearance="outline" [hideRequiredMarker]="true">
-              <input matInput placeholder="" formControlName="note" />
+              <input
+                matInput
+                placeholder=""
+                formControlName="note"
+                [readonly]="isDisabled"
+              />
             </mat-form-field>
           </td>
         </ng-container>
@@ -709,7 +742,7 @@
                   [errorStateMatcher]="matcher"
                   (click)="date.open()"
                   readonly
-                  [min]="currentDate"
+                  [max]="currentDate"
                   [disabled]="isDisabled"
                 />
                 <mat-datepicker-toggle
@@ -729,6 +762,7 @@
                   matNativeControl
                   formControlName="eventCategory"
                   [errorStateMatcher]="matcher"
+                  [disabled]="isDisabled"
                 >
                   <mat-option
                     *ngFor="let data of eventCategoryList | keyvalue"
@@ -749,6 +783,7 @@
                   matInput
                   placeholder=""
                   formControlName="relatedPeople"
+                  [readonly]="isDisabled"
                 />
               </mat-form-field>
             </td>
@@ -758,7 +793,12 @@
             <th mat-header-cell *matHeaderCellDef>Action</th>
             <td mat-cell *matCellDef="let element" [formGroup]="element">
               <mat-form-field appearance="outline" [hideRequiredMarker]="true">
-                <input matInput placeholder="" formControlName="action" />
+                <input
+                  matInput
+                  placeholder=""
+                  formControlName="action"
+                  [readonly]="isDisabled"
+                />
               </mat-form-field>
             </td>
           </ng-container>
@@ -767,7 +807,12 @@
             <th mat-header-cell *matHeaderCellDef>PIC</th>
             <td mat-cell *matCellDef="let element" [formGroup]="element">
               <mat-form-field appearance="outline" [hideRequiredMarker]="true">
-                <input matInput placeholder="" formControlName="pic" />
+                <input
+                  matInput
+                  placeholder=""
+                  formControlName="pic"
+                  [readonly]="isDisabled"
+                />
               </mat-form-field>
             </td>
           </ng-container>
@@ -784,7 +829,6 @@
                   [errorStateMatcher]="matcher"
                   (click)="deadline.open()"
                   readonly
-                  [min]="currentDate"
                   [disabled]="isDisabled"
                 />
                 <mat-datepicker-toggle
@@ -800,7 +844,12 @@
             <th mat-header-cell *matHeaderCellDef>Note</th>
             <td mat-cell *matCellDef="let element" [formGroup]="element">
               <mat-form-field appearance="outline" [hideRequiredMarker]="true">
-                <input matInput placeholder="" formControlName="note" />
+                <input
+                  matInput
+                  placeholder=""
+                  formControlName="note"
+                  [readonly]="isDisabled"
+                />
               </mat-form-field>
             </td>
           </ng-container>

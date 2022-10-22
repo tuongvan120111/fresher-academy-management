@@ -9,7 +9,7 @@
     [style.display]="data.isShowInputMessage ? 'flex' : 'none'"
   >
     <b>Remarks:</b>
-    <input type="text" class="form-control" placeholder="" required />
+    <input type="text" class="form-control" placeholder="" required (change)="inputValue($event)" />
   </div>
   <div class="button">
     <button

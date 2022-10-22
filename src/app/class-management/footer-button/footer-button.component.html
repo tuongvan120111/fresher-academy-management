@@ -8,6 +8,16 @@
     <button mat-stroked-button type="submit" mat-raised-button color="primary">
       Submit
     </button>
+    <button
+      *ngIf="routerURI.includes('/update')"
+      mat-stroked-button
+      type="submit"
+      mat-raised-button
+      color="warn"
+      [routerLink]="'/class-management/' + classID"
+    >
+      Cancel
+    </button>
     <button mat-stroked-button type="button" routerLink="/class-management">
       <mat-icon
         aria-hidden="false"
@@ -23,7 +33,12 @@
 
 <ng-template #buttonUpdate>
   <div class="btn-container">
-    <button mat-stroked-button type="button" [disabled]="isFARec()" routerLink="update">
+    <button
+      mat-stroked-button
+      type="button"
+      [disabled]="isFARec()"
+      routerLink="update"
+    >
       <mat-icon
         aria-hidden="false"
         aria-label="Search icon"
@@ -99,7 +114,13 @@
       mat-stroked-button
       type="button"
       (click)="onClickButon(ButtonType.Cancel)"
-      [disabled]="isClassAdmin() || isTrainer() || isFARec()"
+      [disabled]="
+        isClassAdmin() ||
+        isTrainer() ||
+        isFARec() ||
+        (status !== ClassStatusString.Submitted &&
+          status !== ClassStatusString.Draft)
+      "
     >
       <mat-icon
         aria-hidden="false"

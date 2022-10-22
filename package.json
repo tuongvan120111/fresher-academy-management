@@ -3,11 +3,12 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "start ng serve && start node app.js",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
+  "types": "dist/index.d.ts",
   "private": true,
   "dependencies": {
     "@angular/animations": "^14.1.0",
@@ -21,8 +22,11 @@
     "@angular/platform-browser-dynamic": "^14.1.0",
     "@angular/router": "^14.1.0",
     "bootstrap": "^5.2.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
     "firebase": "^9.9.4",
     "material-icons": "^1.11.11",
+    "nodemailer": "^6.8.0",
     "read-excel-file": "^5.5.0",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",

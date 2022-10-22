@@ -5,7 +5,7 @@ import {
 } from '@angular/fire/compat/firestore';
 import { BehaviorSubject, map, Observable, of, take } from 'rxjs';
 import { Loclastorage, RoleUser } from '../constants/common.constants';
-import { Authentications, LoginInfor } from '../models/common.model';
+import { Authentications } from '../models/common.model';
 
 @Injectable({
   providedIn: 'root',

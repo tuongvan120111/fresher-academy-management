@@ -100,6 +100,9 @@ export const ClassStatusString = {
   Requested: 'Requested',
   Finished: 'Finished',
   Updated: 'Updated',
+  Created: 'Created',
+  Assigned: 'Assigned',
+  Accepted: 'Accepted',
 };
 
 export const ClassManagementColumns: string[] = [
