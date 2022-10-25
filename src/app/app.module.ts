@@ -13,6 +13,7 @@ import { MainPageComponent } from './components/main-page/main-page.component';
 import { AngularFireStorageModule } from '@angular/fire/compat/storage';
 import { AuthGuard } from './auth/auth.guard';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 const routes: Routes = [
   {
@@ -35,6 +36,7 @@ const routes: Routes = [
     BrowserModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule, // for firestore
+    BrowserAnimationsModule,
     HeaderModule,
     ToggleMenuModule,
     BottomModule,

@@ -17,7 +17,6 @@ import { FormsModule } from '@angular/forms';
     MatSelectModule,
     MatFormFieldModule,
     MatOptionModule,
-    BrowserAnimationsModule,
     FormsModule
   ],
   exports: [SelectedItemComponent]

@@ -1,1 +1,166 @@
-<p>dashboard works!</p>
+<div class="dashboard">
+  <div class="title">
+    Dashboard
+  </div>
+
+  <div *ngIf="locations; else loading">
+    <div class="filter">
+      <div class="condition">
+        <div class="condition-text">Dashboard for</div>
+        <div class="condition-option">
+          <app-selected-item [dataSource]="dashboardFors" [(ngModel)]="itemDashboard"
+            (ngModelChange)="onChangeDashboardFor($event)"></app-selected-item>
+        </div>
+      </div>
+
+      <div class="condition">
+        <div class="condition-text">Location</div>
+        <div class="condition-option">
+          <app-selected-item [dataSource]="locations" [(ngModel)]="itemLocation"
+            (ngModelChange)="onChangeLocation($event)">
+          </app-selected-item>
+        </div>
+      </div>
+
+      <div class="condition">
+        <div class="condition-text">Type of Dashboard</div>
+        <div class="condition-option">
+          <app-selected-item [dataSource]="typeDashboards" [(ngModel)]="itemType"
+            (ngModelChange)="onChangeType($event)">
+          </app-selected-item>
+        </div>
+      </div>
+
+      <div class="condition">
+        <div class="condition-text">Status</div>
+        <div class="condition-option">
+          <app-selected-item [dataSource]="status" [(ngModel)]="itemStatus" (ngModelChange)="onChangeStatus($event)">
+          </app-selected-item>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="counter" *ngIf="locations">
+    <div *ngIf="!isLoading; else loading">
+      <div [ngSwitch]="itemType.id">
+        <div class="counter-body" *ngSwitchCase="'1'">Chart</div>
+        <div class="counter-body" *ngSwitchDefault>
+          <div class="plan">
+            <div class="plan-title">
+              Planning
+            </div>
+            <div class="plan-table">
+              <div class="plan-header">
+                <div class="plan-subject">Skill</div>
+                <div class="plan-enrolment">Plan of enrolment</div>
+              </div>
+              <div class="plan-result">
+                <div class="plan-subject">.Net</div>
+                <div class="plan-enrolment">130</div>
+              </div>
+              <div class="plan-result even-number">
+                <div class="plan-subject">Android</div>
+                <div class="plan-enrolment">20</div>
+              </div>
+              <div class="plan-result">
+                <div class="plan-subject">C/C++</div>
+                <div class="plan-enrolment">47</div>
+              </div>
+              <div class="plan-result even-number">
+                <div class="plan-subject">Fron-end</div>
+                <div class="plan-enrolment">19</div>
+              </div>
+              <div class="plan-result">
+                <div class="plan-subject">Java</div>
+                <div class="plan-enrolment">40</div>
+              </div>
+              <div class="plan-result even-number">
+                <div class="plan-subject">Total</div>
+                <div class="plan-enrolment">256</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="plan">
+            <div class="plan-title">
+              Planned
+            </div>
+            <div class="plan-table">
+              <div class="plan-header">
+                <div class="plan-subject">Skill</div>
+                <div class="plan-enrolment">Plan of enrolment</div>
+              </div>
+              <div class="plan-result">
+                <div class="plan-subject">.Net</div>
+                <div class="plan-enrolment">130</div>
+              </div>
+              <div class="plan-result even-number">
+                <div class="plan-subject">Android</div>
+                <div class="plan-enrolment">20</div>
+              </div>
+              <div class="plan-result">
+                <div class="plan-subject">C/C++</div>
+                <div class="plan-enrolment">47</div>
+              </div>
+              <div class="plan-result even-number">
+                <div class="plan-subject">Fron-end</div>
+                <div class="plan-enrolment">19</div>
+              </div>
+              <div class="plan-result">
+                <div class="plan-subject">Java</div>
+                <div class="plan-enrolment">40</div>
+              </div>
+              <div class="plan-result even-number">
+                <div class="plan-subject">Total</div>
+                <div class="plan-enrolment">256</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="plan">
+            <div class="plan-title">
+              In progress
+            </div>
+            <div class="plan-table">
+              <div class="plan-header">
+                <div class="plan-subject">Skill</div>
+                <div class="plan-enrolment">Plan of enrolment</div>
+              </div>
+              <div class="plan-result">
+                <div class="plan-subject">.Net</div>
+                <div class="plan-enrolment">130</div>
+              </div>
+              <div class="plan-result even-number">
+                <div class="plan-subject">Android</div>
+                <div class="plan-enrolment">20</div>
+              </div>
+              <div class="plan-result">
+                <div class="plan-subject">C/C++</div>
+                <div class="plan-enrolment">47</div>
+              </div>
+              <div class="plan-result even-number">
+                <div class="plan-subject">Fron-end</div>
+                <div class="plan-enrolment">19</div>
+              </div>
+              <div class="plan-result">
+                <div class="plan-subject">Java</div>
+                <div class="plan-enrolment">40</div>
+              </div>
+              <div class="plan-result even-number">
+                <div class="plan-subject">Total</div>
+                <div class="plan-enrolment">256</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #loading>
+  <div class="center-load">
+    <div class="lds-dual-ring"></div>
+  </div>
+</ng-template>

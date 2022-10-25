@@ -31,3 +31,5 @@ export const ListRoleuser = [
 export const Loclastorage = {
   UserLogin: 'user.login'
 }
+
+export const CountryAllowed = ["NZ", "UY", "KH", "MV", "ES", "TR", "EG", "VN", "NG", "MY", "SG", "AO", "AU", "IS", "CA", "RU", "UZ", "UA", "IT", "CG", "TW", "ZW", "FR", "MK", "JP", "CN", "HK", "PH", "ID", "AF", "US",]

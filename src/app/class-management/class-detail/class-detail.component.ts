@@ -52,7 +52,6 @@ import { CommonService } from 'src/app/shared/services/common.service';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogSizeSComponent } from 'src/app/components/dialog-size-s/dialog-size-s.component';
 import { NotificationService } from 'src/app/shared/services/notification.service';
-import isEqual from 'lodash.isequal';
 
 @Component({
   selector: 'app-class-detail',
@@ -187,11 +186,7 @@ export class NewClassComponent implements OnInit {
     if (this.router.url.includes('/update')) {
       this.title = 'Update Class';
     }
-    console.log(
-      isEqual({ a: 123, c: 1, b: 33333 }, { a: 123, b: 33333, c: 1123 })
-    );
 
-    console.log(this.title);
     this.classManagementService.getClassByID(this.classID).subscribe({
       next: (data: ClassModel) => {
         if (!data) {
@@ -354,13 +349,11 @@ export class NewClassComponent implements OnInit {
             this.classManagementService.getLocationByID(locationID)
           );
           // TODO: Còn Serial number of skill
-          values.general.classCode = `${location.acronym}_${
-            this.learningPathData?.typeOfClass
-          }_${
-            this.learningPathData?.skillOfClass
-          }_${this.commonSer.getTwoDigitYear(
-            new Date(values.general.expectedStartDate)
-          )}_12`;
+          values.general.classCode = `${location.acronym}_${this.learningPathData?.typeOfClass
+            }_${this.learningPathData?.skillOfClass
+            }_${this.commonSer.getTwoDigitYear(
+              new Date(values.general.expectedStartDate)
+            )}_12`;
           values.general.className = `Fresher ${this.learningPathData?.position} ${this.learningPathData?.skillOfClass}`;
         }
 

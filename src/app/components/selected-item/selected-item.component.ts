@@ -1,16 +1,25 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { ControlValueAccessor, FormControl } from '@angular/forms';
+import { Component, forwardRef, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { Observable } from 'rxjs';
 import { SelectedItem } from 'src/app/shared/models/common.model';
 
 @Component({
   selector: 'app-selected-item',
   templateUrl: './selected-item.component.html',
-  styleUrls: ['./selected-item.component.scss']
+  styleUrls: ['./selected-item.component.scss'],
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => SelectedItemComponent),
+      multi: true
+    }
+  ]
 })
-export class SelectedItemComponent implements OnInit, ControlValueAccessor {
+export class SelectedItemComponent implements OnInit, ControlValueAccessor, OnChanges {
   @Input() dataSource: SelectedItem[] = [];
   @Input() value!: SelectedItem;
   @Input() required!: boolean;
+  @Input() dataSource$!: Observable<SelectedItem[]>;
 
   onChange: (provinceData: any) => void = () => { };
   onTouched: () => void = () => { };
@@ -19,12 +28,15 @@ export class SelectedItemComponent implements OnInit, ControlValueAccessor {
 
   constructor() { }
 
-  ngOnInit(): void {
+  ngOnChanges(changes: SimpleChanges): void {
     if (this.value) {
       this.itemSelected = this.value;
     }
 
     this.isDisabled = !this.dataSource || this.dataSource.length === 0
+  }
+
+  ngOnInit(): void {
   }
 
   writeValue(obj: any): void {

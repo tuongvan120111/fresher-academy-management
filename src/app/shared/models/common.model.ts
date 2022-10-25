@@ -46,3 +46,10 @@ export interface DialogCommonData {
   iconColor?: string;
   isShowInputMessage?: boolean;
 }
+
+export interface DashboardFilter {
+  dashboard: string;
+  location: string;
+  type: string;
+  status: string;
+}
