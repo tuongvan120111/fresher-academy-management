@@ -18,6 +18,12 @@ export class SendMailService {
       link: string;
     }
   ) {
+    console.log({
+      to: to,
+      cc: cc,
+      subject: subject,
+      body: body,
+    });
     return this.httpClient.post('http://localhost:3000/sendmail', {
       to: to,
       cc: cc,

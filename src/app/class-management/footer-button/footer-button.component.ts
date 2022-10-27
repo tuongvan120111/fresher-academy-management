@@ -90,6 +90,7 @@ export class FooterButtonComponent implements OnInit, OnDestroy {
     let confirmMessage = '';
     let status = '';
     let isShowRemarkDialog = false;
+    let statusSubmitted = '';
 
     switch (name) {
       case ButtonType.Submit:
@@ -98,6 +99,7 @@ export class FooterButtonComponent implements OnInit, OnDestroy {
         }
         confirmMessage = 'submit';
         status = ClassStatusString.Submitted;
+        statusSubmitted = ClassStatusString.Submitted;
         break;
       case ButtonType.Approve:
         if (ClassStatusString.Submitted !== this.status) {
@@ -105,6 +107,7 @@ export class FooterButtonComponent implements OnInit, OnDestroy {
         }
         confirmMessage = 'approve';
         status = ClassStatusString.Planning;
+        statusSubmitted = ClassStatusString.Approved;
         break;
       case ButtonType.Reject:
         if (ClassStatusString.Submitted !== this.status) {
@@ -113,6 +116,7 @@ export class FooterButtonComponent implements OnInit, OnDestroy {
         confirmMessage = 'reject';
         status = ClassStatusString.Rejected;
         isShowRemarkDialog = true;
+        statusSubmitted = ClassStatusString.Rejected;
         break;
       case ButtonType.Accept:
         if (ClassStatusString.Planning !== this.status) {
@@ -120,6 +124,7 @@ export class FooterButtonComponent implements OnInit, OnDestroy {
         }
         confirmMessage = 'accept';
         status = ClassStatusString.Planned;
+        statusSubmitted = ClassStatusString.Accepted;
         break;
       case ButtonType.Decline:
         if (ClassStatusString.Planning !== this.status) {
@@ -128,6 +133,7 @@ export class FooterButtonComponent implements OnInit, OnDestroy {
         confirmMessage = 'decline';
         status = ClassStatusString.Declined;
         isShowRemarkDialog = true;
+        statusSubmitted = ClassStatusString.Declined;
         break;
       case ButtonType.Start:
         if (ClassStatusString.Planned !== this.status) {
@@ -135,6 +141,7 @@ export class FooterButtonComponent implements OnInit, OnDestroy {
         }
         confirmMessage = 'start';
         status = ClassStatusString.InProgress;
+        statusSubmitted = ClassStatusString.Started;
         break;
       case ButtonType.Finish:
         if (ClassStatusString.InProgress !== this.status) {
@@ -142,6 +149,7 @@ export class FooterButtonComponent implements OnInit, OnDestroy {
         }
         confirmMessage = 'finish';
         status = ClassStatusString.Pending;
+        statusSubmitted = ClassStatusString.Finished;
         break;
       case ButtonType.Close:
         if (ClassStatusString.Pending !== this.status) {
@@ -149,6 +157,7 @@ export class FooterButtonComponent implements OnInit, OnDestroy {
         }
         confirmMessage = 'close';
         status = ClassStatusString.Closed;
+        statusSubmitted = ClassStatusString.Closed;
         break;
       case ButtonType.Request:
         if (ClassStatusString.Pending !== this.status) {
@@ -157,6 +166,7 @@ export class FooterButtonComponent implements OnInit, OnDestroy {
         confirmMessage = 'request';
         status = ClassStatusString.Requested;
         isShowRemarkDialog = true;
+        statusSubmitted = ClassStatusString.Requested;
         break;
       case ButtonType.Cancel:
         if (
@@ -167,6 +177,7 @@ export class FooterButtonComponent implements OnInit, OnDestroy {
         }
         confirmMessage = 'cancel';
         status = ClassStatusString.Canceled;
+        statusSubmitted = ClassStatusString.Canceled;
         break;
       default:
         break;
@@ -194,11 +205,12 @@ export class FooterButtonComponent implements OnInit, OnDestroy {
           }
           this.setLoading.emit();
 
-          console.log(status)
+          console.log(status);
           await this.classSer.updateStatusClass(
             this.classID,
             this.classManagementData,
-            status
+            status,
+            statusSubmitted
           );
           this.setLoading.emit(false);
 

@@ -170,6 +170,7 @@ export class ClassManagementService {
     id: string,
     data: ClassModel,
     status: string,
+    statusSendMail: string,
     remarksContent: string = ''
   ) {
     let history = data.general.history;
@@ -200,6 +201,7 @@ export class ClassManagementService {
     this.sendMailWhenUpdateClass(
       id,
       status,
+      statusSendMail,
       classCode,
       className,
       classAdmin,
@@ -210,6 +212,7 @@ export class ClassManagementService {
       this.sendMailWhenUpdateClass(
         id,
         ClassStatusString.Assigned,
+        '',
         classCode,
         className,
         classAdmin,
@@ -317,11 +320,12 @@ export class ClassManagementService {
   sendMailWhenUpdateClass(
     id: string,
     status: string,
+    statusSendMail: string,
     classCode: string,
     className: string,
     to: string[],
     trainer: string[] = []
-  ) {
+    ) {
     let body = {
       theClass: `${classCode} - ${className}`,
       className: '',
@@ -330,8 +334,9 @@ export class ClassManagementService {
     };
     let subject = '';
     let cc: string[] = [];
+    console.log(statusSendMail);
 
-    switch (status) {
+    switch (statusSendMail) {
       case ClassStatusString.Updated:
         body.status = 'has been updated';
         subject = `[FA MANAGEMENT]: The Class ${classCode} is updated.`;

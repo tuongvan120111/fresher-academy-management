@@ -440,6 +440,7 @@ export class NewClassComponent implements OnInit, OnDestroy {
               await this.classManagementService.updateStatusClass(
                 this.classID,
                 this.classManagementData,
+                ClassStatusString.Updated,
                 ClassStatusString.Updated
               );
               this.notificationService.success('Update successfully');

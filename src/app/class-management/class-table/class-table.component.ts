@@ -143,6 +143,7 @@ export class ClassTableComponent implements OnInit, AfterViewInit, OnChanges {
         await this.classManagementService.updateStatusClass(
           data.id || '',
           data,
+          ClassStatusString.Canceled,
           ClassStatusString.Canceled
         );
         this.selection.clear();
@@ -176,6 +177,7 @@ export class ClassTableComponent implements OnInit, AfterViewInit, OnChanges {
           this.classManagementService.updateStatusClass(
             data.id || '',
             data,
+            ClassStatusString.Canceled,
             ClassStatusString.Canceled
           );
         });
