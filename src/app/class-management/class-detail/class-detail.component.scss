@@ -1,0 +1,249 @@
+table,
+th,
+td {
+  border: 1px solid;
+  // width: 6vw;
+  & > p {
+    // width: 6vw;
+    // margin: auto;
+    padding: 5px;
+    margin: auto;
+  }
+
+  // &:has(:disabled) button{
+  //   background-color: #95bcf2;
+  //   display: none;
+  // }
+}
+
+th.mat-header-cell:first-of-type,
+td.mat-cell:first-of-type {
+  padding-left: 0;
+  // width: 60px;
+  text-align: center;
+}
+
+td.mat-cell:nth-of-type(2) {
+  text-align: center;
+}
+
+:host ::ng-deep .mat-table thead {
+  background-color: #d3d3d3;
+  text-align-last: center;
+}
+
+h3 {
+  width: 100%;
+  border-bottom: 1px solid;
+  padding: 10px;
+}
+
+.flex-container {
+  display: flex;
+  align-items: center;
+  border: 1px solid;
+
+  &.header {
+    background-color: #95bcf2;
+
+    p {
+      background-color: transparent;
+      padding-left: 10px;
+    }
+
+    mat-icon {
+      height: 100%;
+      font-size: 30px;
+      font-weight: bold;
+      text-align: center;
+      padding: 0 5px;
+      width: fit-content;
+    }
+  }
+
+  p,
+  .mat-form-field,
+  div {
+    height: 35px;
+    display: flex;
+    margin: 0;
+    align-items: center;
+  }
+
+  p:not(:first-child),
+  .mat-form-field:not(:first-child),
+  div {
+    border-left: 1px solid black;
+  }
+
+  p {
+    width: 50%;
+    min-width: 170px;
+    background-color: #d3d3d3;
+    padding-left: 5px;
+  }
+
+  .mat-form-field,
+  div {
+    width: 100%;
+  }
+  .mat-form-field:has(input:disabled),
+  .mat-form-field:has(textarea:disabled),
+  .mat-form-field:has(input:read-only),
+  .mat-form-field:has(textarea:read-only),
+  .mat-form-field:has(.file-input:disabled:read-only),
+  .mat-form-field:has(.date-input:disabled:read-only) {
+    background-color: #d3d3d3;
+    color: black;
+  }
+  .date-input {
+    cursor: pointer;
+  }
+
+  input:disabled,
+  textarea:disabled {
+    cursor: default;
+  }
+
+  .mat-form-field:has(.file-input:read-only),
+  .mat-form-field:has(.date-input:read-only) {
+    background-color: #ffffff;
+  }
+}
+td.mat-cell:has(input:disabled),
+td.mat-cell:has(textarea:disabled),
+td.mat-cell:has(button:disabled) {
+  background-color: lightgrey;
+}
+
+fieldset:not(:first-child) {
+  margin-top: 20px;
+}
+
+form > button {
+  margin-right: 10px;
+}
+
+:host ::ng-deep {
+  .edit-form tr {
+    background: lightgrey;
+  }
+
+  table {
+    box-sizing: border-box;
+    width: 100%;
+  }
+  td:has(p) {
+    background: lightgrey;
+    // p {
+    //   max-width: 12vw !important;
+    //   line-break: anywhere;
+    // }
+  }
+  input:read-only {
+    cursor: default;
+  }
+  textarea:read-only {
+    cursor: default;
+  }
+  .mat-form-field-flex > .mat-form-field-infix {
+    // padding: 0 0 8px 0;
+    padding: 8px 0;
+    width: auto;
+  }
+
+  .mat-form-field-appearance-outline.mat-form-field-disabled,
+  .mat-form-field-outline {
+    color: transparent;
+  }
+
+  .mat-form-field-wrapper {
+    width: 100%;
+    padding-bottom: 0;
+  }
+
+  .mat-form-field-appearance-outline .mat-form-field-outline {
+    color: transparent;
+  }
+
+  .mat-form-field-appearance-outline.mat-focused .mat-form-field-outline-thick {
+    color: transparent;
+  }
+
+  .file-input {
+    background: none;
+  }
+
+  .mat-form-field.mat-form-field-disabled {
+    background: #d3d3d3;
+    color: black;
+    width: 100%;
+  }
+
+  th.mat-header-cell:last-of-type,
+  td.mat-cell:last-of-type,
+  td.mat-footer-cell:last-of-type {
+    padding: 0;
+  }
+
+  .mat-expansion-panel-header {
+    padding: 0;
+    display: contents;
+  }
+  .mat-expansion-panel-header-title {
+    flex: 1;
+    display: block;
+    margin: 0;
+  }
+  .mat-content.mat-content-hide-toggle {
+    margin: 0;
+  }
+
+  .mat-expansion-panel:not([class*="mat-elevation-z"]) {
+    box-shadow: none;
+  }
+  .mat-expansion-panel-body {
+    padding: 0;
+  }
+
+  .mat-form-field-outline-start,
+  .mat-form-field-outline-end {
+    border-radius: 0 !important;
+  }
+
+  .mat-cell .mat-form-field {
+    width: 100%;
+  }
+
+  .mat-input-element:disabled {
+    color: black;
+  }
+}
+
+input[type="file"] {
+  border: none;
+  height: 100%;
+  width: 100%;
+}
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+input.file-input {
+  cursor: pointer;
+}
+
+textarea::-webkit-scrollbar {
+  width: 15px;
+}
+
+textarea.mat-input-element {
+  resize: none;
+}

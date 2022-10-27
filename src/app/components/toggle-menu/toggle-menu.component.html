@@ -9,46 +9,46 @@
   </div>
 
   <div *ngIf="isLogged" class="content-menu">
-    <span class="each-item">
+    <button class="each-item" routerLinkActive="isSelected" routerLink='/dashboard'>
       <mat-icon>fiber_manual_record</mat-icon>
-      <span class="link-action" [ngClass]="{isSelected: selectedItem === MenuEnum.Dashboard}">
-        Dashboard
+      <span class="link-action">
+         Dashboard
       </span>
-    </span>
+    </button>
 
-    <span class="each-item">
+    <button class="each-item" routerLinkActive="isSelected" routerLink='/class-management'>
       <mat-icon>fiber_manual_record</mat-icon>
-      <span class="link-action" [ngClass]="{isSelected: selectedItem === MenuEnum.ClassManagement}">
+      <span class="link-action">
         Class Management
       </span>
-    </span>
+    </button>
 
-    <span class="each-item">
+    <button class="each-item" routerLinkActive="isSelected" routerLink='/candidate-management'>
       <mat-icon>fiber_manual_record</mat-icon>
-      <span class="link-action" [ngClass]="{isSelected: selectedItem === MenuEnum.CandidateManagement}">
+      <span class="link-action">
         Candidate Management
       </span>
-    </span>
+    </button>
 
-    <span class="each-item">
+    <button class="each-item" routerLinkActive="isSelected" routerLink='/trainer-management'>
       <mat-icon>fiber_manual_record</mat-icon>
-      <span class="link-action" [ngClass]="{isSelected: selectedItem === MenuEnum.TrainerManagement}">
+      <span class="link-action">
         Trainer Management
       </span>
-    </span>
+    </button>
 
-    <span class="each-item">
+    <button class="each-item" routerLinkActive="isSelected" routerLink='/trainee-management'>
       <mat-icon>fiber_manual_record</mat-icon>
-      <span class="link-action" [ngClass]="{isSelected: selectedItem === MenuEnum.TraineeManagement}">
+      <span class="link-action">
         Trainee Management
       </span>
-    </span>
+    </button>
 
-    <span class="each-item">
+    <button class="each-item" routerLinkActive="isSelected" routerLink='/general-setting'>
       <mat-icon>fiber_manual_record</mat-icon>
-      <span class="link-action" [ngClass]="{isSelected: selectedItem === MenuEnum.GeneralSetting}">
+      <span class="link-action">
         General Setting
       </span>
-    </span>
+    </button>
   </div>
 </div>

@@ -7,10 +7,16 @@
 
   .body-sys {
     display: flex;
-    height: 100%;
+    min-height: 100%;
   }
 
   .fix-content {
     flex-shrink: 1;
+  }
+
+  .body-content-sys {
+    // flex: auto;
+    width: calc(100% - 300px);
+    padding-bottom: 20px;
   }
 }

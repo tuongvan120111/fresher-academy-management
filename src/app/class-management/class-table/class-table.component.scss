@@ -8,7 +8,7 @@
 
 table {
   width: 100%;
-  // width: calc(95vw - 300px);
+  border: 1px solid;
 }
 
 table tr:nth-child(even) {
@@ -25,9 +25,17 @@ h3 {
   padding: 10px 0;
 }
 
-:host ::ng-deep .mat-table thead {
-  background-color: #d3d3d3;
-  text-align-last: center;
+:host ::ng-deep {
+  .mat-table thead {
+    background-color: #d3d3d3;
+    text-align-last: center;
+  }
+  .mat-form-field-flex > .mat-form-field-infix {
+    padding: 0 0 8px 0;
+  }
+  // .mat-form-field-appearance-outline .mat-form-field-infix {
+  //   padding: 0;
+  // }
 }
 
 table,
@@ -45,6 +53,7 @@ td.mat-cell:first-of-type {
 
 td.mat-cell:nth-of-type(2) {
   text-align: center;
+  width: 40px;
 }
 
 .flex-container {
@@ -71,5 +80,6 @@ td.mat-cell:nth-of-type(2) {
 
   .mat-form-field {
     width: 100%;
+    line-height: unset;
   }
 }

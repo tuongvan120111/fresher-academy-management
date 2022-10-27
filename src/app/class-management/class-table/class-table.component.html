@@ -1,0 +1,251 @@
+<div *ngIf="!(isCreateClass || isUpdateClass)">
+  <h3>Class Listing</h3>
+
+  <div class="content-container">
+    <form [formGroup]="searchData" (ngSubmit)="search(searchData.value)">
+      <div class="flex-container">
+        <div class="item-container">
+          <p>Location</p>
+          <mat-form-field appearance="outline">
+            <mat-select formControlName="location">
+              <mat-option *ngFor="let data of location" [value]="data.id">
+                {{ data.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="item-container">
+          <p>Class Name</p>
+          <mat-form-field appearance="outline">
+            <input
+              matInput
+              placeholder="Class Name"
+              value=""
+              formControlName="name"
+            />
+          </mat-form-field>
+        </div>
+
+        <div class="item-container">
+          <p>Status</p>
+          <mat-form-field appearance="outline">
+            <mat-select formControlName="status">
+              <mat-option
+                *ngFor="let data of classStatus | keyvalue"
+                [value]="data.key"
+              >
+                {{ data.value }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="button-container">
+          <button mat-stroked-button>
+            <mat-icon
+              aria-hidden="false"
+              aria-label="Search icon"
+              fontIcon="search"
+            ></mat-icon>
+            Search
+          </button>
+        </div>
+      </div>
+
+      <div class="flex-container">
+        <div class="item-container">
+          <p>From Date</p>
+          <mat-form-field appearance="outline">
+            <input
+              matInput
+              [matDatepicker]="fromDate"
+              formControlName="fromDate"
+              (click)="fromDate.open()"
+              style="cursor: pointer"
+              readonly
+            />
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="fromDate"
+            ></mat-datepicker-toggle>
+            <mat-datepicker
+              #fromDate
+              (opened)="fromDate.select(undefined)"
+            ></mat-datepicker>
+          </mat-form-field>
+        </div>
+
+        <div class="item-container">
+          <p>To Date</p>
+          <mat-form-field appearance="outline">
+            <input
+              matInput
+              [matDatepicker]="toDate"
+              formControlName="toDate"
+              (click)="toDate.open()"
+              style="cursor: pointer"
+              readonly
+            />
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="toDate"
+            ></mat-datepicker-toggle>
+            <mat-datepicker
+              #toDate
+              (opened)="toDate.select(undefined)"
+            ></mat-datepicker>
+          </mat-form-field>
+        </div>
+      </div>
+    </form>
+
+    <mat-progress-bar
+      mode="indeterminate"
+      [hidden]="!isLoading"
+    ></mat-progress-bar>
+    <section
+      class="example-container mat-elevation-z8"
+      tabindex="0"
+      style="overflow-x: auto"
+    >
+      <table mat-table [dataSource]="classData">
+        <!-- Checkbox Column -->
+        <ng-container matColumnDef="select">
+          <th mat-header-cell *matHeaderCellDef>
+            <mat-checkbox
+              (change)="$event ? toggleAllRows() : null"
+              [checked]="selection.hasValue() && isAllSelected()"
+              [indeterminate]="selection.hasValue() && !isAllSelected()"
+              [aria-label]="checkboxLabel()"
+            >
+            </mat-checkbox>
+          </th>
+          <td mat-cell *matCellDef="let row">
+            <mat-checkbox
+              (click)="$event.stopPropagation()"
+              (change)="$event ? selection.toggle(row) : null"
+              [checked]="selection.isSelected(row)"
+              [aria-label]="checkboxLabel(row)"
+            >
+            </mat-checkbox>
+          </td>
+        </ng-container>
+
+        <!-- ID Column -->
+        <ng-container matColumnDef="id">
+          <th mat-header-cell *matHeaderCellDef>#</th>
+          <td mat-cell *matCellDef="let element; let i = index">
+            {{ i + 1 + paganationData.pageSize * paganationData.pageIndex }}
+          </td>
+        </ng-container>
+
+        <!-- Class Code Column -->
+        <ng-container matColumnDef="classCode">
+          <th mat-header-cell *matHeaderCellDef>Class Code</th>
+          <td mat-cell *matCellDef="let element">
+            <a [routerLink]="'./' + element.id">
+              {{ element.general.classCode }}
+            </a>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="className">
+          <th mat-header-cell *matHeaderCellDef>Class Name</th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.general.className }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actualStartDate">
+          <th mat-header-cell *matHeaderCellDef>Actual Start Date</th>
+          <td mat-cell *matCellDef="let element">
+            {{ convertNumberToDate(element.detail.actualStartDate) }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actualEndDate">
+          <th mat-header-cell *matHeaderCellDef>Actual End Date</th>
+          <td mat-cell *matCellDef="let element">
+            {{ convertNumberToDate(element.detail.actualEndDate) }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="location">
+          <th mat-header-cell *matHeaderCellDef>Location</th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.general.location }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef>Status</th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.general.status }}
+          </td>
+        </ng-container>
+
+        <tr
+          mat-header-row
+          *matHeaderRowDef="displayedColumns; sticky: true"
+        ></tr>
+        <tr
+          mat-row
+          *matRowDef="let row; columns: displayedColumns"
+          (click)="selection.toggle(row)"
+        ></tr>
+      </table>
+    </section>
+    <mat-paginator
+      style="width: 100%"
+      [pageSizeOptions]="[5, 10, 20]"
+      [length]="classData.data.length || 0"
+      (page)="handlePageEvent($event)"
+    >
+    </mat-paginator>
+
+    <div class="flex-container btn-container">
+      <button mat-stroked-button routerLink="new-class">
+        <mat-icon
+          aria-hidden="false"
+          aria-label="Search icon"
+          fontIcon="add_circle"
+          [ngStyle]="{ color: 'green' }"
+        >
+        </mat-icon>
+        New Class
+      </button>
+      <button
+        mat-stroked-button
+        [disabled]="selection.selected.length !== 1"
+        [routerLink]="
+          selection.selected.length >= 1 ? selection.selected[0].id : ''
+        "
+      >
+        <mat-icon
+          aria-hidden="false"
+          aria-label="Search icon"
+          fontIcon="arrow_circle_up"
+          [ngStyle]="{ color: 'blue' }"
+        >
+        </mat-icon>
+        Update Class
+      </button>
+      <button
+        mat-stroked-button
+        (click)="cancelClass()"
+        [disabled]="
+          selection.selected.length === 0 && isMeetConditionShowCancelButton
+        "
+      >
+        <mat-icon
+          aria-hidden="false"
+          aria-label="Search icon"
+          fontIcon="block"
+          [ngStyle]="{ color: 'red' }"
+        ></mat-icon>
+        Cancle Class
+      </button>
+    </div>
+  </div>
+</div>

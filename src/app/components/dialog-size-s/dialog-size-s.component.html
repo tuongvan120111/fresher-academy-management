@@ -1,11 +1,26 @@
 <div class="dialog-s">
   <div class="icon">
-    <mat-icon>{{data.icon}}</mat-icon>
+    <mat-icon [style.color]="data.iconColor">{{ data.icon }}</mat-icon>
   </div>
-  <h3 class="title">{{data.title}}</h3>
-  <div class="message">{{data.message}}</div>
+  <h3 class="title">{{ data.title }}</h3>
+  <div class="message">{{ data.message }}</div>
+  <div
+    class="body"
+    [style.display]="data.isShowInputMessage ? 'flex' : 'none'"
+  >
+    <b>Remarks:</b>
+    <input type="text" class="form-control" placeholder="" required (change)="inputValue($event)" />
+  </div>
   <div class="button">
-    <button *ngIf="!data.isOneButton" class="btn btn-light" (click)="onClosed()">Cancel</button>
-    <button class="btn btn-success" (click)="onSubmit()">{{data.buttons}}</button>
+    <button
+      *ngIf="!data.isOneButton"
+      class="btn btn-light"
+      (click)="onClosed()"
+    >
+      Cancel
+    </button>
+    <button class="btn btn-success" (click)="onSubmit()">
+      {{ data.buttons }}
+    </button>
   </div>
 </div>
