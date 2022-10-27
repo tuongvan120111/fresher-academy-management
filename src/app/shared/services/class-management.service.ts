@@ -188,8 +188,8 @@ export class ClassManagementService {
 
     const listTrainer: string[] = [...trainer, masterTrainer];
 
-    let actualEndDate = 0;
-    let actualStartDate = 0;
+    let actualEndDate = data.detail.actualEndDate;
+    let actualStartDate = data.detail.actualStartDate;
     if (status === ClassStatusString.Started) {
       actualStartDate = Date.now();
     } else if (status === ClassStatusString.Closed) {

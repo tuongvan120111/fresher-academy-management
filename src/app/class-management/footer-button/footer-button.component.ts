@@ -119,7 +119,7 @@ export class FooterButtonComponent implements OnInit, OnDestroy {
           return;
         }
         confirmMessage = 'accept';
-        status = ClassStatusString.Approved;
+        status = ClassStatusString.Planned;
         break;
       case ButtonType.Decline:
         if (ClassStatusString.Planning !== this.status) {
@@ -134,14 +134,14 @@ export class FooterButtonComponent implements OnInit, OnDestroy {
           return;
         }
         confirmMessage = 'start';
-        status = ClassStatusString.Started;
+        status = ClassStatusString.InProgress;
         break;
       case ButtonType.Finish:
         if (ClassStatusString.InProgress !== this.status) {
           return;
         }
         confirmMessage = 'finish';
-        status = ClassStatusString.Finished;
+        status = ClassStatusString.Pending;
         break;
       case ButtonType.Close:
         if (ClassStatusString.Pending !== this.status) {
