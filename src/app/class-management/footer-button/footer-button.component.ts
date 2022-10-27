@@ -104,7 +104,7 @@ export class FooterButtonComponent implements OnInit, OnDestroy {
           return;
         }
         confirmMessage = 'approve';
-        status = ClassStatusString.Approved;
+        status = ClassStatusString.Planning;
         break;
       case ButtonType.Reject:
         if (ClassStatusString.Submitted !== this.status) {
