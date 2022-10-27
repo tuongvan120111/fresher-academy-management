@@ -188,6 +188,14 @@ export class ClassManagementService {
 
     const listTrainer: string[] = [...trainer, masterTrainer];
 
+    let actualEndDate = 0;
+    let actualStartDate = 0;
+    if (status === ClassStatusString.Started) {
+      actualStartDate = Date.now();
+    } else if (status === ClassStatusString.Closed) {
+      actualEndDate = Date.now();
+    }
+
     console.log(status);
     this.sendMailWhenUpdateClass(
       id,
@@ -215,6 +223,11 @@ export class ClassManagementService {
         ...data.general,
         status: status,
         history: history,
+      },
+      detail: {
+        ...data.detail,
+        actualStartDate: actualStartDate,
+        actualEndDate: actualEndDate,
       },
       // detail: {
       //   ...data.detail,

@@ -230,6 +230,9 @@ export class ClassTableComponent implements OnInit, AfterViewInit, OnChanges {
 
   private datePipe = new DatePipe('en-US');
   convertNumberToDate(val: number) {
+    if (val === 0) {
+      return '';
+    }
     return this.datePipe.transform(val, 'yyyy-MM-ddTHH:mm');
     // return val;
   }
